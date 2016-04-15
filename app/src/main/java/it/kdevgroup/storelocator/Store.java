@@ -7,6 +7,24 @@ import java.util.List;
  * Created by andrea on 15/04/16.
  */
 public class Store {
+
+    private static final String TAG = "Store";
+
+    public static final String KEY_GUID = "guid";
+    public static final String KEY_LONGITUDE = "longitude";
+    public static final String KEY_LATITUDE = "latitude";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_ADDRESS = "address";
+    public static final String KEY_DESCRIPTION = "description";
+    public static final String KEY_PHONE = "phone";
+    public static final String KEY_THUMBNAIL = "thumbnail";
+    public static final String KEY_IMAGE = "featured_image";
+    public static final String KEY_TAGS = "tags";
+    public static final String KEY_EMAIL = "email";
+    public static final String KEY_FIRSTNAME = "first";
+    public static final String KEY_LASTNAME = "last";
+
+    private List<Product> products;
     private String GUID;
     private String name;
     private String latitude;
@@ -21,7 +39,13 @@ public class Store {
     private String firstName;
     private String lastName;
 
-    public Store(String GUID,
+    public Store() {
+        tags = new ArrayList<>();
+        products = new ArrayList<>();
+    }
+
+    public Store(List<Product> products,
+                 String GUID,
                  String name,
                  String latitude,
                  String longitude,
@@ -34,6 +58,7 @@ public class Store {
                  String email,
                  String firstName,
                  String lastName) {
+        this.products=products;
         this.GUID = GUID;
         this.name = name;
         this.latitude = latitude;
@@ -47,6 +72,10 @@ public class Store {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public List<Product> getProducts() {
+        return products;
     }
 
     public String getGUID() {
@@ -101,8 +130,8 @@ public class Store {
         return lastName;
     }
 
-    public Store() {
-        tags = new ArrayList<>();
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public void setGUID(String GUID) {

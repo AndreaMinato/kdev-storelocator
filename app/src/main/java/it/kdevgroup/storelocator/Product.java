@@ -4,21 +4,29 @@ package it.kdevgroup.storelocator;
  * Created by andrea on 15/04/16.
  */
 public class Product {
+
+    private static final String TAG = "Store";
+
+    public static final String KEY_ID="id";
+    public static final String KEY_ISAVAILABLE="is_available";
+    public static final String KEY_NAME="name";
+    public static final String KEY_PRICE="price";
+
     private int id;
-    private boolean isAvaible;
+    private boolean isAvailable;
     private String name;
     private String price;
 
     public Product() {
         id = 0;
-        isAvaible = true;
+        isAvailable = true;
         name = "";
         price = "";
     }
 
-    public Product(int id, boolean isAvaible, String name, String price) {
+    public Product(int id, boolean isAvailable, String name, String price) {
         this.id = id;
-        this.isAvaible = isAvaible;
+        this.isAvailable = isAvailable;
         this.name = name;
         this.price = price;
     }
@@ -27,8 +35,8 @@ public class Product {
         return id;
     }
 
-    public boolean isAvaible() {
-        return isAvaible;
+    public boolean isAvailable() {
+        return isAvailable;
     }
 
     public String getName() {
@@ -43,8 +51,8 @@ public class Product {
         this.id = id;
     }
 
-    public void setIsAvaible(boolean isAvaible) {
-        this.isAvaible = isAvaible;
+    public void setIsAvailable(boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 
     public void setName(String name) {
