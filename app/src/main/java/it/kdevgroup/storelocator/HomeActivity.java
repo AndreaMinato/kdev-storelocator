@@ -1,31 +1,66 @@
 package it.kdevgroup.storelocator;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
-    ViewPager mViewPager;
+    PagerManager.PagerAdapter pagerAdapter;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager());
+
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
+
+
+
+
+        /*
+        viewPager.setOnDragListener(new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View v, DragEvent event) {
+                return false;
+            }
+        });
+
+        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                // When swiping between different app sections, select the corresponding tab.
+                // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                // Tab.
+            }
+        });*/
+
+
+
+
+
+
+
+
+
 
 
         /*
@@ -38,7 +73,6 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         */
-
 
         /**
          * da qua in poi drawer

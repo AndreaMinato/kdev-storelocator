@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class PagerManager {
 
-    public class PagerAdapter extends FragmentPagerAdapter {
+    public static class PagerAdapter extends FragmentPagerAdapter {
         public PagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -20,20 +20,38 @@ public class PagerManager {
         public Fragment getItem(int i) {
             Fragment fragment = new PageFragment();
             Bundle args = new Bundle();
-            // Our object is just an integer :-P
-            args.putInt(PageFragment.ARG_OBJECT, i + 1);
+            switch(i){
+                case 0:
+                    //TODO lista negozi
+                    // Our object is just an integer :-P
+                    args.putInt(PageFragment.ARG_OBJECT, i + 1);
+                    break;
+                case 1:
+                    //TODO mappa
+                    // Our object is just an integer :-P
+                    args.putInt(PageFragment.ARG_OBJECT, i + 1);
+                    break;
+                case 2:
+                    //TODO boh non mi ricordo
+                    // Our object is just an integer :-P
+                    args.putInt(PageFragment.ARG_OBJECT, i + 1);
+                    break;
+                default:
+                    break;
+            }
             fragment.setArguments(args);
+
             return fragment;
         }
 
         @Override
         public int getCount() {
-            return 100;
+            return 3;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return "OBJECT " + (position + 1);
+            return "Page " + (position + 1);
         }
     }
 
@@ -48,9 +66,9 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_collection_object, container, false);
+                    R.layout.fragment_test, container, false);
             Bundle args = getArguments();
-            ((TextView) rootView.findViewById(android.R.id.text1)).setText(
+            ((TextView) rootView.findViewById(R.id.sectionText)).setText("Section "+
                     Integer.toString(args.getInt(ARG_OBJECT)));
             return rootView;
         }
