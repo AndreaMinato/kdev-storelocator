@@ -136,10 +136,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     private void launchHomeActivity() {
         Intent i = new Intent(this, HomeActivity.class);
         startActivity(i);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("onDestroy: ", "called");
     }
 }
