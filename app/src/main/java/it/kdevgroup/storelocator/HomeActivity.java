@@ -1,6 +1,7 @@
 package it.kdevgroup.storelocator;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ public class HomeActivity extends AppCompatActivity
 
     PagerManager.PagerAdapter pagerAdapter;
     ViewPager viewPager;
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +28,15 @@ public class HomeActivity extends AppCompatActivity
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager());
+        pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), getApplicationContext());
 
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
 
-
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
 
         /*
