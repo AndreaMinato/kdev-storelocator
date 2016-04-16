@@ -10,12 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
 import com.couchbase.lite.CouchbaseLiteException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.json.JSONException;
-
 import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,7 +23,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private String email;
     private String password;
-
+    private Button btnLogin;
+    private EditText txtUsername;
+    private EditText txtPassword;
     private CouchbaseDB database;
 
     @Override
@@ -34,31 +33,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button btnLogin;
-        EditText txtUsername;
-        EditText txtPassword;
-
         btnLogin = (Button) findViewById(R.id.login);
         if (btnLogin != null) {
             btnLogin.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //i dati dagli edittext vanno presi al momento del click, altrimenti sono stringhe vuote
+                    if (txtUsername != null) {
+                        email = txtUsername.getText().toString();
+                    }
+                    if (txtPassword != null) {
+                        password = txtPassword.getText().toString();
+                    }
                     doLogin(email, password);
                 }
             });
         }
 
-        // ottengo email dalla casella di testo
         txtUsername = (EditText) findViewById(R.id.email);
-        if (txtUsername != null) {
-            email = txtUsername.getText().toString();
-        }
 
-        // ottengo password dalla casella di testo
         txtPassword = (EditText) findViewById(R.id.password);
         if (txtPassword != null) {
             txtPassword.setTypeface(Typeface.DEFAULT);
-            password = txtPassword.getText().toString();
         }
 
         loginLinearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
@@ -142,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private void launchHomeActivity() {
-        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
+        Intent i = new Intent(this, HomeActivity.class);
         startActivity(i);
         finish();
     }
