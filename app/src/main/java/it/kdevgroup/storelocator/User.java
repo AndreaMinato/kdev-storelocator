@@ -1,6 +1,7 @@
 package it.kdevgroup.storelocator;
 
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by damiano on 15/04/16.
@@ -88,5 +89,13 @@ public class User {
      */
     public boolean isSessionExpired() {
         return new Date(sessionTtl).after(new Date());
+    }
+
+    public HashMap<String, Object> toHashMap() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+
+        hashMap.put(getEmail(), this)
+
+        return hashMap;
     }
 }
