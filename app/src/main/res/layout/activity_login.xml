@@ -1,111 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/login_background">
+
     <LinearLayout
         android:id="@+id/loginLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="it.kdevgroup.storelocator.LoginActivity"
-        android:background="@drawable/login_background_style"
-        android:orientation="vertical"
         android:layout_gravity="center"
         android:layout_margin="30dp"
+        android:background="@drawable/login_background_style"
+        android:orientation="vertical"
         android:paddingBottom="40dp"
-        android:paddingTop="40dp"
+        android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:paddingLeft="20dp">
+        android:paddingTop="40dp"
+        tools:context="it.kdevgroup.storelocator.LoginActivity">
 
 
         <ImageView
+            android:id="@+id/logo"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:id="@+id/logo"
-            android:src="@drawable/jesse_logo"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="5dp" />
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/jesse_logo" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Accedi al tuo account"
             android:id="@+id/accedi"
-            android:layout_gravity="center_horizontal"
-            android:textColor="#c49e69"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:inputType="textEmailAddress"
-            android:text="tua@email.com"
-            android:id="@+id/email"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/edit_text_style"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="#ababab"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="5dp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:inputType="textPassword"
-            android:text="la tua password"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/password"
-            android:background="@drawable/edit_text_style"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="#ababab"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="5dp" />
-
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ACCEDI"
-            android:id="@+id/login"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/button_style"
-            android:textColor="#fff"
-            android:textSize="20dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="o"
-            android:id="@+id/textView2"
             android:layout_gravity="center_horizontal"
-            android:textColor="#c49e69" />
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Accedi al tuo account"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/oro" />
 
-        <Button
+        <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="REGISTRATI"
-            android:id="@+id/signup"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/button_style"
-            android:textSize="20dp"
-            android:textColor="#fff"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
+            android:background="@drawable/edit_text_style"
+            android:hint="tua@email.com"
+            android:textColorHint="@color/textColor"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/textColor" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/edit_text_style"
+            android:hint="la tua password"
+            android:textColorHint="@color/textColor"
+            android:inputType="textPassword"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/textColor" />
+
+
+        <Button
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_style"
+            android:text="ACCEDI"
+            android:textColor="#fff"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="o"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/oro" />
+
+        <Button
+            android:id="@+id/signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_style"
+            android:text="REGISTRATI"
+            android:textColor="#fff"
+            android:textSize="20dp" />
 
     </LinearLayout>
 

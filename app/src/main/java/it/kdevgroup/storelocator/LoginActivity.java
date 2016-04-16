@@ -1,6 +1,7 @@
 package it.kdevgroup.storelocator;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         // ottengo password dalla casella di testo
         txtPassword = (EditText) findViewById(R.id.password);
         if (txtPassword != null) {
+            txtPassword.setTypeface(Typeface.DEFAULT);
             password = txtPassword.getText().toString();
         }
 
