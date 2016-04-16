@@ -2,6 +2,9 @@ package it.kdevgroup.storelocator;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+
+import cz.msebera.android.httpclient.client.UserTokenHandler;
 
 /**
  * Created by damiano on 15/04/16.
@@ -33,6 +36,10 @@ public class User {
         this.name = name;
         this.surname = surname;
         this.email = email;
+    }
+
+    public User(Map<String, Object> map) {
+
     }
 
     public String getUsername() {
@@ -94,7 +101,7 @@ public class User {
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
 
-        hashMap.put(getEmail(), this)
+        hashMap.put(getEmail(), this);
 
         return hashMap;
     }

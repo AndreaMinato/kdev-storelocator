@@ -25,7 +25,7 @@ public class ApiManager {
     }
 
     /**
-     * Effettua il login sul server
+     * Effettua il btnLogin sul server
      *
      * @param username
      * @param password non hashata, me ne occupo io

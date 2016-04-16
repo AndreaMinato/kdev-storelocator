@@ -10,10 +10,14 @@ import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,19 +31,16 @@ public class CouchbaseDB {
 
     private static final String USER_VIEW = "viewUser";
 
-    private static final String DB_NAME = "StoreLocatorDatabase";
+    private static final String DB_NAME = "storelocatordb";
 
     private Manager man;
     private Database db;
     private Context ctx;
 
-    public CouchbaseDB() {
-
-    }
-
     public CouchbaseDB(Context c) {
         ctx = c;
         createManager();
+        createUserView();
     }
 
     /**
@@ -72,6 +73,11 @@ public class CouchbaseDB {
         }
     }
 
+    /**
+     * Crea la view che da in output una mappa con<br>
+     * key      -> email utente (univoca) <br>
+     * value    -> oggetto Utente
+     */
     private void createUserView() {
         View view = db.getView(USER_VIEW);
         view.setMap(new Mapper() {
@@ -81,28 +87,51 @@ public class CouchbaseDB {
 
                 if (obj != null && obj.equals(USER_TYPE_VALUE)) {
                     User user = new User(document);
-                    emitter.emit(User.EMAIL_KEY, user.getEmail());
-                    emitter.emit(User.EMAIL_KEY, user.getEmail());
+                    emitter.emit(User.EMAIL_KEY, user);
                 }
             }
-        });
+        }, "1");
     }
 
     /**
-     * Salva un utente nel database
+     * Salva l'utente nel database
+     *
      * @param user utente da salvare
      * @throws CouchbaseLiteException
      */
     public void saveUser(User user) throws CouchbaseLiteException {
         Document document = db.getExistingDocument(user.getEmail());
-        if (document != null) {
-            // TODO
-        } else {
+        Map<String, Object> properties = new HashMap<>();
+
+        // se non ho gia il documento, lo creo e inserisco il type per identificarlo
+        if (document == null) {
             document = db.getDocument(user.getEmail());
-            Map<String, Object> map = user.toHashMap();
-            map.put(TYPE_KEY, USER_TYPE_VALUE);
-            document.putProperties(map);
+            properties.put(TYPE_KEY, USER_TYPE_VALUE);
+        }
+        // se ho gia il documento, prendo tutte le proprietà
+        else {
+            properties.putAll(document.getProperties());
+        }
+        properties.putAll(user.toHashMap());
+        document.putProperties(properties);
+    }
+
+    /**
+     * Carica l'utente dal database
+     * @return
+     * @throws CouchbaseLiteException
+     */
+    public User loadUser() throws CouchbaseLiteException {
+        Query query = db.getView(USER_VIEW).createQuery();
+        query.setMapOnly(true);
+        QueryEnumerator queryRows = query.run();
+
+        User user = null;
+        for (QueryRow row : queryRows) {
+            Object obj = row.getValue();
+            user = new User((Map<String, Object>) row.getValue());
         }
 
+        return user;
     }
 }
