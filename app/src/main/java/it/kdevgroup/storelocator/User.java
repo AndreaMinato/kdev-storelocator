@@ -10,7 +10,7 @@ import cz.msebera.android.httpclient.client.UserTokenHandler;
  * Created by damiano on 15/04/16.
  */
 public class User {
-    public static final String USERNAME_KEY = "username";
+    public static final String ID_KEY = "_id";
     //    public static final String PASSWORD_KEY = "password";
     public static final String SESSION_KEY = "session";
     public static final String SESSION_TTL_KEY = "session_ttl";

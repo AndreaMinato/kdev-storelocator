@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                                         } catch (CouchbaseLiteException e) {
                                             e.printStackTrace();
                                         }
-
+                                        launchHomeActivity();
                                     }
                                 } else {
                                     Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
