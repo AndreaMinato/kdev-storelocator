@@ -1,80 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loginLinearLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="it.kdevgroup.storelocator.LoginActivity"
-    android:background="#ffffff"
-    android:orientation="vertical">
 
-
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:id="@+id/logo"
-        android:src="@drawable/jesse_logo"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Accedi al tuo account"
-        android:id="@+id/accedi"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#c49e69" />
-
-    <EditText
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+    android:background="@drawable/login_background">
+    <LinearLayout
+        android:id="@+id/loginLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:inputType="textEmailAddress"
-        android:text="email@address.com"
-        android:id="@+id/email"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/edit_text_style" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:inputType="textPassword"
-        android:text="password"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:id="@+id/password"
-        android:background="@drawable/edit_text_style" />
-       
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ACCEDI"
-        android:id="@+id/login"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#fff"
-        android:background="#c49e69" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="o"
-        android:id="@+id/textView2"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#c49e69" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="REGISTRATI"
-        android:id="@+id/signup"
-        android:layout_gravity="center_horizontal"
-        android:textColor="#fff" />
+        tools:context="it.kdevgroup.storelocator.LoginActivity"
+        android:background="@drawable/login_background_style"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:paddingBottom="40dp"
+        android:paddingTop="40dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp">
 
 
-</LinearLayout>
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/logo"
+            android:src="@drawable/jesse_logo"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Accedi al tuo account"
+            android:id="@+id/accedi"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#c49e69"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:inputType="textEmailAddress"
+            android:text="tua@email.com"
+            android:id="@+id/email"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/edit_text_style"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="#ababab"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:inputType="textPassword"
+            android:text="la tua password"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/password"
+            android:background="@drawable/edit_text_style"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="#ababab"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="5dp" />
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ACCEDI"
+            android:id="@+id/login"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_style"
+            android:textColor="#fff"
+            android:textSize="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="o"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#c49e69" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REGISTRATI"
+            android:id="@+id/signup"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_style"
+            android:textSize="20dp"
+            android:textColor="#fff"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

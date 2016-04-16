@@ -1,0 +1,7 @@
+diff a/app/src/main/java/it/kdevgroup/storelocator/ApiManager.java b/app/src/main/java/it/kdevgroup/storelocator/ApiManager.java	(rejected hunks)
+@@ -17,4 +17,5 @@
+ 
+     }
+ 
++    //public
+ }
