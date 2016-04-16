@@ -27,7 +27,6 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
 
     private ArrayList<Store> stores;  //lista di eventi
     private Context ctx;
-    private int filter;
 
     public EventsCardsAdapter(ArrayList<Store> stores, Context ctx) {
         this.stores = stores;
@@ -60,13 +59,9 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
 
         //Picasso.with(ctx).setIndicatorsEnabled(true);
 
-        //load thumbnail sulla card?
-        Picasso.with(ctx)
-                .load(stores.get(position).getThumbnail())
-                .fit()
-        //      .networkPolicy(NetworkPolicy.OFFLINE, NetworkPolicy.NO_CACHE)
-                .into(cardHolder.thumb);
-
+        cardHolder.storeName.setText(stores.get(position).getName());
+        cardHolder.storeAddress.setText(stores.get(position).getAddress());
+        cardHolder.storePhone.setText(stores.get(position).getPhone());
     }
 
     @Override
@@ -91,14 +86,16 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
      */
     public static class CardViewHolder extends RecyclerView.ViewHolder {
         CardView card;
-        TextView blogName;
-        ImageView thumb;
+        TextView storeName;
+        TextView storeAddress;
+        TextView storePhone;
 
         CardViewHolder(View itemView) {
             super(itemView);
             card = (CardView) itemView.findViewById(R.id.cardView);
-            blogName = (TextView) itemView.findViewById(R.id.textView);
-            thumb = (ImageView) itemView.findViewById(R.id.imgThumb);
+            storeName = (TextView) itemView.findViewById(R.id.storeName);
+            storeAddress = (TextView) itemView.findViewById(R.id.storeAddress);
+            storePhone = (TextView) itemView.findViewById(R.id.storePhone);
         }
     }
 

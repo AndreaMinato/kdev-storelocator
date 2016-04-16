@@ -86,22 +86,32 @@ public class JsonParser {
     }
 
     /**
-     * Effettua il parsing di un singolo store
+     * Effettua il parsing di un singolo store dalla lista
      *
      * @param obj JSONObject da parsare
      * @return Store
      * @throws Exception
      */
-
     public Store parseStore(JSONObject obj) throws JSONException {
         Store store = new Store();
         store.setGUID(obj.getString(Store.KEY_GUID));
         store.setName(obj.getString(Store.KEY_NAME));
         store.setAddress(obj.getString(Store.KEY_ADDRESS));
-        store.setDescription(obj.getString(Store.KEY_DESCRIPTION));
+        store.setPhone(obj.getString(Store.KEY_PHONE));
 
         return store;
     }
 
-
+    /**
+     * Effettua il parsing dei dettagli dello store, bisogna differenziare le due chiamate perchè
+     * questa ha parametri in più
+     *
+     * @param obj
+     * @return
+     * @throws JSONException
+     */
+    public Store parseStoreDetails(JSONObject obj) throws JSONException {
+        //TODO
+        return null;
+    }
 }
