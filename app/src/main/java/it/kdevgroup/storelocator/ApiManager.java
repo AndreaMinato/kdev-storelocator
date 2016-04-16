@@ -32,7 +32,7 @@ public class ApiManager {
      * @param handler  hangler
      */
     public void login(String username, String password, AsyncHttpResponseHandler handler) {
-        final String USERNAME = "username";
+        final String USERNAME = "email";
         final String PASSWORD = "password";
 
         RequestParams params = new RequestParams();
