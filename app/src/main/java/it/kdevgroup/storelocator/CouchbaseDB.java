@@ -59,12 +59,13 @@ public class CouchbaseDB {
 
         } else {
             try {
-                DatabaseOptions options = new DatabaseOptions();
-                options.setCreate(true);
-                db = man.getDatabase(DB_NAME);
-                //db = man.openDatabase(DB_NAME, options);
-                Log.d("DB costr", "Database creato\n");
-
+                db = man.getExistingDatabase(DB_NAME);
+                if (db == null) {
+                    DatabaseOptions options = new DatabaseOptions();
+                    options.setCreate(true);
+                    db = man.getDatabase(DB_NAME);
+                    Log.d("DB costr", "Database creato\n");
+                }
 
             } catch (CouchbaseLiteException e) {
                 Log.d("ECCEZIONE", "Impossibile accedere al database\n");

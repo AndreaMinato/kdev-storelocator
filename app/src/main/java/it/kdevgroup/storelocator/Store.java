@@ -1,12 +1,15 @@
 package it.kdevgroup.storelocator;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by andrea on 15/04/16.
  */
-public class Store {
+public class Store implements Parcelable {
 
     private static final String TAG = "Store";
 
@@ -58,7 +61,7 @@ public class Store {
                  String email,
                  String firstName,
                  String lastName) {
-        this.products=products;
+        this.products = products;
         this.GUID = GUID;
         this.name = name;
         this.latitude = latitude;
@@ -184,5 +187,63 @@ public class Store {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    // Parte per la parcellizzazione
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(GUID);
+        dest.writeString(name);
+        dest.writeString(latitude);
+        dest.writeString(longitude);
+        dest.writeString(address);
+        dest.writeString(description);
+        dest.writeString(phone);
+        dest.writeString(thumbnail);
+        dest.writeString(image);
+        dest.writeStringList(tags);
+        dest.writeString(email);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeList(products);
+    }
+
+    public final static Parcelable.Creator<Store> CREATOR = new ClassLoaderCreator<Store>() {
+        @Override
+        public Store createFromParcel(Parcel source, ClassLoader loader) {
+            return new Store(source);
+        }
+
+        @Override
+        public Store createFromParcel(Parcel source) {
+            return new Store(source);
+        }
+
+        @Override
+        public Store[] newArray(int size) {
+            return new Store[size];
+        }
+    };
+
+    private Store(Parcel in) {
+        GUID = in.readString();
+        name = in.readString();
+        latitude = in.readString();
+        longitude = in.readString();
+        address = in.readString();
+        description = in.readString();
+        phone = in.readString();
+        thumbnail = in.readString();
+        image = in.readString();
+        in.readStringList(tags);
+        email = in.readString();
+        firstName = in.readString();
+        in.readList(products, Product.class.getClassLoader());
     }
 }

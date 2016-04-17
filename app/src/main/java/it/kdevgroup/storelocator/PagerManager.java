@@ -1,5 +1,6 @@
 package it.kdevgroup.storelocator;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class PagerManager {
 
     public static class PagerAdapter extends FragmentPagerAdapter {
 
-        private String tabTitles[] = new String[] { "Negozi", "Mappa", "Prodotti" };
+        private String tabTitles[] = new String[]{"Negozi", "Mappa", "Prodotti"};
         private Context context;
 
         public PagerAdapter(FragmentManager fm, Context context) {
@@ -38,7 +39,7 @@ public class PagerManager {
 
         @Override
         public Fragment getItem(int i) {
-            switch(i){
+            switch (i) {
                 case 0:
                     return StoresListFragment.newInstance(context);
                 case 1:
@@ -71,6 +72,9 @@ public class PagerManager {
      */
     public static class StoresListFragment extends Fragment {
 
+        private static final String TAG = "StoresListFragment";
+        private static final String STORES_KEY_FOR_BUNDLE = "StoresListKeyForBundle";
+
         private static Context context;
         private ArrayList<Store> stores;
         private EventsCardsAdapter cardsAdapter;
@@ -98,7 +102,16 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_stores_list, container, false);
 
-            stores = new ArrayList<>();
+
+            if (savedInstanceState != null) {
+                stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
+                Log.d(TAG, "trovati store nel bundle");
+            }
+
+            if (stores == null) {
+                stores = new ArrayList<>();
+            }
+
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
             CouchbaseDB database = new CouchbaseDB(context);
@@ -106,35 +119,34 @@ public class PagerManager {
             String session = "";
             try {
                 user = database.loadUser();
-                if(user != null)
-                session = user.getSession();
+                if (user != null)
+                    session = user.getSession();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            //TODO FIXARE SALVATAGGIO DEI DATI NEL DATABASE, PER ORA BISOGNA FORZARE LA SESSIONE
-            //session = "febc3b43-a320-49ef-8d35-c7117fae837f";
-
-            ApiManager.getInstance().getStores(session, new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    String jsonBody = new String(responseBody);
-                    Log.i("onSuccess response:", jsonBody);
-                    try {
-                        stores = JsonParser.getInstance().parseStores(jsonBody);
-                        cardsAdapter = new EventsCardsAdapter(stores, context);
-                        recyclerView.swapAdapter(cardsAdapter, true);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            if (stores.size() == 0) {
+                ApiManager.getInstance().getStores(session, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        String jsonBody = new String(responseBody);
+                        Log.i("onSuccess response:", jsonBody);
+                        try {
+                            stores = JsonParser.getInstance().parseStores(jsonBody);
+                            cardsAdapter = new EventsCardsAdapter(stores, context);
+                            recyclerView.swapAdapter(cardsAdapter, true);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    String jsonBody = new String(responseBody);
-                    Log.i("onFailure response:", jsonBody);
-                }
-            });
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        String jsonBody = new String(responseBody);
+                        Log.i("onFailure response:", jsonBody);
+                    }
+                });
+            }
 
             cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.setAdapter(cardsAdapter);
@@ -157,6 +169,25 @@ public class PagerManager {
 
 
             return rootView;
+        }
+
+        @Override
+        public void onAttach(Activity context) {
+            super.onAttach(context);
+            Log.d(TAG, "onAttach: ");
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            outState.putParcelableArrayList(STORES_KEY_FOR_BUNDLE, stores);
+            super.onSaveInstanceState(outState);
+            Log.d(TAG, "onSaveInstanceState: ");
+        }
+
+        @Override
+        public void onDetach() {
+            super.onDetach();
+            Log.d(TAG, "onDetach: ");
         }
     }
 
@@ -188,7 +219,7 @@ public class PagerManager {
             // properly.
             View rootView = inflater.inflate(
                     R.layout.fragment_placeholder, container, false);
-            TextView text = (TextView)rootView.findViewById(R.id.sectionText);
+            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
             text.setText("Section " + section);
             return rootView;
         }
@@ -222,7 +253,7 @@ public class PagerManager {
             // properly.
             View rootView = inflater.inflate(
                     R.layout.fragment_placeholder, container, false);
-            TextView text = (TextView)rootView.findViewById(R.id.sectionText);
+            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
             text.setText("Section " + section);
             return rootView;
         }
