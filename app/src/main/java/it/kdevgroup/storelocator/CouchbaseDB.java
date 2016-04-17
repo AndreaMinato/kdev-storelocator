@@ -130,7 +130,7 @@ public class CouchbaseDB {
         if (document != null) {
 
             Map<String, Object> properties = document.getProperties();
-            Map<String, Object> userValues = (Map<String, Object>) properties.get("tsac-2015@tecnicosuperiorekennedy.it");
+            Map<String, Object> userValues = (Map<String, Object>) properties.get("user");
             user = new User(userValues);
         /*
         Query query = db.getView(USER_VIEW).createQuery();

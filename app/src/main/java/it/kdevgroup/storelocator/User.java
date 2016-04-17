@@ -1,5 +1,8 @@
 package it.kdevgroup.storelocator;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +10,7 @@ import java.util.Map;
 /**
  * Created by damiano on 15/04/16.
  */
-public class User {
+public class User implements Parcelable {
     public static final String ID_KEY = "_id";
     //    public static final String PASSWORD_KEY = "password";
     public static final String SESSION_KEY = "session";
@@ -104,8 +107,51 @@ public class User {
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
 
-        hashMap.put(getEmail(), this);
+        hashMap.put("user", this);
 
         return hashMap;
+    }
+
+    // parcellizzazione
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(session);
+        dest.writeInt(sessionTtl);
+        dest.writeString(name);
+        dest.writeString(surname);
+        dest.writeString(email);
+    }
+
+    public static final Parcelable.Creator<User> CREATOR = new ClassLoaderCreator<User>() {
+        @Override
+        public User createFromParcel(Parcel source, ClassLoader loader) {
+            return new User(source);
+        }
+
+        @Override
+        public User createFromParcel(Parcel source) {
+            return new User(source);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    private User(Parcel in) {
+        id = in.readString();
+        session = in.readString();
+        sessionTtl = in.readInt();
+        name = in.readString();
+        surname = in.readString();
+        email = in.readString();
     }
 }

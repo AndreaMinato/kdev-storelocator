@@ -66,17 +66,19 @@ public class PagerManager {
         }
     }
 
+
     /**
      * Fragment che conterrà la lista
-     * TODO implementare ciclo di vita per non effettuare la chiamata ad ogni slide
      */
     public static class StoresListFragment extends Fragment {
 
         private static final String TAG = "StoresListFragment";
         private static final String STORES_KEY_FOR_BUNDLE = "StoresListKeyForBundle";
+        private static final String USER_KEY_FOR_BUNDLE = "UserKeyForBundle";
 
         private static Context context;
         private ArrayList<Store> stores;
+        private User user;
         private EventsCardsAdapter cardsAdapter;
         private RecyclerView recyclerView;
         private LinearLayoutManager layoutManager;
@@ -105,28 +107,27 @@ public class PagerManager {
 
             if (savedInstanceState != null) {
                 stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
-                Log.d(TAG, "trovati store nel bundle");
+                user = savedInstanceState.getParcelable(USER_KEY_FOR_BUNDLE);
+                Log.d(TAG, "trovati utente e stores nel bundle");
             }
 
             if (stores == null) {
                 stores = new ArrayList<>();
             }
 
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-
-            CouchbaseDB database = new CouchbaseDB(context);
-            User user = null;
-            String session = "";
-            try {
-                user = database.loadUser();
-                if (user != null)
-                    session = user.getSession();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (user == null) {
+                CouchbaseDB database = new CouchbaseDB(context);
+                try {
+                    user = database.loadUser();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+
             if (stores.size() == 0) {
-                ApiManager.getInstance().getStores(session, new AsyncHttpResponseHandler() {
+                ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         String jsonBody = new String(responseBody);
@@ -180,6 +181,7 @@ public class PagerManager {
         @Override
         public void onSaveInstanceState(Bundle outState) {
             outState.putParcelableArrayList(STORES_KEY_FOR_BUNDLE, stores);
+            outState.putParcelable(USER_KEY_FOR_BUNDLE, user);
             super.onSaveInstanceState(outState);
             Log.d(TAG, "onSaveInstanceState: ");
         }

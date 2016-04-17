@@ -212,6 +212,7 @@ public class Store implements Parcelable {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeList(products);
+        flags = flags;
     }
 
     public final static Parcelable.Creator<Store> CREATOR = new ClassLoaderCreator<Store>() {
