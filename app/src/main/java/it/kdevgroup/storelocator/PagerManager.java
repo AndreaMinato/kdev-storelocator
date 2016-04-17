@@ -45,14 +45,13 @@ public class PagerManager {
                 case 1:
                     //TODO mappa
                     //return MapFragment.newInstance();
-                    break;
+                    return PlaceholderFragment.newInstance(i + 1);
                 case 2:
                     //TODO lista prodotti
                     return PlaceholderFragment.newInstance(i + 1);
                 default:
-                    break;
+                    return PlaceholderFragment.newInstance(i + 1);
             }
-            return PlaceholderFragment.newInstance(i + 1);
         }
 
         @Override
