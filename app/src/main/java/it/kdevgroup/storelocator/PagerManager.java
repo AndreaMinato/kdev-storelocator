@@ -126,6 +126,9 @@ public class PagerManager {
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
+            cardsAdapter = new EventsCardsAdapter(stores, context);
+            recyclerView.setAdapter(cardsAdapter);
+
             if (stores.size() == 0) {
                 ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
                     @Override
@@ -149,9 +152,6 @@ public class PagerManager {
                 });
             }
 
-            cardsAdapter = new EventsCardsAdapter(stores, context);
-            recyclerView.setAdapter(cardsAdapter);
-
             // --- LAYOUT MANAGER
             /**
              * @author damiano
@@ -173,7 +173,7 @@ public class PagerManager {
         }
 
         @Override
-        public void onAttach(Activity context) {
+        public void onAttach(Context context) {
             super.onAttach(context);
             Log.d(TAG, "onAttach: ");
         }
