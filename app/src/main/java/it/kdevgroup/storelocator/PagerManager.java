@@ -129,9 +129,11 @@ public class PagerManager {
             recyclerView.setAdapter(cardsAdapter);
 
             if (stores.size() == 0) {
+                //TODO riciclare codice per controllare la connessione
                 ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        //TODO controllare casi di errore
                         String jsonBody = new String(responseBody);
                         Log.i("onSuccess response:", jsonBody);
                         try {
@@ -145,8 +147,10 @@ public class PagerManager {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        String jsonBody = new String(responseBody);
-                        Log.i("onFailure response:", jsonBody);
+                        if (responseBody != null) { //quando non c'è connessione non si connette al server e la risposta è null
+                            String jsonBody = new String(responseBody);
+                            Log.i("onFailure response:", jsonBody);
+                        }
                     }
                 });
             }
