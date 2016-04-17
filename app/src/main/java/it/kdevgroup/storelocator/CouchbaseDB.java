@@ -100,12 +100,12 @@ public class CouchbaseDB {
      * @throws CouchbaseLiteException
      */
     public void saveUser(User user) throws CouchbaseLiteException {
-        Document document = db.getExistingDocument(user.getEmail());
+        Document document = db.getExistingDocument("user");
         Map<String, Object> properties = new HashMap<>();
 
         // se non ho gia il documento, lo creo e inserisco il type per identificarlo
         if (document == null) {
-            document = db.getDocument(user.getEmail());
+            document = db.getDocument("user");
             properties.put(TYPE_KEY, USER_TYPE_VALUE);
         }
         // se ho gia il documento, prendo tutte le proprietà
@@ -118,18 +118,19 @@ public class CouchbaseDB {
 
     /**
      * Carica l'utente dal database
+     *
      * @return
      * @throws CouchbaseLiteException
      */
     public User loadUser() throws CouchbaseLiteException {
 
-        Document document = db.getExistingDocument("tsac-2015@tecnicosuperiorekennedy.it");
-
+        Document document = db.getExistingDocument("user");
+        User user = null;
         if (document != null) {
 
             Map<String, Object> properties = document.getProperties();
             Map<String, Object> userValues = (Map<String, Object>) properties.get("tsac-2015@tecnicosuperiorekennedy.it");
-            User user = new User(userValues);
+            user = new User(userValues);
         /*
         Query query = db.getView(USER_VIEW).createQuery();
         query.setMapOnly(true);
@@ -141,8 +142,7 @@ public class CouchbaseDB {
             user = new User((Map<String, Object>) row.getValue());
         }
         */
-            return user;
         }
-    return null;
+        return user;
     }
 }
