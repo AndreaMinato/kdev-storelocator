@@ -124,9 +124,12 @@ public class CouchbaseDB {
     public User loadUser() throws CouchbaseLiteException {
 
         Document document = db.getExistingDocument("tsac-2015@tecnicosuperiorekennedy.it");
-        Map<String, Object> properties = document.getProperties();
-        Map<String, Object> userValues = (Map<String, Object>) properties.get("tsac-2015@tecnicosuperiorekennedy.it");
-        User user = new User(userValues);
+
+        if (document != null) {
+
+            Map<String, Object> properties = document.getProperties();
+            Map<String, Object> userValues = (Map<String, Object>) properties.get("tsac-2015@tecnicosuperiorekennedy.it");
+            User user = new User(userValues);
         /*
         Query query = db.getView(USER_VIEW).createQuery();
         query.setMapOnly(true);
@@ -138,6 +141,8 @@ public class CouchbaseDB {
             user = new User((Map<String, Object>) row.getValue());
         }
         */
-        return user;
+            return user;
+        }
+    return null;
     }
 }

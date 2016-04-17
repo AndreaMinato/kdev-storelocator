@@ -103,9 +103,10 @@ public class PagerManager {
 
             CouchbaseDB database = new CouchbaseDB(context);
             User user = null;
-            String session = "b";
+            String session = "";
             try {
                 user = database.loadUser();
+                if(user != null)
                 session = user.getSession();
             } catch (Exception e) {
                 e.printStackTrace();
