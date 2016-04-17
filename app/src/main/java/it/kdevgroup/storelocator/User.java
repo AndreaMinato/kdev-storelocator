@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import cz.msebera.android.httpclient.client.UserTokenHandler;
-
 /**
  * Created by damiano on 15/04/16.
  */
@@ -18,10 +16,10 @@ public class User {
     public static final String SURNAME_KEY = "surname";
     public static final String EMAIL_KEY = "email";
 
-    private String username;
+    private String id;
     //    private String password;
     private String session;
-    private long sessionTtl;
+    private Integer sessionTtl;
     private String name;
     private String surname;
     private String email;
@@ -29,8 +27,8 @@ public class User {
     public User() {
     }
 
-    public User(String username, String session, long sessionTtl, String name, String surname, String email) {
-        this.username = username;
+    public User(String id, String session, Integer sessionTtl, String name, String surname, String email) {
+        this.id = id;
         this.session = session;
         this.sessionTtl = sessionTtl;
         this.name = name;
@@ -39,15 +37,20 @@ public class User {
     }
 
     public User(Map<String, Object> map) {
-
+        id = map.get("id").toString(); //non posso passargli ID_KEY
+        session = map.get(SESSION_KEY).toString(); //qui per fortuna sì
+        sessionTtl = (Integer) map.get("sessionTtl");
+        name = map.get(NAME_KEY).toString();
+        surname = map.get(SURNAME_KEY).toString();
+        email = map.get(EMAIL_KEY).toString();
     }
 
-    public String getUsername() {
-        return username;
+    public String getId() {
+        return id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getSession() {
@@ -58,11 +61,11 @@ public class User {
         this.session = session;
     }
 
-    public long getSessionTtl() {
+    public Integer getSessionTtl() {
         return sessionTtl;
     }
 
-    public void setSessionTtl(long sessionTtl) {
+    public void setSessionTtl(Integer sessionTtl) {
         this.sessionTtl = sessionTtl;
     }
 

@@ -61,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
 
         database = new CouchbaseDB(getApplicationContext());
 
+
         try {
             User user = database.loadUser();
             if (user != null && !user.isSessionExpired())
@@ -68,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
+
     }
 
     /**

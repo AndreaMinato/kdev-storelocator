@@ -122,6 +122,12 @@ public class CouchbaseDB {
      * @throws CouchbaseLiteException
      */
     public User loadUser() throws CouchbaseLiteException {
+
+        Document document = db.getExistingDocument("tsac-2015@tecnicosuperiorekennedy.it");
+        Map<String, Object> properties = document.getProperties();
+        Map<String, Object> userValues = (Map<String, Object>) properties.get("tsac-2015@tecnicosuperiorekennedy.it");
+        User user = new User(userValues);
+        /*
         Query query = db.getView(USER_VIEW).createQuery();
         query.setMapOnly(true);
         QueryEnumerator queryRows = query.run();
@@ -131,7 +137,7 @@ public class CouchbaseDB {
             Object obj = row.getValue();
             user = new User((Map<String, Object>) row.getValue());
         }
-
+        */
         return user;
     }
 }

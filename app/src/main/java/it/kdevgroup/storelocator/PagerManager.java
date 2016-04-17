@@ -107,12 +107,12 @@ public class PagerManager {
             try {
                 user = database.loadUser();
                 session = user.getSession();
-            } catch (CouchbaseLiteException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
             //TODO FIXARE SALVATAGGIO DEI DATI NEL DATABASE, PER ORA BISOGNA FORZARE LA SESSIONE
-            session = "febc3b43-a320-49ef-8d35-c7117fae837f";
+            //session = "febc3b43-a320-49ef-8d35-c7117fae837f";
 
             ApiManager.getInstance().getStores(session, new AsyncHttpResponseHandler() {
                 @Override

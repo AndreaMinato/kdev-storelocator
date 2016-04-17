@@ -41,9 +41,9 @@ public class JsonParser {
             user = new User();
             JSONObject data = jsonObject.getJSONObject(DATA);
             user.setEmail(data.getString(User.EMAIL_KEY));
-            user.setUsername(data.getString(User.ID_KEY));
+            user.setId(data.getString(User.ID_KEY));
             user.setSession(data.getString(User.SESSION_KEY));
-            user.setSessionTtl(data.getLong(User.SESSION_TTL_KEY));
+            user.setSessionTtl(data.getInt(User.SESSION_TTL_KEY));
             user.setName(data.getString(User.NAME_KEY));
             user.setSurname(data.getString(User.SURNAME_KEY));
         }
