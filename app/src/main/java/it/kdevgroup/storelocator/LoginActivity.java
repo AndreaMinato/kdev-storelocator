@@ -64,10 +64,9 @@ public class LoginActivity extends AppCompatActivity {
 
         database = new CouchbaseDB(getApplicationContext());
 
-        //TODO controllare connessione prima di avviare la seconda activity (?)
         try {
             User user = database.loadUser();
-            if (user != null && !user.isSessionExpired() && isNetworkAvailable())
+            if (user != null && !user.isSessionExpired())
                 launchHomeActivity();
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
