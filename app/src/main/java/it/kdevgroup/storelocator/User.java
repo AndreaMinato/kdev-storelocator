@@ -13,6 +13,9 @@ import java.util.Map;
  * Created by damiano on 15/04/16.
  */
 public class User implements Parcelable {
+
+    private static User instance;
+
     public static final String ID_KEY = "_id";
     //    public static final String PASSWORD_KEY = "password";
     public static final String SESSION_KEY = "session";
@@ -28,6 +31,45 @@ public class User implements Parcelable {
     private String name;
     private String surname;
     private String email;
+
+    // PARTE SINGLETON
+
+    public static User getInstance() {
+        if (instance == null) {
+            instance = new User();
+        }
+        return instance;
+    }
+
+    /**
+     * Determina se l'instanza del singleton è impostata in tutti i suoi campi
+     *
+     * @return
+     */
+    public boolean isSet() {
+        return instance != null &&
+                id != null &&
+                session != null &&
+                sessionTtl != null &&
+                name != null &&
+                surname != null &&
+                email != null
+                ;
+    }
+
+    /**
+     * Imposta l'instanza del singleton
+     *
+     * @param u
+     */
+    public void setInstance(User u) {
+        instance = new User(u.getId(),
+                u.getSession(),
+                u.getSessionTtl(),
+                u.getName(),
+                u.getSurname(),
+                u.getEmail());
+    }
 
     public User() {
     }

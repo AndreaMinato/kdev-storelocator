@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -21,6 +22,8 @@ import com.couchbase.lite.CouchbaseLiteException;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "HomeActivity";
 
     private PagerManager.PagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -47,22 +50,13 @@ public class HomeActivity extends AppCompatActivity
 
         database = new CouchbaseDB(getApplicationContext());
 
-        User user = null;
-
-        try {
-            user = database.loadUser();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
-        }
-
-
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
 
         if (goSnack) {
-            welcome = Snackbar.make(viewPager, "Benvenuto " + user.getName(), Snackbar.LENGTH_LONG);
+            welcome = Snackbar.make(viewPager, "Benvenuto " + User.getInstance().getName(), Snackbar.LENGTH_LONG);
             welcome.show();
         }
         goSnack = false;

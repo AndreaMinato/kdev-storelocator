@@ -242,18 +242,13 @@ public class PagerManager {
         private GoogleMap googleMap;
 
         public static MapFragment newInstance() {
-//            Bundle args = new Bundle();
-//            args.putInt(ARG_OBJECT, page);
             MapFragment fragment = new MapFragment();
-//            fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-//            section = getArguments().getInt(ARG_OBJECT);
-
         }
 
         @Override
@@ -266,9 +261,6 @@ public class PagerManager {
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
             mapFragment.getMapAsync(this);
-
-//            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
-//            text.setText("Section " + section);
             return rootView;
         }
 
@@ -290,7 +282,7 @@ public class PagerManager {
                                 googleMap.animateCamera(center);
                                 MarkerOptions marker = new MarkerOptions();
                                 marker.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                                marker.title("");
+                                marker.title(User.getInstance().getName());
                                 googleMap.addMarker(marker);
                                 Log.d(TAG, "onLocationChanged: animata camera");
                                 Log.d(TAG, "onLocationChanged: lat: " + location.getLatitude());

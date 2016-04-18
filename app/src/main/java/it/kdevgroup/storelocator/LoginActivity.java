@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
             long time = System.currentTimeMillis();
             User user = database.loadUser();
             if (user != null && !user.isSessionExpired()) {
+                User.getInstance().setInstance(user);
                 Log.d(TAG, "onCreate: impiegati " + (System.currentTimeMillis() - time) + "ms");
                 launchHomeActivity();
             }
