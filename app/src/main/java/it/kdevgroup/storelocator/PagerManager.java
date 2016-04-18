@@ -208,7 +208,7 @@ public class PagerManager {
     /**
      * Fragment per la mappa
      */
-    public static class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
+    public static class MapFragment extends Fragment implements OnMapReadyCallback {
 
         private static final String TAG = "MapFragment";
         public static final String ARG_OBJECT = "object";
@@ -237,17 +237,16 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_map, container);
+                    R.layout.fragment_map, container, false);
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
-            if (mapFragment != null) {
-                mapFragment.getMapAsync(this);
-            }
+            mapFragment.getMapAsync(this);
 
 //            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
 //            text.setText("Section " + section);
             return rootView;
         }
+
 
         @Override
         public void onMapReady(GoogleMap gm) {
@@ -285,6 +284,7 @@ public class PagerManager {
                 e.printStackTrace();
             }
         }
+
     }
 
     /**
