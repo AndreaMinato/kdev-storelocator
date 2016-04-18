@@ -147,7 +147,7 @@ public class JsonParser {
         return store;
     }
 
-    public Product parseProduct (JSONObject obj) throws JSONException{
+    public Product parseProduct(JSONObject obj) throws JSONException {
         Product product = new Product();
         product.setId(obj.getInt(Product.KEY_ID));
         product.setIsAvailable(obj.getBoolean(Product.KEY_ISAVAILABLE));

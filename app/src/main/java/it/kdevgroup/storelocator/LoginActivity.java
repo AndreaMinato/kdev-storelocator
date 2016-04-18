@@ -13,9 +13,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import org.json.JSONException;
+
 import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends AppCompatActivity {
@@ -81,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param password
      */
     private void doLogin(String email, String password) {
-        if(isNetworkAvailable()) {
+        if (isNetworkAvailable()) {
             if (email != null && password != null) {
                 ApiManager.getInstance().login(
                         email,
