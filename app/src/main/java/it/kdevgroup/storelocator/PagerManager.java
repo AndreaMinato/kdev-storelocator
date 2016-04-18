@@ -141,7 +141,7 @@ public class PagerManager {
             cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.setAdapter(cardsAdapter);
 
-            HomeActivity homeActivity = (HomeActivity)getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
+            HomeActivity homeActivity = (HomeActivity) getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
 
             if (stores.size() == 0 && homeActivity.isNetworkAvailable()) {
                 getStores();
@@ -162,7 +162,7 @@ public class PagerManager {
             }
             layoutManager = new GridLayoutManager(context, colonne, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            
+
             return rootView;
         }
 
@@ -186,7 +186,7 @@ public class PagerManager {
             Log.d(TAG, "onDetach: ");
         }
 
-        public void getStores(){    //controlli già verificati prima della chiamata
+        public void getStores() {    //controlli già verificati prima della chiamata
             ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

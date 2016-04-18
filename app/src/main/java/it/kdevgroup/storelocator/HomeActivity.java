@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.design.widget.NavigationView;
@@ -15,12 +17,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.couchbase.lite.CouchbaseLiteException;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private PagerManager.PagerAdapter pagerAdapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private CouchbaseDB database;
+    public Snackbar welcome;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +38,25 @@ public class HomeActivity extends AppCompatActivity
 
         pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
 
+        database = new CouchbaseDB(getApplicationContext());
+
+        User user = null;
+
+        try {
+            user = database.loadUser();
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+
+
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
+
+        welcome = Snackbar.make(viewPager, "Benvenuto " + user.getName(), Snackbar.LENGTH_LONG);
+        welcome.show();
+
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);

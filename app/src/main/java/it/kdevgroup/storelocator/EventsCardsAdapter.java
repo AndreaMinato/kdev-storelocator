@@ -29,7 +29,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
     private ArrayList<Store> stores;  //lista di eventi
     private Context ctx;
 
-    private static final String TAG="prova";
+    private static final String TAG = "prova";
 
     public EventsCardsAdapter(ArrayList<Store> stores, Context ctx) {
         this.stores = stores;
