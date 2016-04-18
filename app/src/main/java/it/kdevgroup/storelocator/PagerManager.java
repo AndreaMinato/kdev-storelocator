@@ -92,7 +92,6 @@ public class PagerManager {
 
         private static Context context;
         private ArrayList<Store> stores;
-        private User user;
         private EventsCardsAdapter cardsAdapter;
         private RecyclerView recyclerView;
         private LinearLayoutManager layoutManager;
@@ -120,7 +119,8 @@ public class PagerManager {
 
             if (savedInstanceState != null) {
                 stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
-                user = savedInstanceState.getParcelable(USER_KEY_FOR_BUNDLE);
+                if (User.isNull())
+                    User.getInstance().setInstance((User) savedInstanceState.getParcelable(USER_KEY_FOR_BUNDLE));
                 Log.d(TAG, "trovati utente e stores nel bundle");
             }
 
@@ -128,14 +128,14 @@ public class PagerManager {
                 stores = new ArrayList<>();
             }
 
-            if (user == null) {
-                CouchbaseDB database = new CouchbaseDB(context);
-                try {
-                    user = database.loadUser();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+//            if (user == null) {
+//                CouchbaseDB database = new CouchbaseDB(context);
+//                try {
+//                    user = database.loadUser();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
@@ -176,7 +176,7 @@ public class PagerManager {
         @Override
         public void onSaveInstanceState(Bundle outState) {
             outState.putParcelableArrayList(STORES_KEY_FOR_BUNDLE, stores);
-            outState.putParcelable(USER_KEY_FOR_BUNDLE, user);
+            outState.putParcelable(USER_KEY_FOR_BUNDLE, User.getInstance());
             super.onSaveInstanceState(outState);
             Log.d(TAG, "onSaveInstanceState: ");
         }
@@ -188,7 +188,7 @@ public class PagerManager {
         }
 
         public void getStores() {    //controlli già verificati prima della chiamata
-            ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
+            ApiManager.getInstance().getStores(User.getInstance().getSession(), new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -280,13 +280,16 @@ public class PagerManager {
                             public void onLocationChanged(Location location) {
                                 CameraUpdate center = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12.0f);
                                 googleMap.animateCamera(center);
-                                MarkerOptions marker = new MarkerOptions();
-                                marker.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                                marker.title(User.getInstance().getName());
-                                googleMap.addMarker(marker);
+
+                                MarkerOptions userMarker = new MarkerOptions();
+                                userMarker.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                                userMarker.title(User.getInstance().getName());
+                                googleMap.addMarker(userMarker);
                                 Log.d(TAG, "onLocationChanged: animata camera");
                                 Log.d(TAG, "onLocationChanged: lat: " + location.getLatitude());
                                 Log.d(TAG, "onLocationChanged: long: " + location.getLongitude());
+
+
                             }
 
                             @Override

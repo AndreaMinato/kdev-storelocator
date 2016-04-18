@@ -42,6 +42,14 @@ public class User implements Parcelable {
     }
 
     /**
+     * Determina se l'istanza è nulla
+     * @return
+     */
+    public static boolean isNull() {
+        return instance == null;
+    }
+
+    /**
      * Determina se l'instanza del singleton è impostata in tutti i suoi campi
      *
      * @return

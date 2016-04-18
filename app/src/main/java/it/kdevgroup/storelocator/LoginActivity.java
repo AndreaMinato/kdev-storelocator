@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private EditText txtUsername;
     private EditText txtPassword;
+    private ProgressBar progressBar;
     private CouchbaseDB database;
 
     @Override
@@ -64,6 +66,9 @@ public class LoginActivity extends AppCompatActivity {
         if (txtPassword != null) {
             txtPassword.setTypeface(Typeface.DEFAULT);
         }
+
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         loginLinearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
 
@@ -138,13 +143,20 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-
+                                progressBar.setVisibility(View.INVISIBLE);
                                 Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onStart() {
                                 super.onStart();
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                 );
