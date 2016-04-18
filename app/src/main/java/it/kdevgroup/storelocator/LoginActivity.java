@@ -73,9 +73,8 @@ public class LoginActivity extends AppCompatActivity {
             long time = System.currentTimeMillis();
             User user = database.loadUser();
             if (user != null && !user.isSessionExpired()) {
-                User.getInstance().setInstance(user);
                 Log.d(TAG, "onCreate: impiegati " + (System.currentTimeMillis() - time) + "ms");
-                launchHomeActivity();
+                launchHomeActivity(user);
             }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
@@ -128,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                                         } catch (CouchbaseLiteException e) {
                                             e.printStackTrace();
                                         }
-                                        launchHomeActivity();
+                                        launchHomeActivity(user);
                                     }
                                 } else {
                                     Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
@@ -158,7 +157,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void launchHomeActivity() {
+    private void launchHomeActivity(User user) {
+        User.getInstance().setInstance(user);
         Intent i = new Intent(this, HomeActivity.class);
         startActivity(i);
         finish();
