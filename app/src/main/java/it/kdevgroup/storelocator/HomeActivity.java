@@ -27,11 +27,20 @@ public class HomeActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private CouchbaseDB database;
     public Snackbar welcome;
+    public boolean goSnack=true;
+
+    private static final String SAVE="onsaved";
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState!=null){
+            goSnack=savedInstanceState.getBoolean(SAVE);
+        }
         setContentView(R.layout.activity_home);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,8 +65,11 @@ public class HomeActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(pagerAdapter);
 
-        welcome = Snackbar.make(viewPager, "Benvenuto " + user.getName(), Snackbar.LENGTH_LONG);
-        welcome.show();
+        if (goSnack) {
+            welcome = Snackbar.make(viewPager, "Benvenuto " + user.getName(), Snackbar.LENGTH_LONG);
+            welcome.show();
+        }
+        goSnack=false;
 
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -156,5 +168,11 @@ public class HomeActivity extends AppCompatActivity
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVE,goSnack);
     }
 }
