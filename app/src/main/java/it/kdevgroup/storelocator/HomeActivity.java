@@ -40,15 +40,13 @@ public class HomeActivity extends AppCompatActivity
 
         database = new CouchbaseDB(getApplicationContext());
 
-        User user=null;
+        User user = null;
 
         try {
             user = database.loadUser();
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
-
-
 
 
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the

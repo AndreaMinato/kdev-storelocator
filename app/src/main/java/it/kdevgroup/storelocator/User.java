@@ -98,6 +98,7 @@ public class User implements Parcelable {
 
     /**
      * Determina se la sessione dell'utente è scaduta
+     *
      * @return <b>true</b> se è scaduta<br><b>false</b> se è ancora attiva
      */
     public boolean isSessionExpired() {
