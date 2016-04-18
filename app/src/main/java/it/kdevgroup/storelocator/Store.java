@@ -26,6 +26,8 @@ public class Store implements Parcelable {
     public static final String KEY_EMAIL = "email";
     public static final String KEY_FIRSTNAME = "first";
     public static final String KEY_LASTNAME = "last";
+    public static final String KEY_PERSON = "sales_person";
+    public static final String KEY_PRODUCTS = "products";
 
     private List<Product> products;
     private String GUID;
