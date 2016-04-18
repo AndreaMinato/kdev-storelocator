@@ -237,7 +237,7 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_map, container, false);
+                    R.layout.fragment_map, container);
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
             mapFragment.getMapAsync(this);
