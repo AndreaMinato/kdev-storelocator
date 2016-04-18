@@ -102,7 +102,7 @@ public class User implements Parcelable {
      * @return <b>true</b> se è scaduta<br><b>false</b> se è ancora attiva
      */
     public boolean isSessionExpired() {
-        return new Date(sessionTtl).after(new Date());
+        return new Date(sessionTtl).before(new Date());
     }
 
     public HashMap<String, Object> toHashMap() {
