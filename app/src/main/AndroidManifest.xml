@@ -49,7 +49,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-<<<<<<< HEAD
+
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps" />
@@ -58,8 +58,7 @@
             android:label="@string/title_activity_detail_store"
             android:theme="@style/AppTheme" >
         </activity>
-=======
->>>>>>> 97f970be9be04f5569e6ec7f8dd1b18343706cb8
+
     </application>
 
 </manifest>
