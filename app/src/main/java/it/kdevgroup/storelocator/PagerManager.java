@@ -240,7 +240,9 @@ public class PagerManager {
                     R.layout.fragment_map, container);
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+            if (mapFragment != null) {
                 mapFragment.getMapAsync(this);
+            }
 
 //            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
 //            text.setText("Section " + section);
