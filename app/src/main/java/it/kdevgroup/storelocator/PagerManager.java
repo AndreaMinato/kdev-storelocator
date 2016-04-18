@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.couchbase.lite.CouchbaseLiteException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -220,9 +219,9 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_placeholder, container, false);
-            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
-            text.setText("Section " + section);
+                    R.layout.fragment_map, container, false);
+//            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
+//            text.setText("Section " + section);
             return rootView;
         }
     }
@@ -254,9 +253,9 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_placeholder, container, false);
-            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
-            text.setText("Section " + section);
+                    R.layout.fragment_map, container, false);
+//            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
+//            text.setText("Section " + section);
             return rootView;
         }
     }
