@@ -1,9 +1,15 @@
 package it.kdevgroup.storelocator;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,6 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -42,9 +54,7 @@ public class PagerManager {
                 case 0:
                     return StoresListFragment.newInstance(context);
                 case 1:
-                    //TODO mappa
-                    //return MapFragment.newInstance();
-                    return PlaceholderFragment.newInstance(i + 1);
+                    return MapFragment.newInstance();
                 case 2:
                     //TODO lista prodotti
                     return PlaceholderFragment.newInstance(i + 1);
@@ -198,22 +208,27 @@ public class PagerManager {
     /**
      * Fragment per la mappa
      */
-    public static class MapFragment extends Fragment {
+    public static class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
+
+        private static final String TAG = "MapFragment";
         public static final String ARG_OBJECT = "object";
         private int section;
 
-        public static MapFragment newInstance(int page) {
-            Bundle args = new Bundle();
-            args.putInt(ARG_OBJECT, page);
+        private GoogleMap googleMap;
+
+        public static MapFragment newInstance() {
+//            Bundle args = new Bundle();
+//            args.putInt(ARG_OBJECT, page);
             MapFragment fragment = new MapFragment();
-            fragment.setArguments(args);
+//            fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            section = getArguments().getInt(ARG_OBJECT);
+//            section = getArguments().getInt(ARG_OBJECT);
+
         }
 
         @Override
@@ -222,10 +237,51 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_map, container, false);
+                    R.layout.fragment_map, container);
+
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+                mapFragment.getMapAsync(this);
+
 //            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
 //            text.setText("Section " + section);
             return rootView;
+        }
+
+        @Override
+        public void onMapReady(GoogleMap gm) {
+            this.googleMap = gm;
+
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            try {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        0,
+                        0,
+                        new LocationListener() {
+                            @Override
+                            public void onLocationChanged(Location location) {
+                                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                                googleMap.moveCamera(center);
+                                Log.d(TAG, "onLocationChanged: animata camera");
+                            }
+
+                            @Override
+                            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                            }
+
+                            @Override
+                            public void onProviderEnabled(String provider) {
+
+                            }
+
+                            @Override
+                            public void onProviderDisabled(String provider) {
+
+                            }
+                        });
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -256,7 +312,7 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_map, container, false);
+                    R.layout.fragment_stores_list, container, false);
 //            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
 //            text.setText("Section " + section);
             return rootView;
