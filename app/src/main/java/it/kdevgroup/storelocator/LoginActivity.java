@@ -89,45 +89,48 @@ public class LoginActivity extends AppCompatActivity {
                         new AsyncHttpResponseHandler() {
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                User user = null;
-                                String jsonBody = new String(responseBody);
-                                String[] error = null;
+                                // called when response HTTP status is "200 OK"
 
-                                if (statusCode == 200) {
-                                    // ottengo dei possibili errori
+                                User user = null;
+                                String[] error = null;
+                                String jsonBody = new String(responseBody);
+
+                                // ottengo dei possibili errori
+                                try {
+                                    error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                // se non ho errori procedo
+                                if (error == null) {
                                     try {
-                                        error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
+                                        user = JsonParser.getInstance().parseUserAfterLogin(jsonBody);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
 
-                                    // se non ho errori procedo
-                                    if (error == null) {
+                                    // se ho letto l'utente, lo salvo nel DB
+                                    if (user != null) {
                                         try {
-                                            user = JsonParser.getInstance().parseUserAfterLogin(jsonBody);
-                                        } catch (JSONException e) {
+                                            database.saveUser(user);
+                                            Log.d(TAG, "salvato utente");
+
+                                        } catch (CouchbaseLiteException e) {
                                             e.printStackTrace();
                                         }
-
-                                        // se ho letto l'utente, lo salvo nel DB
-                                        if (user != null) {
-                                            try {
-                                                database.saveUser(user);
-                                                Log.d(TAG, "salvato utente");
-
-                                            } catch (CouchbaseLiteException e) {
-                                                e.printStackTrace();
-                                            }
-                                            launchHomeActivity();
-                                        }
-                                    } else {
-                                        Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
+                                        launchHomeActivity();
                                     }
+                                } else {
+                                    Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
                                 }
+
                             }
 
                             @Override
                             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+
                                 Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
                             }
 
@@ -159,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     // Metodo che controlla la possibilità di accedere a internet
-    private boolean isNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();

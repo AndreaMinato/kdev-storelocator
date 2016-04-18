@@ -10,6 +10,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -42,6 +46,7 @@ public class PagerManager {
 
         private String tabTitles[] = new String[]{"Negozi", "Mappa", "Prodotti"};
         private Context context;
+
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
@@ -112,7 +117,6 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_stores_list, container, false);
 
-
             if (savedInstanceState != null) {
                 stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
                 user = savedInstanceState.getParcelable(USER_KEY_FOR_BUNDLE);
@@ -137,20 +141,38 @@ public class PagerManager {
             cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.setAdapter(cardsAdapter);
 
-            if (stores.size() == 0) {
+            HomeActivity homeActivity = (HomeActivity)getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
+
+            if (stores.size() == 0 && homeActivity.isNetworkAvailable()) {
                 //TODO riciclare codice per controllare la connessione
                 ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        //TODO controllare casi di errore
+
+                        String[] error = null;
                         String jsonBody = new String(responseBody);
                         Log.i("onSuccess response:", jsonBody);
+
+                        // ottengo dei possibili errori
                         try {
-                            stores = JsonParser.getInstance().parseStores(jsonBody);
-                            cardsAdapter = new EventsCardsAdapter(stores, context);
-                            recyclerView.swapAdapter(cardsAdapter, true);
+                            error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        }
+
+                        //se non ho trovato errori nella chiamata parso i negozi
+                        if (error == null) {
+                            try {
+                                stores = JsonParser.getInstance().parseStores(jsonBody);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            if (stores != null && stores.size() > 0) {
+                                cardsAdapter = new EventsCardsAdapter(stores, context);
+                                recyclerView.swapAdapter(cardsAdapter, true);
+                            }
+                        } else {
+                            Snackbar.make(recyclerView, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
                         }
                     }
 
@@ -290,7 +312,6 @@ public class PagerManager {
      */
     public static class PlaceholderFragment extends Fragment {
         public static final String ARG_OBJECT = "object";
-        private int section;
 
         public static PlaceholderFragment newInstance(int page) {
             Bundle args = new Bundle();
@@ -303,7 +324,6 @@ public class PagerManager {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            section = getArguments().getInt(ARG_OBJECT);
         }
 
         @Override
