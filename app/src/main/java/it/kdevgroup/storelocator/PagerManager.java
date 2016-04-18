@@ -132,46 +132,7 @@ public class PagerManager {
             HomeActivity homeActivity = (HomeActivity)getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
 
             if (stores.size() == 0 && homeActivity.isNetworkAvailable()) {
-                //TODO riciclare codice per controllare la connessione
-                ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
-                        String[] error = null;
-                        String jsonBody = new String(responseBody);
-                        Log.i("onSuccess response:", jsonBody);
-
-                        // ottengo dei possibili errori
-                        try {
-                            error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        //se non ho trovato errori nella chiamata parso i negozi
-                        if (error == null) {
-                            try {
-                                stores = JsonParser.getInstance().parseStores(jsonBody);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            if (stores != null && stores.size() > 0) {
-                                cardsAdapter = new EventsCardsAdapter(stores, context);
-                                recyclerView.swapAdapter(cardsAdapter, true);
-                            }
-                        } else {
-                            Snackbar.make(recyclerView, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        if (responseBody != null) { //quando non c'è connessione non si connette al server e la risposta è null
-                            String jsonBody = new String(responseBody);
-                            Log.i("onFailure response:", jsonBody);
-                        }
-                    }
-                });
+                getStores();
             }
 
             // --- LAYOUT MANAGER
@@ -189,8 +150,7 @@ public class PagerManager {
             }
             layoutManager = new GridLayoutManager(context, colonne, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-
-
+            
             return rootView;
         }
 
@@ -212,6 +172,48 @@ public class PagerManager {
         public void onDetach() {
             super.onDetach();
             Log.d(TAG, "onDetach: ");
+        }
+
+        public void getStores(){    //controlli già verificati prima della chiamata
+            ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    String[] error = null;
+                    String jsonBody = new String(responseBody);
+                    Log.i("onSuccess response:", jsonBody);
+
+                    // ottengo dei possibili errori
+                    try {
+                        error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //se non ho trovato errori nella chiamata parso i negozi
+                    if (error == null) {
+                        try {
+                            stores = JsonParser.getInstance().parseStores(jsonBody);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (stores != null && stores.size() > 0) {
+                            cardsAdapter = new EventsCardsAdapter(stores, context);
+                            recyclerView.swapAdapter(cardsAdapter, true);
+                        }
+                    } else {
+                        Snackbar.make(recyclerView, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    if (responseBody != null) { //quando non c'è connessione non si connette al server e la risposta è null
+                        String jsonBody = new String(responseBody);
+                        Log.i("onFailure response:", jsonBody);
+                    }
+                }
+            });
         }
     }
 
