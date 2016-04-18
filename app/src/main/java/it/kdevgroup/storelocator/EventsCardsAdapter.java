@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
 
     private ArrayList<Store> stores;  //lista di eventi
     private Context ctx;
+
+    private static final String TAG="prova";
 
     public EventsCardsAdapter(ArrayList<Store> stores, Context ctx) {
         this.stores = stores;
@@ -60,8 +63,29 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         //Picasso.with(ctx).setIndicatorsEnabled(true);
 
         cardHolder.storeName.setText(stores.get(position).getName());
+        cardHolder.storeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "activity di dettaglio");
+                // TODO: collegare all'activity di dettaglio
+            }
+        });
         cardHolder.storeAddress.setText(stores.get(position).getAddress());
+        cardHolder.storeAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "mappa");
+                // TODO: collegare alla mappa
+            }
+        });
         cardHolder.storePhone.setText(stores.get(position).getPhone());
+        cardHolder.storePhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "telefono");
+                // TODO: collegare alla tastiera del telefono
+            }
+        });
     }
 
     @Override

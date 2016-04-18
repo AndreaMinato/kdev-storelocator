@@ -1,5 +1,8 @@
 package it.kdevgroup.storelocator;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -15,9 +18,9 @@ import android.view.MenuItem;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    PagerManager.PagerAdapter pagerAdapter;
-    ViewPager viewPager;
-    TabLayout tabLayout;
+    private PagerManager.PagerAdapter pagerAdapter;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +29,7 @@ public class HomeActivity extends AppCompatActivity
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), getApplicationContext());
+        pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
 
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
@@ -120,5 +123,14 @@ public class HomeActivity extends AppCompatActivity
         assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    // Metodo che controlla la possibilità di accedere a internet
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

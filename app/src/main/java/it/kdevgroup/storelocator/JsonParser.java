@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by andrea on 15/04/16.
@@ -52,6 +53,7 @@ public class JsonParser {
 
     /**
      * Ritorna un array con [errorMessage, errorCode] se la chiamata non ha avuto successo
+     *
      * @param jsonBody
      * @return
      * @throws JSONException
@@ -111,7 +113,47 @@ public class JsonParser {
      * @throws JSONException
      */
     public Store parseStoreDetails(JSONObject obj) throws JSONException {
-        //TODO
-        return null;
+        Store store = new Store();
+        store.setGUID(obj.getString(Store.KEY_GUID));
+        store.setName(obj.getString(Store.KEY_NAME));
+        store.setAddress(obj.getString(Store.KEY_ADDRESS));
+        store.setPhone(obj.getString(Store.KEY_PHONE));
+        store.setLatitude(obj.getString(Store.KEY_LATITUDE));
+        store.setLongitude(Store.KEY_LONGITUDE);
+        store.setImage(obj.getString(Store.KEY_IMAGE));
+        store.setDescription(obj.getString(Store.KEY_DESCRIPTION));
+        store.setThumbnail(Store.KEY_THUMBNAIL);
+
+        JSONArray tagArray = obj.getJSONArray(Store.KEY_TAGS);
+        List<String> tmp = new ArrayList<>();
+        for (int i = 0; i < tagArray.length(); i++) {
+            String tag = tagArray.getString(i);
+            tmp.add(tag);
+        }
+        store.setTags(tmp);
+
+        JSONObject person = new JSONObject(Store.KEY_PERSON);
+        store.setEmail(person.getString(Store.KEY_EMAIL));
+        store.setFirstName(person.getString(Store.KEY_FIRSTNAME));
+        store.setLastName(person.getString(Store.KEY_LASTNAME));
+
+        List<Product> products = new ArrayList<>();
+        JSONArray productList = obj.getJSONArray(Store.KEY_PRODUCTS);
+        for (int i = 0; i < productList.length(); i++) {
+            JSONObject actualProduct = productList.getJSONObject(i);
+            products.add(parseProduct(actualProduct));
+        }
+        store.setProducts(products);
+        return store;
     }
+
+    public Product parseProduct (JSONObject obj) throws JSONException{
+        Product product = new Product();
+        product.setId(obj.getInt(Product.KEY_ID));
+        product.setIsAvailable(obj.getBoolean(Product.KEY_ISAVAILABLE));
+        product.setName(obj.getString(Product.KEY_NAME));
+        product.setPrice(obj.getString(Product.KEY_PRICE));
+        return product;
+    }
+
 }

@@ -1,9 +1,19 @@
 package it.kdevgroup.storelocator;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -16,6 +26,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -31,6 +47,7 @@ public class PagerManager {
         private String tabTitles[] = new String[]{"Negozi", "Mappa", "Prodotti"};
         private Context context;
 
+
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
@@ -42,9 +59,7 @@ public class PagerManager {
                 case 0:
                     return StoresListFragment.newInstance(context);
                 case 1:
-                    //TODO mappa
-                    //return MapFragment.newInstance();
-                    return PlaceholderFragment.newInstance(i + 1);
+                    return MapFragment.newInstance();
                 case 2:
                     //TODO lista prodotti
                     return PlaceholderFragment.newInstance(i + 1);
@@ -102,7 +117,6 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_stores_list, container, false);
 
-
             if (savedInstanceState != null) {
                 stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
                 user = savedInstanceState.getParcelable(USER_KEY_FOR_BUNDLE);
@@ -127,31 +141,10 @@ public class PagerManager {
             cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.setAdapter(cardsAdapter);
 
-            if (stores.size() == 0) {
-                //TODO riciclare codice per controllare la connessione
-                ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        //TODO controllare casi di errore
-                        String jsonBody = new String(responseBody);
-                        Log.i("onSuccess response:", jsonBody);
-                        try {
-                            stores = JsonParser.getInstance().parseStores(jsonBody);
-                            cardsAdapter = new EventsCardsAdapter(stores, context);
-                            recyclerView.swapAdapter(cardsAdapter, true);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+            HomeActivity homeActivity = (HomeActivity)getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        if (responseBody != null) { //quando non c'è connessione non si connette al server e la risposta è null
-                            String jsonBody = new String(responseBody);
-                            Log.i("onFailure response:", jsonBody);
-                        }
-                    }
-                });
+            if (stores.size() == 0 && homeActivity.isNetworkAvailable()) {
+                getStores();
             }
 
             // --- LAYOUT MANAGER
@@ -169,8 +162,7 @@ public class PagerManager {
             }
             layoutManager = new GridLayoutManager(context, colonne, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-
-
+            
             return rootView;
         }
 
@@ -193,27 +185,74 @@ public class PagerManager {
             super.onDetach();
             Log.d(TAG, "onDetach: ");
         }
+
+        public void getStores(){    //controlli già verificati prima della chiamata
+            ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    String[] error = null;
+                    String jsonBody = new String(responseBody);
+                    Log.i("onSuccess response:", jsonBody);
+
+                    // ottengo dei possibili errori
+                    try {
+                        error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    //se non ho trovato errori nella chiamata parso i negozi
+                    if (error == null) {
+                        try {
+                            stores = JsonParser.getInstance().parseStores(jsonBody);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if (stores != null && stores.size() > 0) {
+                            cardsAdapter = new EventsCardsAdapter(stores, context);
+                            recyclerView.swapAdapter(cardsAdapter, true);
+                        }
+                    } else {
+                        Snackbar.make(recyclerView, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    if (responseBody != null) { //quando non c'è connessione non si connette al server e la risposta è null
+                        String jsonBody = new String(responseBody);
+                        Log.i("onFailure response:", jsonBody);
+                    }
+                }
+            });
+        }
     }
 
     /**
      * Fragment per la mappa
      */
-    public static class MapFragment extends Fragment {
+    public static class MapFragment extends Fragment implements OnMapReadyCallback {
+
+        private static final String TAG = "MapFragment";
         public static final String ARG_OBJECT = "object";
         private int section;
 
-        public static MapFragment newInstance(int page) {
-            Bundle args = new Bundle();
-            args.putInt(ARG_OBJECT, page);
+        private GoogleMap googleMap;
+
+        public static MapFragment newInstance() {
+//            Bundle args = new Bundle();
+//            args.putInt(ARG_OBJECT, page);
             MapFragment fragment = new MapFragment();
-            fragment.setArguments(args);
+//            fragment.setArguments(args);
             return fragment;
         }
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            section = getArguments().getInt(ARG_OBJECT);
+//            section = getArguments().getInt(ARG_OBJECT);
+
         }
 
         @Override
@@ -223,10 +262,53 @@ public class PagerManager {
             // properly.
             View rootView = inflater.inflate(
                     R.layout.fragment_map, container, false);
+
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
+            mapFragment.getMapAsync(this);
+
 //            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
 //            text.setText("Section " + section);
             return rootView;
         }
+
+
+        @Override
+        public void onMapReady(GoogleMap gm) {
+            this.googleMap = gm;
+
+            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            try {
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        0,
+                        0,
+                        new LocationListener() {
+                            @Override
+                            public void onLocationChanged(Location location) {
+                                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
+                                googleMap.moveCamera(center);
+                                Log.d(TAG, "onLocationChanged: animata camera");
+                            }
+
+                            @Override
+                            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                            }
+
+                            @Override
+                            public void onProviderEnabled(String provider) {
+
+                            }
+
+                            @Override
+                            public void onProviderDisabled(String provider) {
+
+                            }
+                        });
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /**
@@ -234,7 +316,6 @@ public class PagerManager {
      */
     public static class PlaceholderFragment extends Fragment {
         public static final String ARG_OBJECT = "object";
-        private int section;
 
         public static PlaceholderFragment newInstance(int page) {
             Bundle args = new Bundle();
@@ -247,7 +328,6 @@ public class PagerManager {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            section = getArguments().getInt(ARG_OBJECT);
         }
 
         @Override
@@ -256,7 +336,7 @@ public class PagerManager {
             // The last two arguments ensure LayoutParams are inflated
             // properly.
             View rootView = inflater.inflate(
-                    R.layout.fragment_map, container, false);
+                    R.layout.fragment_stores_list, container, false);
 //            TextView text = (TextView) rootView.findViewById(R.id.sectionText);
 //            text.setText("Section " + section);
             return rootView;
