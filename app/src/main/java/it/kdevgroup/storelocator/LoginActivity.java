@@ -1,7 +1,10 @@
 package it.kdevgroup.storelocator;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -61,7 +64,6 @@ public class LoginActivity extends AppCompatActivity {
 
         database = new CouchbaseDB(getApplicationContext());
 
-
         try {
             User user = database.loadUser();
             if (user != null && !user.isSessionExpired())
@@ -79,62 +81,68 @@ public class LoginActivity extends AppCompatActivity {
      * @param password
      */
     private void doLogin(String email, String password) {
+        if(isNetworkAvailable()) {
+            if (email != null && password != null) {
+                ApiManager.getInstance().login(
+                        email,
+                        password,
+                        new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                User user = null;
+                                String jsonBody = new String(responseBody);
+                                String[] error = null;
 
-        if (email != null && password != null) {
-            ApiManager.getInstance().login(
-                    email,
-                    password,
-                    new AsyncHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            User user = null;
-                            String jsonBody = new String(responseBody);
-                            String[] error = null;
-
-                            if (statusCode == 200) {
-                                // ottengo dei possibili errori
-                                try {
-                                    error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                                // se non ho errori procedo
-                                if (error == null) {
+                                if (statusCode == 200) {
+                                    // ottengo dei possibili errori
                                     try {
-                                        user = JsonParser.getInstance().parseUserAfterLogin(jsonBody);
+                                        error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
 
-                                    // se ho letto l'utente, lo salvo nel DB
-                                    if (user != null) {
+                                    // se non ho errori procedo
+                                    if (error == null) {
                                         try {
-                                            database.saveUser(user);
-                                            Log.d(TAG, "salvato utente");
-
-                                        } catch (CouchbaseLiteException e) {
+                                            user = JsonParser.getInstance().parseUserAfterLogin(jsonBody);
+                                        } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-                                        launchHomeActivity();
+
+                                        // se ho letto l'utente, lo salvo nel DB
+                                        if (user != null) {
+                                            try {
+                                                database.saveUser(user);
+                                                Log.d(TAG, "salvato utente");
+
+                                            } catch (CouchbaseLiteException e) {
+                                                e.printStackTrace();
+                                            }
+                                            launchHomeActivity();
+                                        }
+                                    } else {
+                                        Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
                                     }
-                                } else {
-                                    Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
                                 }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
-                        }
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
+                            }
 
-                        @Override
-                        public void onStart() {
-                            super.onStart();
+                            @Override
+                            public void onStart() {
+                                super.onStart();
+                            }
                         }
-                    }
-            );
+                );
+            } else {
+                Snackbar.make(loginLinearLayout, "Inserire tutti i dati", Snackbar.LENGTH_SHORT).show();
+
+            }
+        } else {
+            Snackbar.make(loginLinearLayout, "Connessione assente", Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -148,5 +156,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.i("onDestroy: ", "called");
+    }
+
+    // Metodo che controlla la possibilità di accedere a internet
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -44,14 +44,13 @@ public class PagerManager {
                 case 1:
                     //TODO mappa
                     //return MapFragment.newInstance();
-                    break;
+                    return PlaceholderFragment.newInstance(i + 1);
                 case 2:
                     //TODO lista prodotti
                     return PlaceholderFragment.newInstance(i + 1);
                 default:
-                    break;
+                    return PlaceholderFragment.newInstance(i + 1);
             }
-            return PlaceholderFragment.newInstance(i + 1);
         }
 
         @Override
@@ -125,10 +124,15 @@ public class PagerManager {
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
+            cardsAdapter = new EventsCardsAdapter(stores, context);
+            recyclerView.setAdapter(cardsAdapter);
+
             if (stores.size() == 0) {
+                //TODO riciclare codice per controllare la connessione
                 ApiManager.getInstance().getStores(user.getSession(), new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        //TODO controllare casi di errore
                         String jsonBody = new String(responseBody);
                         Log.i("onSuccess response:", jsonBody);
                         try {
@@ -142,14 +146,13 @@ public class PagerManager {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        String jsonBody = new String(responseBody);
-                        Log.i("onFailure response:", jsonBody);
+                        if (responseBody != null) { //quando non c'è connessione non si connette al server e la risposta è null
+                            String jsonBody = new String(responseBody);
+                            Log.i("onFailure response:", jsonBody);
+                        }
                     }
                 });
             }
-
-            cardsAdapter = new EventsCardsAdapter(stores, context);
-            recyclerView.setAdapter(cardsAdapter);
 
             // --- LAYOUT MANAGER
             /**
@@ -172,7 +175,7 @@ public class PagerManager {
         }
 
         @Override
-        public void onAttach(Activity context) {
+        public void onAttach(Context context) {
             super.onAttach(context);
             Log.d(TAG, "onAttach: ");
         }
