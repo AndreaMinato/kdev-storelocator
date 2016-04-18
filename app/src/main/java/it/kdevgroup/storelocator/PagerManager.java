@@ -32,6 +32,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
@@ -279,16 +280,21 @@ public class PagerManager {
             LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             try {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        0,
-                        0,
+                        30 * 1000,
+                        0.5f,
                         new LocationListener() {
-
 
                             @Override
                             public void onLocationChanged(Location location) {
-                                CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));
-                                googleMap.moveCamera(center);
+                                CameraUpdate center = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12.0f);
+                                googleMap.animateCamera(center);
+                                MarkerOptions marker = new MarkerOptions();
+                                marker.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                                marker.title("");
+                                googleMap.addMarker(marker);
                                 Log.d(TAG, "onLocationChanged: animata camera");
+                                Log.d(TAG, "onLocationChanged: lat: " + location.getLatitude());
+                                Log.d(TAG, "onLocationChanged: long: " + location.getLongitude());
                             }
 
                             @Override

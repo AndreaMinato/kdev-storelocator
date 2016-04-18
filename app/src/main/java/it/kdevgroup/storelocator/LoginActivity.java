@@ -19,6 +19,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 
+import java.io.SyncFailedException;
+
 import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends AppCompatActivity {
@@ -68,9 +70,12 @@ public class LoginActivity extends AppCompatActivity {
         database = new CouchbaseDB(getApplicationContext());
 
         try {
+            long time = System.currentTimeMillis();
             User user = database.loadUser();
-            if (user != null && !user.isSessionExpired())
+            if (user != null && !user.isSessionExpired()) {
+                Log.d(TAG, "onCreate: impiegati " + (System.currentTimeMillis() - time) + "ms");
                 launchHomeActivity();
+            }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }

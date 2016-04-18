@@ -27,19 +27,17 @@ public class HomeActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private CouchbaseDB database;
     public Snackbar welcome;
-    public boolean goSnack=true;
+    public boolean goSnack = true;
 
-    private static final String SAVE="onsaved";
-
-
+    private static final String SAVE = "onsaved";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState!=null){
-            goSnack=savedInstanceState.getBoolean(SAVE);
+        if (savedInstanceState != null) {
+            goSnack = savedInstanceState.getBoolean(SAVE);
         }
         setContentView(R.layout.activity_home);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,7 +65,7 @@ public class HomeActivity extends AppCompatActivity
             welcome = Snackbar.make(viewPager, "Benvenuto " + user.getName(), Snackbar.LENGTH_LONG);
             welcome.show();
         }
-        goSnack=false;
+        goSnack = false;
 
 
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -171,6 +169,6 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(SAVE,goSnack);
+        outState.putBoolean(SAVE, goSnack);
     }
 }
