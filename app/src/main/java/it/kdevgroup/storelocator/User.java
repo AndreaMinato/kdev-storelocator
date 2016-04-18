@@ -2,7 +2,9 @@ package it.kdevgroup.storelocator;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,7 +104,9 @@ public class User implements Parcelable {
      * @return <b>true</b> se è scaduta<br><b>false</b> se è ancora attiva
      */
     public boolean isSessionExpired() {
-        return new Date(sessionTtl).before(new Date());
+//        Log.d("isSessionExpired", new SimpleDateFormat("dd MM yyyy").format(new Date()));
+//        Log.d("isSessionExpired", new SimpleDateFormat("dd MM yyyy").format(new Date((long) sessionTtl * 1000)));
+        return new Date().after(new Date((long) sessionTtl * 1000));
     }
 
     public HashMap<String, Object> toHashMap() {
