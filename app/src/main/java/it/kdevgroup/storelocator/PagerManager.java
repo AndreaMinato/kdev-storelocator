@@ -282,6 +282,8 @@ public class PagerManager {
                         0,
                         0,
                         new LocationListener() {
+
+
                             @Override
                             public void onLocationChanged(Location location) {
                                 CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude()));

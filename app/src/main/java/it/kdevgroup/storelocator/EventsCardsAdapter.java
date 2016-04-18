@@ -3,6 +3,7 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -56,7 +57,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
      * @param position   posizione di un evento nella lista
      */
     @Override
-    public void onBindViewHolder(CardViewHolder cardHolder, final int position) {
+    public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
         //cardHolder.blogName.setText(stores.get(position).getBlogName());
         // carico l'immagine con picasso
 
@@ -83,7 +84,8 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "telefono");
-                // TODO: collegare alla tastiera del telefono
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + stores.get(position).getPhone()));
+                ctx.startActivity(intent);
             }
         });
     }
