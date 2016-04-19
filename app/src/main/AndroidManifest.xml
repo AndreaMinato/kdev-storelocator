@@ -17,10 +17,10 @@
         android:value="@integer/google_play_services_version" />
 
     <application
-        android:largeHeap="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
@@ -33,6 +33,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:launchMode="singleTop"
             android:name=".HomeActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -49,16 +50,20 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
         <activity
             android:name=".DetailStore"
             android:label="@string/title_activity_detail_store"
             android:theme="@style/AppTheme" >
         </activity>
-
+        <activity
+            android:name=".DetailUser"
+            android:label="Account"
+            android:parentActivityName=".HomeActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="it.kdevgroup.storelocator.HomeActivity" />
+        </activity>
     </application>
 
 </manifest>
