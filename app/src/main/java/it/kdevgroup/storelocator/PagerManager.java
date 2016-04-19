@@ -30,8 +30,6 @@ public class PagerManager {
             this.context = context;
         }
 
-
-
         @Override
         public Fragment getItem(int i) {
             switch (i) {

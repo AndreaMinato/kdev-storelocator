@@ -53,6 +53,8 @@ public class HomeActivity extends AppCompatActivity
 
         pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
 
+        ((NavigationView)findViewById(R.id.nav_view)).setItemIconTintList(null);
+
         fragManager = getSupportFragmentManager();
 
         if (savedInstanceState != null) {
