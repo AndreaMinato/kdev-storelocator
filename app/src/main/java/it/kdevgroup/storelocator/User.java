@@ -23,6 +23,8 @@ public class User implements Parcelable {
     public static final String NAME_KEY = "name";
     public static final String SURNAME_KEY = "surname";
     public static final String EMAIL_KEY = "email";
+    public static final String COMPANY_KEY = "company";
+    public static final String FAVOURITE_COMPANY_KEY = "favorite_company";
 
     private String id;
     //    private String password;
@@ -31,6 +33,8 @@ public class User implements Parcelable {
     private String name;
     private String surname;
     private String email;
+    private String company;
+    private String favouriteCompany;
 
     // PARTE SINGLETON
 
@@ -61,8 +65,9 @@ public class User implements Parcelable {
                 sessionTtl != null &&
                 name != null &&
                 surname != null &&
-                email != null
-                ;
+                email != null &&
+                company != null &&
+                favouriteCompany != null;
     }
 
     /**
@@ -76,19 +81,24 @@ public class User implements Parcelable {
                 u.getSessionTtl(),
                 u.getName(),
                 u.getSurname(),
-                u.getEmail());
+                u.getEmail(),
+                u.getCompany(),
+                u.getFavouriteCompany());
     }
 
     public User() {
     }
 
-    public User(String id, String session, Integer sessionTtl, String name, String surname, String email) {
+    public User(String id, String session, Integer sessionTtl, String name, String surname, String email,
+                String company, String favouriteCompany) {
         this.id = id;
         this.session = session;
         this.sessionTtl = sessionTtl;
         this.name = name;
         this.surname = surname;
         this.email = email;
+        this.company = company;
+        this.favouriteCompany = favouriteCompany;
     }
 
     public User(Map<String, Object> map) {
@@ -98,6 +108,8 @@ public class User implements Parcelable {
         name = map.get(NAME_KEY).toString();
         surname = map.get(SURNAME_KEY).toString();
         email = map.get(EMAIL_KEY).toString();
+        company = map.get("company").toString();
+        favouriteCompany = map.get("favouriteCompany").toString();
     }
 
     public String getId() {
@@ -148,6 +160,23 @@ public class User implements Parcelable {
         this.email = email;
     }
 
+    public String getCompany(){
+        return company;
+    }
+
+    public void setCompany(String company){
+        this.company = company;
+    }
+
+    public String getFavouriteCompany() {
+        return favouriteCompany;
+    }
+
+    public void setFavouriteCompany(String favouriteCompany) {
+        this.favouriteCompany = favouriteCompany;
+    }
+
+
     /**
      * Determina se la sessione dell'utente è scaduta
      *
@@ -182,6 +211,8 @@ public class User implements Parcelable {
         dest.writeString(name);
         dest.writeString(surname);
         dest.writeString(email);
+        dest.writeString(company);
+        dest.writeString(favouriteCompany);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new ClassLoaderCreator<User>() {
@@ -208,5 +239,7 @@ public class User implements Parcelable {
         name = in.readString();
         surname = in.readString();
         email = in.readString();
+        company = in.readString();
+        favouriteCompany = in.readString();
     }
 }
