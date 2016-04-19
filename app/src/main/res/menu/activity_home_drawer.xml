@@ -5,7 +5,7 @@
         <item
             android:id="@+id/nav_user"
             android:icon="@drawable/ic_person_pin"
-            android:title="User" />
+            android:title="Account" />
         <item
             android:id="@+id/nav_preferiti"
             android:icon="@drawable/ic_favorite"

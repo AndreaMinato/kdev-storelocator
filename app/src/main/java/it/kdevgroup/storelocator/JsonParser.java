@@ -47,6 +47,8 @@ public class JsonParser {
             user.setSessionTtl(data.getInt(User.SESSION_TTL_KEY));
             user.setName(data.getString(User.NAME_KEY));
             user.setSurname(data.getString(User.SURNAME_KEY));
+            user.setCompany(data.getString(User.COMPANY_KEY));
+            user.setFavouriteCompany(data.getString(User.FAVOURITE_COMPANY_KEY));
         }
         return user;
     }

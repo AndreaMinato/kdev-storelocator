@@ -15,13 +15,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="id utente"
-        android:id="@+id/txtId"
+        android:text="nome+cognome"
+        android:id="@+id/txtTitle"
         android:drawableLeft="@drawable/ic_perm_identity"
         android:drawablePadding="5dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="40dp"
-        android:textSize="30dp"
+        android:textSize="25dp"
         android:textColor="@color/oro"
         android:textStyle="bold"
         android:layout_centerHorizontal="true" />
@@ -33,7 +33,9 @@
         android:text="nome"
         android:id="@+id/txtNome"
         android:layout_marginBottom="5dp"
-        android:layout_below="@+id/txtId" />
+        android:layout_below="@+id/txtId"
+        android:textSize="15dp"
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -43,7 +45,8 @@
         android:id="@+id/txtCognome"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:layout_below="@+id/txtNome" />
+        android:layout_below="@+id/txtNome"
+        android:textSize="15dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -53,7 +56,8 @@
         android:id="@+id/txtEmail"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_below="@+id/txtCognome" />
+        android:layout_below="@+id/txtCognome"
+        android:textSize="15dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -63,16 +67,8 @@
         android:id="@+id/txtCompany"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_below="@+id/txtEmail" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="type"
-        android:id="@+id/txtType"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/txtCompany" />
+        android:layout_below="@+id/txtEmail"
+        android:textSize="15dp" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -90,16 +86,19 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cambia password"
-            android:id="@+id/btnPassword"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="Logout"
             android:id="@+id/btnLogout"
             android:layout_weight="1" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="id"
+        android:id="@+id/txtId"
+        android:layout_below="@+id/txtTitle"
+        android:textSize="15dp"
+        android:layout_marginBottom="5dp" />
 
 </RelativeLayout>
