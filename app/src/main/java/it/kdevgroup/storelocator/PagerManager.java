@@ -281,9 +281,9 @@ public class PagerManager {
         public void onMapReady(GoogleMap gm) {
             googleMap = gm;
 
-            try{
-            googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima
-            } catch (SecurityException e){
+            try {
+                googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima
+            } catch (SecurityException e) {
                 e.printStackTrace();
             }
 
