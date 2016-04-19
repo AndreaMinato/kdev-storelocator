@@ -55,8 +55,6 @@ public class HomeActivity extends AppCompatActivity
 
         fragManager = getSupportFragmentManager();
 
-        database = new CouchbaseDB(getApplicationContext());
-
         if (savedInstanceState != null) {
             goSnack = savedInstanceState.getBoolean(SAVE);
             stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
@@ -70,15 +68,18 @@ public class HomeActivity extends AppCompatActivity
         assert viewPager != null;   //conferma che non è null
         viewPager.setAdapter(pagerAdapter);
 
+        //se non ho preso negozi dal bundle li chiedo al server
         if (stores.size() == 0 && isNetworkAvailable()) {
             getStoresFromServer();
         }
 
+        //snackbar di benvenuto, mostrata una volta sola
         if (goSnack) {
             Snackbar.make(viewPager, "Benvenuto " + User.getInstance().getName(), Snackbar.LENGTH_LONG).show();
             goSnack = false;
         }
 
+        //setup delle tab stile whatsapp
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager);

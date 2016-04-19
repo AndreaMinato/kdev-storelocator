@@ -44,8 +44,8 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:drawableLeft="@drawable/ic_place"
                 android:drawablePadding="5dp"
+                android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:textStyle="italic"
                 android:padding="5dp"
                 android:clickable="true" />
 
@@ -58,8 +58,8 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:drawableLeft="@drawable/ic_local_phone"
                 android:drawablePadding="5dp"
+                android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:textStyle="italic"
                 android:padding="5dp"
                 android:clickable="true" />
 
