@@ -1,6 +1,7 @@
 package it.kdevgroup.storelocator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -128,6 +129,9 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_user) {
+            Intent vInt=new Intent(this,DetailUser.class);
+            startActivity(vInt);
+
 
         } else if (id == R.id.nav_preferiti) {
 
@@ -142,6 +146,7 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
     // Metodo che controlla la possibilità di accedere a internet
     public boolean isNetworkAvailable() {
