@@ -2,7 +2,10 @@ package it.kdevgroup.storelocator;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.Location;
@@ -25,6 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +36,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -237,9 +242,15 @@ public class PagerManager {
 
         private static final String TAG = "MapFragment";
         public static final String ARG_OBJECT = "object";
-        private int section;
+        private static final String CONNECTION_TYPE = "Connection type: ";
+        private static final int FIVE_SECS = 5 * 1000;
 
+        private Location bestLocation;
         private GoogleMap googleMap;
+        private Marker userMarker;
+        private HomeActivity homeActivity;
+
+        //TODO cachare la mappa per visualizzarla anche senza dati se si può
 
         public static MapFragment newInstance() {
             MapFragment fragment = new MapFragment();
@@ -259,36 +270,77 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_map, container, false);
 
+            homeActivity = (HomeActivity)getActivity();
+
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
             mapFragment.getMapAsync(this);
             return rootView;
         }
 
-
         @Override
         public void onMapReady(GoogleMap gm) {
-            this.googleMap = gm;
+            googleMap = gm;
 
-            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+            try{
+            googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima
+            } catch (SecurityException e){
+                e.printStackTrace();
+            }
+
+            /*
+            homeActivity.registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (homeActivity.isNetworkAvailable()) {
+                        setLocationRequest(LocationManager.NETWORK_PROVIDER);
+                    } else
+                        setLocationRequest(LocationManager.GPS_PROVIDER);
+                }
+            }, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+            */
+        }
+
+        public void setLocationRequest(final String locationProvider){
+            final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             try {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        30 * 1000,
-                        0.5f,
+                locationManager.requestLocationUpdates(
+                        locationProvider,
+                        FIVE_SECS,
+                        0.5f,       //mezzo metro dalla vecchia location
                         new LocationListener() {
 
                             @Override
                             public void onLocationChanged(Location location) {
-                                CameraUpdate center = CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 12.0f);
-                                googleMap.animateCamera(center);
+                                Log.i(TAG, "onLocationChanged: lat: " + location.getLatitude());
+                                Log.i(TAG, "onLocationChanged: long: " + location.getLongitude());
 
-                                MarkerOptions userMarker = new MarkerOptions();
-                                userMarker.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                                userMarker.title(User.getInstance().getName());
-                                googleMap.addMarker(userMarker);
-                                Log.d(TAG, "onLocationChanged: animata camera");
-                                Log.d(TAG, "onLocationChanged: lat: " + location.getLatitude());
-                                Log.d(TAG, "onLocationChanged: long: " + location.getLongitude());
+                                try {
+                                    if ( isBetterLocation(location, bestLocation) ) {
+                                        bestLocation = location;
 
+                                        //posizione telecamera
+                                        CameraUpdate center = CameraUpdateFactory.newLatLngZoom(
+                                                new LatLng(
+                                                        location.getLatitude(),
+                                                        location.getLongitude()),
+                                                googleMap.getCameraPosition().zoom);    //prendo lo zoom già presente per non rompere le palle ogni volta, si può zoomare solo la prima volta in caso
+                                        googleMap.animateCamera(center);
+
+                                        //tolgo il marker se era già presente
+                                        if(userMarker != null)
+                                            userMarker.remove();
+
+                                        //setta marker
+                                        MarkerOptions userMarkerOptions = new MarkerOptions();
+                                        userMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
+                                        userMarkerOptions.title(User.getInstance().getName());
+                                        userMarker = googleMap.addMarker(userMarkerOptions);
+
+                                        Log.i(TAG, "onLocationChanged: animata camera");
+                                    }
+                                } catch (SecurityException e) {
+                                    e.printStackTrace();
+                                }
 
                             }
 
@@ -304,12 +356,54 @@ public class PagerManager {
 
                             @Override
                             public void onProviderDisabled(String provider) {
-
+                                //qua si scambiano i provider
+                                if (provider.equals(LocationManager.GPS_PROVIDER)) {
+                                    Log.i("Provider cambiato: ", "network");
+                                    setLocationRequest(LocationManager.NETWORK_PROVIDER);
+                                } else {
+                                    Log.i("Provider cambiato: ", "gps");
+                                    setLocationRequest(LocationManager.GPS_PROVIDER);
+                                }
                             }
                         });
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
+        }
+
+        protected boolean isBetterLocation(Location location, Location currentBestLocation) {
+            if (currentBestLocation == null) {
+                // A new location is always better than no location
+                return true;
+            }
+
+            // Check whether the new location fix is more or less accurate
+            int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
+            boolean isLessAccurate = accuracyDelta > 0;
+            boolean isMoreAccurate = accuracyDelta < 0;
+            boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+            // Check if the old and new location are from the same provider
+            boolean isFromSameProvider = isSameProvider(location.getProvider(),
+                    currentBestLocation.getProvider());
+
+            // Determine location quality using a combination of timeliness and accuracy
+            if (isMoreAccurate) {
+                return true;
+            } else if (!isLessAccurate) {
+                return true;
+            } else if (!isSignificantlyLessAccurate && isFromSameProvider) {
+                return true;
+            }
+            return false;
+        }
+
+        /** Checks whether two providers are the same */
+        private boolean isSameProvider(String provider1, String provider2) {
+            if (provider1 == null) {
+                return provider2 == null;
+            }
+            return provider1.equals(provider2);
         }
 
     }

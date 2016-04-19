@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -14,16 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.couchbase.lite.CouchbaseLiteException;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "HomeActivity";
+    private static final String SAVE = "onsaved";
 
     private PagerManager.PagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -32,7 +29,6 @@ public class HomeActivity extends AppCompatActivity
     public Snackbar welcome;
     public boolean goSnack = true;
 
-    private static final String SAVE = "onsaved";
 
 
     @Override
@@ -61,7 +57,6 @@ public class HomeActivity extends AppCompatActivity
         }
         goSnack = false;
 
-
         tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -75,6 +70,7 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         */
+
 
         /**
          * da qua in poi drawer
@@ -150,7 +146,6 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     // Metodo che controlla la possibilità di accedere a internet
     public boolean isNetworkAvailable() {
