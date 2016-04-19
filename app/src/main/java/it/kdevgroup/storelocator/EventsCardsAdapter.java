@@ -67,7 +67,11 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "activity di dettaglio");
-                // TODO: collegare all'activity di dettaglio
+              /*  Intent vIntent = new Intent(ctx, DetailStore.class);
+                Bundle vBundle = new Bundle();
+                vBundle.putParcelable(String.valueOf(Store.class),stores.get(position));
+                vIntent.putExtras(vBundle);
+                ctx.startActivity(vIntent);*/
             }
         });
         cardHolder.storeAddress.setText(stores.get(position).getAddress());
@@ -75,6 +79,8 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "mappa");
+
+
                 // TODO: collegare alla mappa
             }
         });

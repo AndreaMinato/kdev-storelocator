@@ -6,15 +6,30 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class DetailStore extends AppCompatActivity {
+
+    ImageView imgMap;//dettaglio longitudine e latitudine
+    TextView txtStoreName,txtStoreAddress, txtStorePhone, txtSalesPerson,txtStoreDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_store);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        imgMap = (ImageView)findViewById(R.id.imgMap);
+        txtStoreName = (TextView)findViewById(R.id.txtStoreName);
+        txtStoreAddress=(TextView)findViewById(R.id.txtStoreAddress);
+        txtStorePhone = (TextView)findViewById(R.id.txtStorePhone);
+        txtSalesPerson = (TextView)findViewById(R.id.txtSalesPerson);
+        txtStoreDescription = (TextView)findViewById(R.id.txtStoreDescriptions);
+
+       /* setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -23,7 +38,7 @@ public class DetailStore extends AppCompatActivity {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
     }
 
 }

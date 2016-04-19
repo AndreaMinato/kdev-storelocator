@@ -13,14 +13,18 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:id="@+id/imageView2"
+        android:id="@+id/imgMap"
+        android:contentDescription="map/longitude/latitude"
         />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/imageView2"
-        android:id="@+id/scrollView" >
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/imgMap"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        >
      <LinearLayout
          android:layout_width="match_parent"
          android:layout_height="match_parent"
@@ -28,31 +32,42 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="70dp"
             android:text="name"
-            android:id="@+id/txtView1" />
+            android:id="@+id/txtStoreName"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:paddingBottom="10dp" />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:text="address"
-            android:id="@+id/txtView2"
+            android:id="@+id/txtStoreAddress"
             />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:text="phone"
-            android:id="@+id/txtView3" />
+            android:id="@+id/txtStorePhone" />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="salesPerson"
-            android:id="@+id/txtView4" />
+            android:layout_height="100dp"
+            android:text="salesPerson
+
+                          firstName
+
+                          lastName
+
+                          email"
+            android:id="@+id/txtSalesPerson" />
 
          <TextView
              android:layout_width="match_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="match_parent"
              android:text="descriptions"
-             android:id="@+id/txtView5" />
+             android:id="@+id/txtStoreDescriptions" />
      </LinearLayout>
     </ScrollView>
 
