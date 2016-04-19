@@ -13,11 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
+
+import java.io.SyncFailedException;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -32,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private EditText txtUsername;
     private EditText txtPassword;
+    private ProgressBar progressBar;
     private CouchbaseDB database;
 
     @Override
@@ -63,14 +67,20 @@ public class LoginActivity extends AppCompatActivity {
             txtPassword.setTypeface(Typeface.DEFAULT);
         }
 
+        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
+
         loginLinearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
 
         database = new CouchbaseDB(getApplicationContext());
 
         try {
+            long time = System.currentTimeMillis();
             User user = database.loadUser();
-            if (user != null && !user.isSessionExpired())
-                launchHomeActivity();
+            if (user != null && !user.isSessionExpired()) {
+                Log.d(TAG, "onCreate: impiegati " + (System.currentTimeMillis() - time) + "ms");
+                launchHomeActivity(user);
+            }
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }
@@ -122,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
                                         } catch (CouchbaseLiteException e) {
                                             e.printStackTrace();
                                         }
-                                        launchHomeActivity();
+                                        launchHomeActivity(user);
                                     }
                                 } else {
                                     Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
@@ -133,13 +143,20 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-
+                                progressBar.setVisibility(View.INVISIBLE);
                                 Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onStart() {
                                 super.onStart();
+                                progressBar.setVisibility(View.VISIBLE);
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                super.onFinish();
+                                progressBar.setVisibility(View.INVISIBLE);
                             }
                         }
                 );
@@ -152,7 +169,8 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void launchHomeActivity() {
+    private void launchHomeActivity(User user) {
+        User.getInstance().setInstance(user);
         Intent i = new Intent(this, HomeActivity.class);
         startActivity(i);
         finish();

@@ -214,7 +214,6 @@ public class Store implements Parcelable {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeList(products);
-        flags = flags;
     }
 
     public final static Parcelable.Creator<Store> CREATOR = new ClassLoaderCreator<Store>() {
@@ -244,9 +243,12 @@ public class Store implements Parcelable {
         phone = in.readString();
         thumbnail = in.readString();
         image = in.readString();
+        tags = new ArrayList<>();
         in.readStringList(tags);
         email = in.readString();
         firstName = in.readString();
+        lastName = in.readString();
+        products = new ArrayList<>();
         in.readList(products, Product.class.getClassLoader());
     }
 }

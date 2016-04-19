@@ -124,6 +124,7 @@ public class CouchbaseDB {
      * @throws CouchbaseLiteException
      */
     public User loadUser() throws CouchbaseLiteException {
+        long time = System.currentTimeMillis();
 
         Document document = db.getExistingDocument("user");
         User user = null;
@@ -144,6 +145,8 @@ public class CouchbaseDB {
         }
         */
         }
+
+        Log.d(TAG, "loadUser: impegati " + (System.currentTimeMillis() - time) + "ms");
         return user;
     }
 }

@@ -23,12 +23,11 @@
                 android:layout_height="wrap_content"
                 android:text="Nome negozio"
                 android:id="@+id/storeName"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:drawableLeft="@drawable/ic_store_mall_directory"
                 android:drawablePadding="5dp"
                 android:gravity="center_vertical"
                 android:textStyle="bold|italic"
-                android:paddingLeft="5dp"
+                android:textSize="27sp"
+                android:paddingLeft="10dp"
                 android:paddingTop="5dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
@@ -44,8 +43,8 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:drawableLeft="@drawable/ic_place"
                 android:drawablePadding="5dp"
+                android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:textStyle="italic"
                 android:padding="5dp"
                 android:clickable="true" />
 
@@ -58,8 +57,8 @@
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:drawableLeft="@drawable/ic_local_phone"
                 android:drawablePadding="5dp"
+                android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:textStyle="italic"
                 android:padding="5dp"
                 android:clickable="true" />
 
