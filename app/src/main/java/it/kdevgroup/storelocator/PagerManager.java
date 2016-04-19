@@ -1,22 +1,8 @@
 package it.kdevgroup.storelocator;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -27,37 +13,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
-import org.json.JSONException;
-
 import java.util.ArrayList;
-
-import cz.msebera.android.httpclient.Header;
 
 public class PagerManager {
 
-    public static class PagerAdapter extends FragmentPagerAdapter {
+    public static class PagerAdapter extends FragmentPagerAdapter{
 
-        private String tabTitles[] = new String[]{"Negozi", "Mappa", "Prodotti"};
+        private String tabTitles[] = new String[]{"Negozi", "Mappa"};
         private Context context;
-
 
         public PagerAdapter(FragmentManager fm, Context context) {
             super(fm);
             this.context = context;
         }
+
+
 
         @Override
         public Fragment getItem(int i) {
@@ -67,7 +40,7 @@ public class PagerManager {
                 case 1:
                     return MapFragment.newInstance();
                 case 2:
-                    //TODO lista prodotti
+                    //TODO lista prodotti ?
                     return PlaceholderFragment.newInstance(i + 1);
                 default:
                     return PlaceholderFragment.newInstance(i + 1);
@@ -76,23 +49,23 @@ public class PagerManager {
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             return tabTitles[position];
         }
-    }
 
+
+    }
 
     /**
      * Fragment che conterrà la lista
      */
-    public static class StoresListFragment extends Fragment {
+    public static class StoresListFragment extends Fragment implements HomeActivity.StoresUpdater{
 
         private static final String TAG = "StoresListFragment";
-        private static final String STORES_KEY_FOR_BUNDLE = "StoresListKeyForBundle";
         private static final String USER_KEY_FOR_BUNDLE = "UserKeyForBundle";
 
         private static Context context;
@@ -100,6 +73,7 @@ public class PagerManager {
         private EventsCardsAdapter cardsAdapter;
         private RecyclerView recyclerView;
         private LinearLayoutManager layoutManager;
+        private HomeActivity homeActivity;
 
         public static StoresListFragment newInstance(Context ctx) {
             context = ctx;
@@ -123,35 +97,25 @@ public class PagerManager {
                     R.layout.fragment_stores_list, container, false);
 
             if (savedInstanceState != null) {
-                stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
+                stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
                 if (User.isNull())
                     User.getInstance().setInstance((User) savedInstanceState.getParcelable(USER_KEY_FOR_BUNDLE));
                 Log.d(TAG, "trovati utente e stores nel bundle");
             }
 
-            if (stores == null) {
-                stores = new ArrayList<>();
-            }
+            //castare il context non sembra dare problemi
+            homeActivity = (HomeActivity) context; //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
 
-//            if (user == null) {
-//                CouchbaseDB database = new CouchbaseDB(context);
-//                try {
-//                    user = database.loadUser();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            if(stores == null)
+                stores = homeActivity.getStores();
+
+            if (stores != null && stores.size() > 0) {
+                updateAdapter();
+            }
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-
             cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.setAdapter(cardsAdapter);
-
-            HomeActivity homeActivity = (HomeActivity) getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
-
-            if (stores.size() == 0 && homeActivity.isNetworkAvailable()) {
-                getStores();
-            }
 
             // --- LAYOUT MANAGER
             /**
@@ -180,7 +144,7 @@ public class PagerManager {
 
         @Override
         public void onSaveInstanceState(Bundle outState) {
-            outState.putParcelableArrayList(STORES_KEY_FOR_BUNDLE, stores);
+            outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
             outState.putParcelable(USER_KEY_FOR_BUNDLE, User.getInstance());
             super.onSaveInstanceState(outState);
             Log.d(TAG, "onSaveInstanceState: ");
@@ -192,69 +156,29 @@ public class PagerManager {
             Log.d(TAG, "onDetach: ");
         }
 
-        public void getStores() {    //controlli già verificati prima della chiamata
-            ApiManager.getInstance().getStores(User.getInstance().getSession(), new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        public void updateAdapter(){
+            cardsAdapter = new EventsCardsAdapter(stores, context);
+            recyclerView.swapAdapter(cardsAdapter, true);
+        }
 
-                    String[] error = null;
-                    String jsonBody = new String(responseBody);
-                    Log.i("onSuccess response:", jsonBody);
-
-                    // ottengo dei possibili errori
-                    try {
-                        error = JsonParser.getInstance().getErrorInfoFromResponse(jsonBody);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    //se non ho trovato errori nella chiamata parso i negozi
-                    if (error == null) {
-                        try {
-                            stores = JsonParser.getInstance().parseStores(jsonBody);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        if (stores != null && stores.size() > 0) {
-                            cardsAdapter = new EventsCardsAdapter(stores, context);
-                            recyclerView.swapAdapter(cardsAdapter, true);
-                        }
-                    } else {
-                        Snackbar.make(recyclerView, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    if (responseBody != null) { //quando non c'è connessione non si connette al server e la risposta è null
-                        String jsonBody = new String(responseBody);
-                        Log.i("onFailure response:", jsonBody);
-                    }
-                }
-            });
+        @Override
+        public void updateStores(ArrayList<Store> newStores){
+            stores = newStores;
+            updateAdapter();
         }
     }
 
     /**
      * Fragment per la mappa
      */
-    public static class MapFragment extends Fragment implements OnMapReadyCallback {
+    public static class MapFragment extends Fragment implements OnMapReadyCallback, HomeActivity.StoresUpdater {
 
-        private static final String TAG = "MapFragment";
-        public static final String ARG_OBJECT = "object";
-        private static final String CONNECTION_TYPE = "Connection type: ";
-        private static final int FIVE_SECS = 5 * 1000;
-
-        private Location bestLocation;
         private GoogleMap googleMap;
-        private Marker userMarker;
         private HomeActivity homeActivity;
-
-        //TODO cachare la mappa per visualizzarla anche senza dati se si può
+        private ArrayList<Store> stores;
 
         public static MapFragment newInstance() {
-            MapFragment fragment = new MapFragment();
-            return fragment;
+            return new MapFragment();
         }
 
         @Override
@@ -270,6 +194,21 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_map, container, false);
 
+            if(savedInstanceState != null){
+                stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
+            }
+
+            //castare il context non sembra dia problemi
+            homeActivity = (HomeActivity) getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
+
+            if(stores == null)
+                stores = homeActivity.getStores();
+
+            if (stores != null && stores.size() > 0) {
+                //TODO chiamare setMarkers();
+            }
+
+            //TODO cachare la mappa per visualizzarla anche senza dati se si può
             homeActivity = (HomeActivity)getActivity();
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
@@ -282,7 +221,7 @@ public class PagerManager {
             googleMap = gm;
 
             try {
-                googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima
+                googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima (setta il punto blu)
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
@@ -300,6 +239,19 @@ public class PagerManager {
             */
         }
 
+        @Override
+        public void updateStores(ArrayList<Store> newStores) {
+            stores = newStores;
+            //TODO pinnare stores nella mappa
+        }
+
+        @Override
+        public void onSaveInstanceState(Bundle outState) {
+            super.onSaveInstanceState(outState);
+            outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
+        }
+
+        /*
         public void setLocationRequest(final String locationProvider){
             final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
             try {
@@ -398,15 +350,16 @@ public class PagerManager {
             return false;
         }
 
-        /** Checks whether two providers are the same */
+        // Checks whether two providers are the same
         private boolean isSameProvider(String provider1, String provider2) {
             if (provider1 == null) {
                 return provider2 == null;
             }
             return provider1.equals(provider2);
         }
-
+        */
     }
+
 
     /**
      * Fragment placeholder che verrà sostituito dalla lista di prodotti più avanti
@@ -439,5 +392,4 @@ public class PagerManager {
             return rootView;
         }
     }
-
 }
