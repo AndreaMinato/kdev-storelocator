@@ -2,6 +2,7 @@ package it.kdevgroup.storelocator;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.Property;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -17,8 +18,11 @@ import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by damiano on 15/04/16.
@@ -148,5 +152,45 @@ public class CouchbaseDB {
 
         Log.d(TAG, "loadUser: impegati " + (System.currentTimeMillis() - time) + "ms");
         return user;
+    }
+
+    public void saveStores(ArrayList<Store> stores) throws CouchbaseLiteException {
+        Document document = db.getExistingDocument("stores");
+        Map<String, Object> properties = new HashMap<>();
+
+        // se non ho gia il documento, lo creo e inserisco il type per identificarlo
+        if (document == null) {
+            document = db.getDocument("stores");
+        }
+
+        Map<String, Object> storesData = new HashMap<>();
+
+        for(Store store : stores) {
+            storesData.put(store.getGUID(), store.toHashMap());
+        }
+
+        properties.put("stores", storesData); //le properties consistono in un array con chiave = GUID e valore = hashMap dell'oggetto store
+
+        document.putProperties(properties);
+    }
+
+    public ArrayList<Store> getStores() throws CouchbaseLiteException {
+        ArrayList<Store> stores = null;
+        Document document = db.getExistingDocument("stores");
+        Store tempStore = null;
+
+        if (document != null) {
+
+            Map<String, Object> properties = document.getProperties();
+            stores = new ArrayList<>();
+            Map<String, Object> storesData = (Map<String, Object>) properties.get("stores");
+
+            for(String guid : storesData.keySet()){
+                tempStore = new Store(((Map<String, Object>) properties.get(guid)));
+                stores.add(tempStore);
+            }
+        }
+
+        return stores;
     }
 }

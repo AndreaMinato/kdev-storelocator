@@ -4,7 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by andrea on 15/04/16.
@@ -77,6 +79,15 @@ public class Store implements Parcelable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Store (Map<String, Object> map) {
+        phone = map.get(KEY_PHONE).toString();
+        GUID = map.get(KEY_GUID).toString();
+        name = map.get(KEY_NAME).toString();
+        address = map.get(KEY_ADDRESS).toString();
+        //latitude = map.get(KEY_LATITUDE).toString();
+        //longitude = map.get(KEY_LONGITUDE).toString();
     }
 
     public List<Product> getProducts() {
@@ -189,6 +200,14 @@ public class Store implements Parcelable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public HashMap<String, Object> toHashMap() {
+        HashMap<String, Object> hashMap = new HashMap<>();
+
+        hashMap.put("store", this);
+
+        return hashMap;
     }
 
     // Parte per la parcellizzazione

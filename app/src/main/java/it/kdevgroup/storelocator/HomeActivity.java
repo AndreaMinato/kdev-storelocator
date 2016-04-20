@@ -1,5 +1,6 @@
 package it.kdevgroup.storelocator;
 
+import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.couchbase.lite.CouchbaseLiteException;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.json.JSONException;
 import java.util.ArrayList;
@@ -26,6 +32,52 @@ import cz.msebera.android.httpclient.Header;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Home Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://it.kdevgroup.storelocator/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Home Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://it.kdevgroup.storelocator/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 
     public interface StoresUpdater {
         void updateStores(ArrayList<Store> newStores);
@@ -53,7 +105,7 @@ public class HomeActivity extends AppCompatActivity
 
         pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
 
-        ((NavigationView)findViewById(R.id.nav_view)).setItemIconTintList(null);
+        ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
 
         fragManager = getSupportFragmentManager();
 
@@ -61,17 +113,29 @@ public class HomeActivity extends AppCompatActivity
             goSnack = savedInstanceState.getBoolean(SAVE);
             stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
         }
-            Log.i("onMapReady: ", "updateStores");
+
+        Log.i("onMapReady: ", "updateStores");
         if (stores == null)
             stores = new ArrayList<>();
 
+        database = new CouchbaseDB(getApplicationContext());
+        try {
+            stores = database.getStores();
+        } catch (CouchbaseLiteException e) {
+            e.printStackTrace();
+        }
+
+        if (stores == null) {
+            stores = new ArrayList<>();
+        }
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         viewPager = (ViewPager) findViewById(R.id.pager);
         assert viewPager != null;   //conferma che non è null
         viewPager.setAdapter(pagerAdapter);
 
-        //se non ho preso negozi dal bundle li chiedo al server
+
+        //se non ho preso negozi dal bundle e dal database li chiedo al server
         if (stores.size() == 0 && isNetworkAvailable()) {
             getStoresFromServer();
         }
@@ -102,9 +166,12 @@ public class HomeActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public ArrayList<Store> getStores(){
+    public ArrayList<Store> getStores() {
         return stores;
     }
 
@@ -132,11 +199,19 @@ public class HomeActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                     if (stores != null && stores.size() > 0) {
+
+                        //salvo store nel database
+                        try {
+                            database.saveStores(stores);
+                        } catch (CouchbaseLiteException e) {
+                            e.printStackTrace();
+                        }
+
                         //prendo il fragment corrente castandolo come interfaccia
                         //e gli dico di aver aggiornato i negozi e quindi di fare cose
-                        StoresUpdater currentFragment = (StoresUpdater)fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0);
+                        StoresUpdater currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0);
                         currentFragment.updateStores(stores);
-                        currentFragment = (StoresUpdater)fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 1);
+                        currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 1);
                         currentFragment.updateStores(stores);
                     }
                 } else {
@@ -193,7 +268,7 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_user) {
-            Intent vInt=new Intent(this,DetailUser.class);
+            Intent vInt = new Intent(this, DetailUser.class);
             startActivity(vInt);
 
 
