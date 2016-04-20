@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -261,6 +262,7 @@ public class PagerManager {
                     Log.i("onMapReady: ", "Ciclo Markers");
                     googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(stores.get(i).getLatitude()), Double.parseDouble(stores.get(i).getLongitude())))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                             .title(stores.get(i).getName()));
                 }
             }
