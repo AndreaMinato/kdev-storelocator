@@ -30,11 +30,11 @@ public class DetailUser extends AppCompatActivity {
         compagnia=(TextView)findViewById(R.id.txtCompany);
 
         title.setText(User.getInstance().getName()+" "+User.getInstance().getSurname());
-        id.setText("id: "+User.getInstance().getId());
-        nome.setText("nome: " + User.getInstance().getName());
-        cognome.setText("cognome: "+User.getInstance().getSurname());
-        email.setText("email: "+User.getInstance().getEmail());
-        compagnia.setText("azienda: "+User.getInstance().getCompany());
+        id.setText(User.getInstance().getId());
+        nome.setText( User.getInstance().getName());
+        cognome.setText(User.getInstance().getSurname());
+        email.setText(User.getInstance().getEmail());
+        compagnia.setText(User.getInstance().getCompany());
 
 
 
