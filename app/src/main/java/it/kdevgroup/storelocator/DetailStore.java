@@ -38,13 +38,6 @@ public class DetailStore extends AppCompatActivity {
         txtStorePhone = (TextView) findViewById(R.id.txtStorePhone);
         txtSalesPerson = (TextView) findViewById(R.id.txtSalesPerson);
         txtStoreDescription = (TextView) findViewById(R.id.txtStoreDescriptions);
-
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> master
     }
 
     private void updateFields(Bundle bundle) {
