@@ -2,9 +2,11 @@ package it.kdevgroup.storelocator;
 
 import android.util.Base64;
 import android.util.Log;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -15,7 +17,7 @@ public class ApiManager {
 
     private static final String LINK_LOGIN = "http://its-bitrace.herokuapp.com/api/public/v2/login";
     private static final String LINK_GET_STORES = "http://its-bitrace.herokuapp.com/api/v2/stores";
-    private static final String TAG="tag";
+    private static final String TAG = "tag";
 
     private static ApiManager ourInstance;
 
@@ -51,14 +53,30 @@ public class ApiManager {
 
     /**
      * Richiede la lista di negozi con la session passata
+     *
      * @param session sessione dell'utente
      */
-    public void getStores(String session, AsyncHttpResponseHandler handler){
+    public void getStores(String session, AsyncHttpResponseHandler handler) {
         final String session_key = "x-bitrace-session";
 
         AsyncHttpClient httpClient = new AsyncHttpClient();
         httpClient.addHeader(session_key, session);
         httpClient.get(LINK_GET_STORES, handler);
+    }
+
+    /**
+     * Ottiene il dettaglio del negozio in base all'ID passato come parametro
+     *
+     * @param storeID id dello store da recuperare
+     * @param session sessione dell'utente
+     * @param handler handler per gestire la risposta
+     */
+    public void getStoreDetail(String storeID, String session, AsyncHttpResponseHandler handler) {
+        final String session_key = "x-bitrace-session";
+
+        AsyncHttpClient httpClient = new AsyncHttpClient();
+        httpClient.addHeader(session_key, session);
+        httpClient.get(String.format("%s/%s", LINK_GET_STORES, storeID), handler);
     }
 
     private String toBase64Sha512(String password) {
@@ -73,7 +91,9 @@ public class ApiManager {
             byte byteData[] = md.digest();
             password = Base64.encodeToString(byteData, Base64.NO_WRAP);
         }
-        Log.d(TAG,""+password);
+        Log.d(TAG, "" + password);
         return password;
     }
+
+
 }

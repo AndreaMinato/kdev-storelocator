@@ -66,9 +66,9 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "activity di dettaglio");
-                Intent vIntent = new Intent(ctx, DetailStore.class);
+                Intent vIntent = new Intent(ctx, DetailStoreActivity.class);
                 Bundle vBundle = new Bundle();
-                vBundle.putParcelable(DetailStore.KEY_STORE, stores.get(position));
+                vBundle.putString(DetailStoreActivity.KEY_STORE, stores.get(position).getGUID());
                 vIntent.putExtras(vBundle);
                 ctx.startActivity(vIntent);
             }
