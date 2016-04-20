@@ -86,8 +86,8 @@ public class Store implements Parcelable {
         GUID = map.get(KEY_GUID).toString();
         name = map.get(KEY_NAME).toString();
         address = map.get(KEY_ADDRESS).toString();
-        //latitude = map.get(KEY_LATITUDE).toString();
-        //longitude = map.get(KEY_LONGITUDE).toString();
+        latitude = map.get(KEY_LATITUDE).toString();
+        longitude = map.get(KEY_LONGITUDE).toString();
     }
 
     public List<Product> getProducts() {
