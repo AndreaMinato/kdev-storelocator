@@ -63,11 +63,11 @@ public class DetailStore extends AppCompatActivity {
     private void updateFields(Bundle bundle) {
 
         Store store= bundle.getParcelable(DetailStore.KEY_STORE);
-        txtStoreName.setText("name" + store.getName());
-        txtStoreAddress.setText("address" + store.getAddress());
-        txtStorePhone.setText("phone" + store.getPhone() );
-        txtSalesPerson.setText("firstName/lastName/email" + store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
-        txtStoreDescription.setText("description" + store.getDescription());
+        txtStoreName.setText(store.getName());
+        txtStoreAddress.setText( store.getAddress());
+        txtStorePhone.setText( store.getPhone() );
+        txtSalesPerson.setText( store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
+        txtStoreDescription.setText( store.getDescription());
         // TODO - prendere dal bundle i valori e metterli nelle textview
 
 
