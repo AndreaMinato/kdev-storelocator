@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
+            android:layout_gravity="left"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:tabTextColor="#ffffff"
             app:tabSelectedTextColor="@color/oro" />
