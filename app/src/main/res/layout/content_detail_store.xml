@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:paddingEnd="10dp"
                     android:paddingStart="10dp"
-                    android:text=""
+                    android:text="Name"
                     android:textAppearance="?android:textAppearanceMedium"
                     android:textColor="@color/oro" />
             </LinearLayout>
