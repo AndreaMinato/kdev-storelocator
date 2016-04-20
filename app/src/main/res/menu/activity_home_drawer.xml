@@ -6,10 +6,12 @@
             android:id="@+id/nav_user"
             android:icon="@drawable/ic_person_pin"
             android:title="Account" />
+        <!--
         <item
             android:id="@+id/nav_preferiti"
             android:icon="@drawable/ic_favorite"
             android:title="Preferiti" />
+            -->
         <item
             android:id="@+id/nav_impostazioni"
             android:icon="@drawable/ic_settings"

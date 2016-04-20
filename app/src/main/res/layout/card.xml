@@ -35,6 +35,19 @@
                 android:textColor="@color/oro"
                 android:clickable="true" />
 
+            <!--
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/heart"
+                android:src="@drawable/ic_not_favorite"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:layout_alignTop="@+id/storeName"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+            -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

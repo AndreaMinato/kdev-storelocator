@@ -134,7 +134,6 @@ public class HomeActivity extends AppCompatActivity
         assert viewPager != null;   //conferma che non è null
         viewPager.setAdapter(pagerAdapter);
 
-
         //se non ho preso negozi dal bundle e dal database li chiedo al server
         if (stores.size() == 0 && isNetworkAvailable()) {
             getStoresFromServer();
