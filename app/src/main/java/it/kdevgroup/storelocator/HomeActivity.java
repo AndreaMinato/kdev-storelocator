@@ -27,8 +27,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.json.JSONException;
 import java.util.ArrayList;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
+import it.kdevgroup.storelocator.database.CouchbaseDB;
+import it.kdevgroup.storelocator.database.IAsyncQueryHandler;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -120,7 +123,12 @@ public class HomeActivity extends AppCompatActivity
 
         database = new CouchbaseDB(getApplicationContext());
         try {
-            stores = database.getStores();
+            database.getStoresAsync(new IAsyncQueryHandler() {
+                @Override
+                public void handle(Map<String, Object> value, Throwable error) {
+                    stores.add(new Store(value));
+                }
+            });
         } catch (CouchbaseLiteException e) {
             e.printStackTrace();
         }

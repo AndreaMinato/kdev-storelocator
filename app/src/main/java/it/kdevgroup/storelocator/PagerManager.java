@@ -3,7 +3,6 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -27,6 +26,9 @@ import java.util.ArrayList;
 public class PagerManager {
 
     public static class PagerAdapter extends FragmentPagerAdapter {
+
+//        private StoresListFragment storesListFragment;
+//        private MapFragment mapFragment;
 
         private String tabTitles[] = new String[]{"Negozi", "Mappa"};
         private Context context;
@@ -226,7 +228,6 @@ public class PagerManager {
         public void onMapReady(GoogleMap gm) {
             googleMap = gm;
 
-
             try {
                 googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima (setta il punto blu)
             } catch (SecurityException e) {
@@ -238,7 +239,6 @@ public class PagerManager {
 
             if (stores != null && stores.size() > 0) {
                 updateStores(stores);
-
             }
 
             /*
@@ -266,7 +266,6 @@ public class PagerManager {
                             .title(stores.get(i).getName()));
                 }
             }
-           
         }
 
         @Override

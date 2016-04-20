@@ -71,7 +71,7 @@ public class DetailStoreActivity extends AppCompatActivity {
                         String[] error = JsonParser.getInstance().getErrorInfoFromResponse(response);
                         if (error == null) {
                             if (jsonResponse != null) {
-                                store = JsonParser.getInstance().parseStoreDetails(jsonResponse);
+                                store = JsonParser.getInstance().parseStoreDetails(jsonResponse.getJSONObject("data"));
                                 updateFields(store);
                                 imgMap.post(new Runnable() {
                                     @Override
@@ -92,7 +92,7 @@ public class DetailStoreActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                    error.printStackTrace();
                 }
             });
 
@@ -104,14 +104,11 @@ public class DetailStoreActivity extends AppCompatActivity {
 
     private void updateFields(Store store) {
 
-        txtStoreName.setText("name" + store.getName());
-        txtStoreAddress.setText("address" + store.getAddress());
-        txtStorePhone.setText("phone" + store.getPhone());
-        txtSalesPerson.setText("firstName/lastName/email" + store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
-        txtStoreDescription.setText("description" + store.getDescription());
-        // TODO - prendere dal bundle i valori e metterli nelle textview
-
-
+        txtStoreName.setText(store.getName());
+        txtStoreAddress.setText(store.getAddress());
+        txtStorePhone.setText(store.getPhone());
+        txtSalesPerson.setText(store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
+        txtStoreDescription.setText(store.getDescription());
     }
 
     private void getMap(ImageView imgMap, String... latlong) throws URISyntaxException {

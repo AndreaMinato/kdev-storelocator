@@ -1,4 +1,4 @@
-package it.kdevgroup.storelocator;
+package it.kdevgroup.storelocator.database;
 
 import android.content.Context;
 import android.util.Log;
@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import it.kdevgroup.storelocator.Store;
+import it.kdevgroup.storelocator.User;
 
 /**
  * Created by damiano on 15/04/16.
@@ -211,6 +214,7 @@ public class CouchbaseDB {
      * @return
      * @throws CouchbaseLiteException
      */
+    @Deprecated
     public ArrayList<Store> getStores() throws CouchbaseLiteException {
 
         View view = db.getView(STORES_VIEW);
@@ -223,10 +227,28 @@ public class CouchbaseDB {
 
         ArrayList<Store> stores = new ArrayList<>();
         for (QueryRow row : rows) {
-            Map<String, Object> map = row.getDocumentProperties();
             stores.add(new Store(((Map<String, Object>) row.getValue())));
         }
 
         return stores;
+    }
+
+    /**
+     * Esegue asincronamente la query per ottenere gli stores
+     * @param handler
+     * @throws CouchbaseLiteException
+     */
+    public void getStoresAsync(final IAsyncQueryHandler handler) throws CouchbaseLiteException {
+        View view = db.getView(STORES_VIEW);
+        Query query = view.createQuery();
+        query.setMapOnly(true);
+        query.runAsync(new Query.QueryCompleteListener() {
+            @Override
+            public void completed(QueryEnumerator rows, Throwable error) {
+                for (QueryRow row : rows) {
+                    handler.handle((Map<String, Object>) row.getValue(), error);
+                }
+            }
+        });
     }
 }
