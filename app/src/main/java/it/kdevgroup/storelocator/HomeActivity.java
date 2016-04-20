@@ -61,6 +61,7 @@ public class HomeActivity extends AppCompatActivity
             goSnack = savedInstanceState.getBoolean(SAVE);
             stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
         }
+            Log.i("onMapReady: ", "updateStores");
         if (stores == null)
             stores = new ArrayList<>();
 
@@ -133,7 +134,9 @@ public class HomeActivity extends AppCompatActivity
                     if (stores != null && stores.size() > 0) {
                         //prendo il fragment corrente castandolo come interfaccia
                         //e gli dico di aver aggiornato i negozi e quindi di fare cose
-                        StoresUpdater currentFragment = (StoresUpdater)fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + viewPager.getCurrentItem());
+                        StoresUpdater currentFragment = (StoresUpdater)fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0);
+                        currentFragment.updateStores(stores);
+                        currentFragment = (StoresUpdater)fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 1);
                         currentFragment.updateStores(stores);
                     }
                 } else {
