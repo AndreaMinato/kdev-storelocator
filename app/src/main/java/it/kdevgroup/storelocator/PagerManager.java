@@ -94,6 +94,8 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_stores_list, container, false);
 
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+
             if (savedInstanceState != null) {
                 stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
                 if (User.isNull())
@@ -111,7 +113,6 @@ public class PagerManager {
                 updateAdapter();
             }
 
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
             cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.setAdapter(cardsAdapter);
 
