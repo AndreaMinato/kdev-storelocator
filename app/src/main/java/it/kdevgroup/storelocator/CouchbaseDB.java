@@ -10,6 +10,9 @@ import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
+import com.couchbase.lite.Query;
+import com.couchbase.lite.QueryEnumerator;
+import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 
@@ -26,8 +29,10 @@ public class CouchbaseDB {
     private static final String TAG = "CouchbaseDB";
     private static final String TYPE_KEY = "type";
     private static final String USER_TYPE_VALUE = User.class.getSimpleName();
+    private static final String STORE_TYPE_VALUE = Store.class.getSimpleName();
 
     private static final String USER_VIEW = "viewUser";
+    private static final String STORES_VIEW = "viewStores";
 
     private static final String DB_NAME = "storelocatordb";
 
@@ -39,6 +44,7 @@ public class CouchbaseDB {
         ctx = c;
         createManager();
         createUserView();
+        createStoresView();
     }
 
     /**
@@ -149,46 +155,76 @@ public class CouchbaseDB {
     }
 
     /**
+     * Crea la view che da in output una mappa con
+     * key:     guid
+     * value:   attributi dello store (anche il guid e type:Store)
+     */
+    private void createStoresView() {
+        View view = db.getView(STORES_VIEW);
+        view.setMap(new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                for (String key : document.keySet()) {
+                    if (key.equals(TYPE_KEY)
+                            && document.get(TYPE_KEY).equals(STORE_TYPE_VALUE)) {
+                        emitter.emit(document.get(Store.KEY_GUID), document);
+                    }
+                }
+            }
+        }, "1");
+    }
+
+
+    /**
      * Salva l'array di store nel DB
      *
      * @param stores
      * @throws CouchbaseLiteException
      */
     public void saveStores(ArrayList<Store> stores) throws CouchbaseLiteException {
-        Document document = db.getExistingDocument("stores");
-        Map<String, Object> properties = new HashMap<>();
 
-        // se non ho gia il documento, lo creo e inserisco il type per identificarlo
-        if (document == null) {
-            document = db.getDocument("stores");
-        }
-
-        Map<String, Object> storesData = new HashMap<>();
-
+        /*
+        ID documento    ->  GUID store
+        value documento ->  store.toHashMap()
+         */
         for (Store store : stores) {
-            storesData.put(store.getGUID(), store.toHashMap());
+            Document document = db.getExistingDocument(store.getGUID());
+
+            // se non ho gia il documento, lo creo e inserisco il type per identificarlo
+            Map<String, Object> properties = new HashMap<>();
+            if (document == null) {
+                document = db.getDocument(store.getGUID());
+                properties.put(TYPE_KEY, STORE_TYPE_VALUE);     // "type": "Store"
+                document.putProperties(properties);
+            }
+            // ottengo le proprietà per la modifica
+
+            properties.putAll(document.getProperties());
+            properties.putAll(store.toHashMap());       // aggiungo lo store alle proprietà (se gia presenti, sovrascrivo)
+            document.putProperties(properties);         // salvo nel documento
         }
-
-        properties.put("stores", storesData); //le properties consistono in un array con chiave = GUID e valore = hashMap dell'oggetto store
-
-        document.putProperties(properties);
     }
 
+    /**
+     * Ottiene un array degli store memorizzati nel database
+     *
+     * @return
+     * @throws CouchbaseLiteException
+     */
     public ArrayList<Store> getStores() throws CouchbaseLiteException {
-        ArrayList<Store> stores = null;
-        Document document = db.getExistingDocument("stores");
-        Store tempStore = null;
 
-        if (document != null) {
+        View view = db.getView(STORES_VIEW);
+        Query query = view.createQuery();
+        query.setMapOnly(true);
+        QueryEnumerator rows = query.run();
 
-            Map<String, Object> properties = document.getProperties();
-            stores = new ArrayList<>();
-            Map<String, Object> storesData = (Map<String, Object>) properties.get("stores");
+        if (rows.getCount() == 0)
+            return null;
 
-            for (String guid : storesData.keySet()) {
-                tempStore = new Store(((Map<String, Object>) storesData.get(guid)));
-                stores.add(tempStore);
-            }
+        ArrayList<Store> stores = new ArrayList<>();
+        for (QueryRow row : rows) {
+            Map<String, Object> map = row.getDocumentProperties();
+            stores.add(new Store(((Map<String, Object>) row.getValue())));
         }
 
         return stores;

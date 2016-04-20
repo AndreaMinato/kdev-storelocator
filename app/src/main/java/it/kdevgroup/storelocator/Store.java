@@ -89,6 +89,9 @@ public class Store implements Parcelable {
         phone = ((String) map.get(KEY_PHONE));
         thumbnail = ((String) map.get(KEY_THUMBNAIL));
         image = ((String) map.get(KEY_IMAGE));
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
         tags = ((ArrayList) map.get(KEY_TAGS));
         latitude = ((String) map.get(KEY_LATITUDE));
         longitude = ((String) map.get(KEY_LONGITUDE));
