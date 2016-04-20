@@ -123,7 +123,7 @@ public class JsonParser {
         store.setAddress(obj.getString(Store.KEY_ADDRESS));
         store.setPhone(obj.getString(Store.KEY_PHONE));
         store.setLatitude(obj.getString(Store.KEY_LATITUDE));
-        store.setLongitude(Store.KEY_LONGITUDE);
+        store.setLongitude(obj.getString(Store.KEY_LONGITUDE));
         store.setImage(obj.getString(Store.KEY_IMAGE));
         store.setDescription(obj.getString(Store.KEY_DESCRIPTION));
         store.setThumbnail(Store.KEY_THUMBNAIL);

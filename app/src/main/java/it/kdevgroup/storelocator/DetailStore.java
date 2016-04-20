@@ -39,9 +39,22 @@ public class DetailStore extends AppCompatActivity {
         txtSalesPerson = (TextView) findViewById(R.id.txtSalesPerson);
         txtStoreDescription = (TextView) findViewById(R.id.txtStoreDescriptions);
 
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> master
     }
 
     private void updateFields(Bundle bundle) {
+
+        Store store= bundle.getParcelable(DetailStore.KEY_STORE);
+        txtStoreName.setText("name" + store.getName());
+        txtStoreAddress.setText("address" + store.getAddress());
+        txtStorePhone.setText("phone" + store.getPhone() );
+        txtSalesPerson.setText("firstName/lastName/email" + store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
+        txtStoreDescription.setText("description" + store.getDescription());
         // TODO - prendere dal bundle i valori e metterli nelle textview
     }
 

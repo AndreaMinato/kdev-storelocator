@@ -3,6 +3,7 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -13,14 +14,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 
 public class PagerManager {
 
-    public static class PagerAdapter extends FragmentPagerAdapter{
+    public static class PagerAdapter extends FragmentPagerAdapter {
 
         private String tabTitles[] = new String[]{"Negozi", "Mappa"};
         private Context context;
@@ -61,7 +66,7 @@ public class PagerManager {
     /**
      * Fragment che conterrà la lista
      */
-    public static class StoresListFragment extends Fragment implements HomeActivity.StoresUpdater{
+    public static class StoresListFragment extends Fragment implements HomeActivity.StoresUpdater {
 
         private static final String TAG = "StoresListFragment";
         private static final String USER_KEY_FOR_BUNDLE = "UserKeyForBundle";
@@ -106,7 +111,7 @@ public class PagerManager {
             //castare il context non sembra dare problemi
             homeActivity = (HomeActivity) context; //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
 
-            if(stores == null)
+            if (stores == null)
                 stores = homeActivity.getStores();
 
             if (stores != null && stores.size() > 0) {
@@ -155,13 +160,13 @@ public class PagerManager {
             Log.d(TAG, "onDetach: ");
         }
 
-        public void updateAdapter(){
+        public void updateAdapter() {
             cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.swapAdapter(cardsAdapter, true);
         }
 
         @Override
-        public void updateStores(ArrayList<Store> newStores){
+        public void updateStores(ArrayList<Store> newStores) {
             stores = newStores;
             updateAdapter();
         }
@@ -193,22 +198,23 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_map, container, false);
 
-            if(savedInstanceState != null){
+            if (savedInstanceState != null) {
                 stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
             }
 
             //castare il context non sembra dia problemi
             homeActivity = (HomeActivity) getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
 
-            if(stores == null)
+            if (stores == null)
                 stores = homeActivity.getStores();
 
             if (stores != null && stores.size() > 0) {
                 //TODO chiamare setMarkers();
+
             }
 
             //TODO cachare la mappa per visualizzarla anche senza dati se si può
-            homeActivity = (HomeActivity)getActivity();
+            homeActivity = (HomeActivity) getActivity();
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
             mapFragment.getMapAsync(this);
@@ -218,6 +224,7 @@ public class PagerManager {
         @Override
         public void onMapReady(GoogleMap gm) {
             googleMap = gm;
+
 
             try {
                 googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima (setta il punto blu)
@@ -241,7 +248,15 @@ public class PagerManager {
         @Override
         public void updateStores(ArrayList<Store> newStores) {
             stores = newStores;
-            //TODO pinnare stores nella mappa
+            if (googleMap != null) {
+                for (int i = 0; i < stores.size(); i++) {
+                    Log.i("onMapReady: ", "Ciclo Markers");
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(Double.parseDouble(stores.get(i).getLatitude()), Double.parseDouble(stores.get(i).getLongitude())))
+                            .title(stores.get(i).getName()));
+                }
+            }
+           
         }
 
         @Override
