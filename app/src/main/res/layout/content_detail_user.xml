@@ -20,55 +20,163 @@
         android:drawableLeft="@drawable/ic_perm_identity"
         android:drawablePadding="5dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="25dp"
         android:textSize="25dp"
         android:textColor="@color/oro"
         android:textStyle="bold"
         android:layout_centerHorizontal="true" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/line0"
+        android:layout_above="@+id/id1" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="nome"
-        android:id="@+id/txtNome"
-        android:layout_marginBottom="5dp"
+        android:text="ID"
+        android:id="@+id/id1"
+        android:layout_below="@+id/txtTitle"
+        android:textColor="@color/oro"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="--"
+        android:id="@+id/txtId"
+        android:layout_below="@+id/id1"
+        android:layout_marginBottom="15dp"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
         android:layout_below="@+id/txtId"
-        android:textSize="15dp"
-        android:layout_marginTop="5dp" />
+        android:id="@+id/line1" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="cognome"
+        android:text="Nome"
+        android:id="@+id/nome1"
+        android:layout_below="@+id/line1"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/oro"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="-----"
+        android:id="@+id/txtNome"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/nome1"
+        android:textColor="@color/colorPrimary"
+        android:textSize="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/line2"
+        android:layout_below="@+id/txtNome" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Cognome"
+        android:id="@+id/cognome1"
+        android:layout_below="@+id/line2"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/oro"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="------"
         android:id="@+id/txtCognome"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/txtNome"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/cognome1"
+        android:textColor="@color/colorPrimary"
         android:textSize="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/line3"
+        android:layout_below="@+id/txtCognome" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="email"
+        android:text="E-mail"
+        android:id="@+id/email1"
+        android:layout_below="@+id/line3"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/oro"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="------"
         android:id="@+id/txtEmail"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@+id/txtCognome"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/email1"
+        android:textColor="@color/colorPrimary"
         android:textSize="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/lin4"
+        android:layout_below="@+id/txtEmail" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="compagnia"
+        android:text="Azienda"
+        android:id="@+id/company1"
+        android:layout_below="@+id/lin4"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/oro"
+        android:textSize="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="-----"
         android:id="@+id/txtCompany"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@+id/txtEmail"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/company1"
+        android:textColor="@color/colorPrimary"
         android:textSize="15dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:id="@+id/line5"
+        android:layout_below="@+id/txtCompany" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -81,24 +189,20 @@
             android:layout_height="wrap_content"
             android:text="Modifica"
             android:id="@+id/btnModifica"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/button_style"
+            android:textColor="#fff"
+            android:layout_marginRight="8dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Logout"
             android:id="@+id/btnLogout"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@drawable/button_style"
+            android:textColor="#fff"
+            android:layout_marginLeft="8dp" />
     </LinearLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="id"
-        android:id="@+id/txtId"
-        android:layout_below="@+id/txtTitle"
-        android:textSize="15dp"
-        android:layout_marginBottom="5dp" />
 
 </RelativeLayout>
