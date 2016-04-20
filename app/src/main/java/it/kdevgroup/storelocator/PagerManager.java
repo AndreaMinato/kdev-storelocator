@@ -232,6 +232,14 @@ public class PagerManager {
                 e.printStackTrace();
             }
 
+            if (stores == null)
+                stores = homeActivity.getStores();
+
+            if (stores != null && stores.size() > 0) {
+                updateStores(stores);
+
+            }
+
             /*
             homeActivity.registerReceiver(new BroadcastReceiver() {
                 @Override
