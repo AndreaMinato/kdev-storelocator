@@ -20,9 +20,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import org.json.JSONException;
 
-import java.io.SyncFailedException;
-
 import cz.msebera.android.httpclient.Header;
+import it.kdevgroup.storelocator.database.CouchbaseDB;
 
 public class LoginActivity extends AppCompatActivity {
 

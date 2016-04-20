@@ -25,10 +25,15 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
+import it.kdevgroup.storelocator.database.CouchbaseDB;
+import it.kdevgroup.storelocator.database.IAsyncMapQueryHandler;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -104,6 +109,7 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
+        database = new CouchbaseDB(getApplicationContext());
 
         ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
 
@@ -115,14 +121,27 @@ public class HomeActivity extends AppCompatActivity
         }
 
         Log.i("onMapReady: ", "updateStores");
-        if (stores == null)
+        if (stores == null) {
             stores = new ArrayList<>();
-
-        database = new CouchbaseDB(getApplicationContext());
-        try {
-            stores = database.getStores();
-        } catch (CouchbaseLiteException e) {
-            e.printStackTrace();
+            try {
+                database.getStoresAsync(new IAsyncMapQueryHandler() {
+                    @Override
+                    public void handle(Map<String, Object> value, Throwable error) {
+                        if (value == null) {
+                            Log.w(TAG, "handle: value is null", error);
+                            if (isNetworkAvailable())
+                                getStoresFromServer();
+                            return;
+                        }
+                        stores.add(new Store(value));
+                        if (error != null) {
+                            error.printStackTrace();
+                        }
+                    }
+                });
+            } catch (CouchbaseLiteException e) {
+                e.printStackTrace();
+            }
         }
 
         if (stores == null) {
@@ -135,9 +154,9 @@ public class HomeActivity extends AppCompatActivity
         viewPager.setAdapter(pagerAdapter);
 
         //se non ho preso negozi dal bundle e dal database li chiedo al server
-        if (stores.size() == 0 && isNetworkAvailable()) {
-            getStoresFromServer();
-        }
+//        if (stores.size() == 0 && isNetworkAvailable()) {
+//            getStoresFromServer();
+//        }
 
         //snackbar di benvenuto, mostrata una volta sola
         if (goSnack) {

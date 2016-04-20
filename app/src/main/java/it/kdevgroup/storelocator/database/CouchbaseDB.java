@@ -1,8 +1,7 @@
-package it.kdevgroup.storelocator;
+package it.kdevgroup.storelocator.database;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.Property;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -18,11 +17,12 @@ import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+
+import it.kdevgroup.storelocator.Store;
+import it.kdevgroup.storelocator.User;
 
 /**
  * Created by damiano on 15/04/16.
@@ -32,8 +32,10 @@ public class CouchbaseDB {
     private static final String TAG = "CouchbaseDB";
     private static final String TYPE_KEY = "type";
     private static final String USER_TYPE_VALUE = User.class.getSimpleName();
+    private static final String STORE_TYPE_VALUE = Store.class.getSimpleName();
 
     private static final String USER_VIEW = "viewUser";
+    private static final String STORES_VIEW = "viewStores";
 
     private static final String DB_NAME = "storelocatordb";
 
@@ -45,6 +47,7 @@ public class CouchbaseDB {
         ctx = c;
         createManager();
         createUserView();
+        createStoresView();
     }
 
     /**
@@ -154,43 +157,103 @@ public class CouchbaseDB {
         return user;
     }
 
-    public void saveStores(ArrayList<Store> stores) throws CouchbaseLiteException {
-        Document document = db.getExistingDocument("stores");
-        Map<String, Object> properties = new HashMap<>();
-
-        // se non ho gia il documento, lo creo e inserisco il type per identificarlo
-        if (document == null) {
-            document = db.getDocument("stores");
-        }
-
-        Map<String, Object> storesData = new HashMap<>();
-
-        for(Store store : stores) {
-            storesData.put(store.getGUID(), store.toHashMap());
-        }
-
-        properties.put("stores", storesData); //le properties consistono in un array con chiave = GUID e valore = hashMap dell'oggetto store
-
-        document.putProperties(properties);
+    /**
+     * Crea la view che da in output una mappa con
+     * key:     guid
+     * value:   attributi dello store (anche il guid e type:Store)
+     */
+    private void createStoresView() {
+        View view = db.getView(STORES_VIEW);
+        view.setMap(new Mapper() {
+            @Override
+            public void map(Map<String, Object> document, Emitter emitter) {
+                for (String key : document.keySet()) {
+                    if (key.equals(TYPE_KEY)
+                            && document.get(TYPE_KEY).equals(STORE_TYPE_VALUE)) {
+                        emitter.emit(document.get(Store.KEY_GUID), document);
+                    }
+                }
+            }
+        }, "1");
     }
 
-    public ArrayList<Store> getStores() throws CouchbaseLiteException {
-        ArrayList<Store> stores = null;
-        Document document = db.getExistingDocument("stores");
-        Store tempStore = null;
 
-        if (document != null) {
+    /**
+     * Salva l'array di store nel DB
+     *
+     * @param stores
+     * @throws CouchbaseLiteException
+     */
+    public void saveStores(ArrayList<Store> stores) throws CouchbaseLiteException {
 
-            Map<String, Object> properties = document.getProperties();
-            stores = new ArrayList<>();
-            Map<String, Object> storesData = (Map<String, Object>) properties.get("stores");
+        /*
+        ID documento    ->  GUID store
+        value documento ->  store.toHashMap()
+         */
+        for (Store store : stores) {
+            Document document = db.getExistingDocument(store.getGUID());
 
-            for(String guid : storesData.keySet()){
-                tempStore = new Store(((Map<String, Object>) storesData.get(guid)));
-                stores.add(tempStore);
+            // se non ho gia il documento, lo creo e inserisco il type per identificarlo
+            Map<String, Object> properties = new HashMap<>();
+            if (document == null) {
+                document = db.getDocument(store.getGUID());
+                properties.put(TYPE_KEY, STORE_TYPE_VALUE);     // "type": "Store"
+                document.putProperties(properties);
             }
+            // ottengo le proprietà per la modifica
+
+            properties.putAll(document.getProperties());
+            properties.putAll(store.toHashMap());       // aggiungo lo store alle proprietà (se gia presenti, sovrascrivo)
+            document.putProperties(properties);         // salvo nel documento
+        }
+    }
+
+    /**
+     * Ottiene un array degli store memorizzati nel database
+     *
+     * @return
+     * @throws CouchbaseLiteException
+     */
+    @Deprecated
+    public ArrayList<Store> getStores() throws CouchbaseLiteException {
+
+        View view = db.getView(STORES_VIEW);
+        Query query = view.createQuery();
+        query.setMapOnly(true);
+        QueryEnumerator rows = query.run();
+
+        if (rows.getCount() == 0)
+            return null;
+
+        ArrayList<Store> stores = new ArrayList<>();
+        for (QueryRow row : rows) {
+            stores.add(new Store(((Map<String, Object>) row.getValue())));
         }
 
         return stores;
+    }
+
+    /**
+     * Esegue asincronamente la query per ottenere gli stores
+     * @param handler
+     * @throws CouchbaseLiteException
+     */
+    public void getStoresAsync(final IAsyncMapQueryHandler handler) throws CouchbaseLiteException {
+        View view = db.getView(STORES_VIEW);
+        Query query = view.createQuery();
+        query.setMapOnly(true);
+        query.runAsync(new Query.QueryCompleteListener() {
+            @Override
+            public void completed(QueryEnumerator rows, Throwable error) {
+                if (rows.getCount() == 0) {
+                    handler.handle(null, error);
+                    return;
+                }
+
+                for (QueryRow row : rows) {
+                    handler.handle((Map<String, Object>) row.getValue(), error);
+                }
+            }
+        });
     }
 }

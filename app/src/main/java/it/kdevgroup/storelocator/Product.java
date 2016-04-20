@@ -8,7 +8,7 @@ public class Product {
     private static final String TAG = "Store";
 
     public static final String KEY_ID = "id";
-    public static final String KEY_ISAVAILABLE = "is_available";
+    public static final String KEY_ISAVAILABLE = "isAvailable";
     public static final String KEY_NAME = "name";
     public static final String KEY_PRICE = "price";
 

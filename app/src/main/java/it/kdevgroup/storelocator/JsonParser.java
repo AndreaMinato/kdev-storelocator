@@ -136,7 +136,7 @@ public class JsonParser {
         }
         store.setTags(tmp);
 
-        JSONObject person = new JSONObject(Store.KEY_PERSON);
+        JSONObject person = obj.getJSONObject(Store.KEY_PERSON);
         store.setEmail(person.getString(Store.KEY_EMAIL));
         store.setFirstName(person.getString(Store.KEY_FIRSTNAME));
         store.setLastName(person.getString(Store.KEY_LASTNAME));

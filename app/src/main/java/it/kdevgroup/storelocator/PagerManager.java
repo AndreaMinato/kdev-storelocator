@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 public class PagerManager {
 
     public static class PagerAdapter extends FragmentPagerAdapter {
+
+//        private StoresListFragment storesListFragment;
+//        private MapFragment mapFragment;
 
         private String tabTitles[] = new String[]{"Negozi", "Mappa"};
         private Context context;
@@ -222,11 +226,17 @@ public class PagerManager {
         public void onMapReady(GoogleMap gm) {
             googleMap = gm;
 
-
             try {
                 googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima (setta il punto blu)
             } catch (SecurityException e) {
                 e.printStackTrace();
+            }
+
+            if (stores == null)
+                stores = homeActivity.getStores();
+
+            if (stores != null && stores.size() > 0) {
+                updateStores(stores);
             }
 
             /*
@@ -250,10 +260,10 @@ public class PagerManager {
                     Log.i("onMapReady: ", "Ciclo Markers");
                     googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(stores.get(i).getLatitude()), Double.parseDouble(stores.get(i).getLongitude())))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                             .title(stores.get(i).getName()));
                 }
             }
-           
         }
 
         @Override
