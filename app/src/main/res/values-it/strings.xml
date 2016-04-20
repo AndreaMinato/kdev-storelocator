@@ -6,11 +6,11 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="error_onFailure">Oops, it seems that comunication with the server went in trouble! Retry later please.</string>
+    <string name="error_onFailure">Oops, sembra ci siano problemi di comunicazione con il server! Riprova più tardi.</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_detail_store">DetailStore</string>
     <string name="title_activity_datail_user">DatailUser</string>
 
-    <string name="indirizzo">Address</string>
-    <string name="telefono">Phone</string>
+    <string name="indirizzo">Indirizzo</string>
+    <string name="telefono">Telefono</string>
 </resources>
