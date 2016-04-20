@@ -238,13 +238,18 @@ public class CouchbaseDB {
      * @param handler
      * @throws CouchbaseLiteException
      */
-    public void getStoresAsync(final IAsyncQueryHandler handler) throws CouchbaseLiteException {
+    public void getStoresAsync(final IAsyncMapQueryHandler handler) throws CouchbaseLiteException {
         View view = db.getView(STORES_VIEW);
         Query query = view.createQuery();
         query.setMapOnly(true);
         query.runAsync(new Query.QueryCompleteListener() {
             @Override
             public void completed(QueryEnumerator rows, Throwable error) {
+                if (rows.getCount() == 0) {
+                    handler.handle(null, error);
+                    return;
+                }
+
                 for (QueryRow row : rows) {
                     handler.handle((Map<String, Object>) row.getValue(), error);
                 }

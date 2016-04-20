@@ -120,7 +120,7 @@ public class DetailStoreActivity extends AppCompatActivity {
         uriBuilder.addParameter("size", String.format("%sx%s", imgMap.getWidth(), imgMap.getHeight()));
         uriBuilder.addParameter("scale", "2");
         uriBuilder.addParameter("key", getResources().getString(R.string.google_maps_key));
-        String url = uriBuilder.build().toString(); // DEBUGGA PRIMA
+//        String url = uriBuilder.build().toString(); // DEBUGGA PRIMA
 
         Picasso.with(getApplicationContext())
                 .load(uriBuilder.build().toString())
