@@ -27,17 +27,37 @@ public class DetailStore extends AppCompatActivity {
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Bundle bundle;
+        Bundle bundle = null;
         if (getIntent() != null) {
             bundle = getIntent().getExtras();
         }
+        Store store = null;
+        if (bundle != null) {
+            store = bundle.getParcelable(DetailStore.KEY_STORE);
+        }
+        if (store != null) {
+            imgMap = (ImageView) findViewById(R.id.imgMap);
 
-        imgMap = (ImageView) findViewById(R.id.imgMap);
-        txtStoreName = (TextView) findViewById(R.id.txtStoreName);
-        txtStoreAddress = (TextView) findViewById(R.id.txtStoreAddress);
-        txtStorePhone = (TextView) findViewById(R.id.txtStorePhone);
-        txtSalesPerson = (TextView) findViewById(R.id.txtSalesPerson);
-        txtStoreDescription = (TextView) findViewById(R.id.txtStoreDescriptions);
+            txtStoreName = (TextView) findViewById(R.id.txtStoreName);
+            txtStoreAddress = (TextView) findViewById(R.id.txtStoreAddress);
+            txtStorePhone = (TextView) findViewById(R.id.txtStorePhone);
+            txtSalesPerson = (TextView) findViewById(R.id.txtSalesPerson);
+            txtStoreDescription = (TextView) findViewById(R.id.txtStoreDescriptions);
+
+            updateFields(bundle);
+
+            final Store finalStore = store;
+            imgMap.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        getMap(imgMap, finalStore.getLatitude(), finalStore.getLongitude());
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     }
 
     private void updateFields(Bundle bundle) {
@@ -49,6 +69,8 @@ public class DetailStore extends AppCompatActivity {
         txtSalesPerson.setText("firstName/lastName/email" + store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
         txtStoreDescription.setText("description" + store.getDescription());
         // TODO - prendere dal bundle i valori e metterli nelle textview
+
+
     }
 
     private void getMap(ImageView imgMap, String... latlong) throws URISyntaxException {
@@ -64,7 +86,8 @@ public class DetailStore extends AppCompatActivity {
 
         Picasso.with(getApplicationContext())
                 .load(uriBuilder.build().toString())
-                .fit()
+                .resize(imgMap.getWidth(), imgMap.getHeight())
+                .centerCrop()
                 .into(imgMap);
     }
 }
