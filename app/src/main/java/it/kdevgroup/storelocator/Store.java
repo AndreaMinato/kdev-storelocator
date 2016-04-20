@@ -205,7 +205,10 @@ public class Store implements Parcelable {
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
 
-        hashMap.put("store", this);
+        hashMap.put(KEY_GUID, getGUID());
+        hashMap.put(KEY_NAME, getName());
+        hashMap.put(KEY_ADDRESS, getAddress());
+        hashMap.put(KEY_PHONE, getPhone());
 
         return hashMap;
     }

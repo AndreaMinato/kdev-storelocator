@@ -176,6 +176,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void getStoresFromServer() {    //controlli già verificati prima della chiamata
+        Log.i("CHIAMO SERVER", "CHIAMO SERVER BRO, DATABASE NON VA O È VUOTO :(");
         ApiManager.getInstance().getStores(User.getInstance().getSession(), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

@@ -186,7 +186,7 @@ public class CouchbaseDB {
             Map<String, Object> storesData = (Map<String, Object>) properties.get("stores");
 
             for(String guid : storesData.keySet()){
-                tempStore = new Store(((Map<String, Object>) properties.get(guid)));
+                tempStore = new Store(((Map<String, Object>) storesData.get(guid)));
                 stores.add(tempStore);
             }
         }
