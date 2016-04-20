@@ -31,145 +31,156 @@
         android:layout_height="1dp"
         android:background="#c2c2c2"
         android:id="@+id/line0"
-        android:layout_above="@+id/id1" />
+        android:layout_below="@+id/txtTitle" />
 
-    <TextView
-        android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="ID"
-        android:id="@+id/id1"
-        android:layout_below="@+id/txtTitle"
-        android:textColor="@color/oro"
-        android:textSize="20dp"
-        android:layout_marginTop="3dp" />
+        android:id="@+id/scrollView2"
+        android:layout_below="@+id/line0" >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="--"
-        android:id="@+id/txtId"
-        android:layout_below="@+id/id1"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#c2c2c2"
-        android:layout_below="@+id/txtId"
-        android:id="@+id/line1" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="ID"
+                android:id="@+id/id1"
+                android:textColor="@color/oro"
+                android:textSize="20dp"
+                android:layout_marginTop="3dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Nome"
-        android:id="@+id/nome1"
-        android:layout_below="@+id/line1"
-        android:layout_marginTop="3dp"
-        android:textColor="@color/oro"
-        android:textSize="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="--"
+                android:id="@+id/txtId"
+                android:layout_below="@+id/id1"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="-----"
-        android:id="@+id/txtNome"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/nome1"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:layout_below="@+id/txtId"
+                android:id="@+id/line1" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#c2c2c2"
-        android:id="@+id/line2"
-        android:layout_below="@+id/txtNome" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Nome"
+                android:id="@+id/nome1"
+                android:layout_below="@+id/line1"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/oro"
+                android:textSize="20dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Cognome"
-        android:id="@+id/cognome1"
-        android:layout_below="@+id/line2"
-        android:layout_marginTop="3dp"
-        android:textColor="@color/oro"
-        android:textSize="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="-----"
+                android:id="@+id/txtNome"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/nome1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="------"
-        android:id="@+id/txtCognome"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/cognome1"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:id="@+id/line2"
+                android:layout_below="@+id/txtNome" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#c2c2c2"
-        android:id="@+id/line3"
-        android:layout_below="@+id/txtCognome" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Cognome"
+                android:id="@+id/cognome1"
+                android:layout_below="@+id/line2"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/oro"
+                android:textSize="20dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="E-mail"
-        android:id="@+id/email1"
-        android:layout_below="@+id/line3"
-        android:layout_marginTop="3dp"
-        android:textColor="@color/oro"
-        android:textSize="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="------"
+                android:id="@+id/txtCognome"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/cognome1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="------"
-        android:id="@+id/txtEmail"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/email1"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:id="@+id/line3"
+                android:layout_below="@+id/txtCognome" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#c2c2c2"
-        android:id="@+id/lin4"
-        android:layout_below="@+id/txtEmail" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="E-mail"
+                android:id="@+id/email1"
+                android:layout_below="@+id/line3"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/oro"
+                android:textSize="20dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Azienda"
-        android:id="@+id/company1"
-        android:layout_below="@+id/lin4"
-        android:layout_marginTop="3dp"
-        android:textColor="@color/oro"
-        android:textSize="20dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="------"
+                android:id="@+id/txtEmail"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/email1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="-----"
-        android:id="@+id/txtCompany"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/company1"
-        android:textColor="@color/colorPrimary"
-        android:textSize="15dp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:id="@+id/lin4"
+                android:layout_below="@+id/txtEmail" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Azienda"
+                android:id="@+id/company1"
+                android:layout_below="@+id/lin4"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/oro"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="-----"
+                android:id="@+id/txtCompany"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/company1"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15dp" />
+        </RelativeLayout>
+    </ScrollView>
 
     <LinearLayout
         android:orientation="horizontal"
