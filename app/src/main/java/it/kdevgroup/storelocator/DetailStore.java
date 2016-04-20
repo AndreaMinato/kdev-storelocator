@@ -6,6 +6,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.net.URISyntaxException;
+
+import cz.msebera.android.httpclient.client.utils.URIBuilder;
+
 public class DetailStore extends AppCompatActivity {
 
     public static final String KEY_STORE = "storePresoDalBundle";
@@ -32,10 +38,24 @@ public class DetailStore extends AppCompatActivity {
         txtStorePhone = (TextView) findViewById(R.id.txtStorePhone);
         txtSalesPerson = (TextView) findViewById(R.id.txtSalesPerson);
         txtStoreDescription = (TextView) findViewById(R.id.txtStoreDescriptions);
-
     }
 
     private void updateFields(Bundle bundle) {
         // TODO - prendere dal bundle i valori e metterli nelle textview
+    }
+
+    private void getMap(ImageView imgMap, String... latlong) throws URISyntaxException {
+        URIBuilder uriBuilder = new URIBuilder("https://maps.googleapis.com/maps/api/staticmap");
+        uriBuilder.addParameter("maptype", "satellite");
+        uriBuilder.addParameter("center", String.format("%s,%s", latlong[0], latlong[1]));
+        uriBuilder.addParameter("zoom", "12");
+        uriBuilder.addParameter("size", String.format("%sx%s", imgMap.getWidth(), imgMap.getHeight()));
+        uriBuilder.addParameter("key", getResources().getString(R.string.google_maps_key));
+        String url = uriBuilder.build().toString(); // DEBUGGA PRIMA
+
+        Picasso.with(getApplicationContext())
+                .load(uriBuilder.build().toString())
+                .fit()
+                .into(imgMap);
     }
 }
