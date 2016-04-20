@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import java.util.ArrayList;
 
 public class PagerManager {
@@ -205,6 +208,7 @@ public class PagerManager {
 
             if (stores != null && stores.size() > 0) {
                 //TODO chiamare setMarkers();
+
             }
 
             //TODO cachare la mappa per visualizzarla anche senza dati se si può
@@ -224,6 +228,11 @@ public class PagerManager {
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
+
+
+            gm.addMarker(new MarkerOptions()
+                    .position(new LatLng(10, 10))
+                    .title("Hello world"));
 
             /*
             homeActivity.registerReceiver(new BroadcastReceiver() {

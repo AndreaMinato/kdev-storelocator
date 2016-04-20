@@ -102,6 +102,8 @@ public class JsonParser {
         store.setName(obj.getString(Store.KEY_NAME));
         store.setAddress(obj.getString(Store.KEY_ADDRESS));
         store.setPhone(obj.getString(Store.KEY_PHONE));
+        store.setLatitude(obj.getString(Store.KEY_LATITUDE));
+        store.setLongitude(Store.KEY_LONGITUDE);
 
         return store;
     }
