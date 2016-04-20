@@ -1,18 +1,17 @@
 package it.kdevgroup.storelocator;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 public class DetailStore extends AppCompatActivity {
 
-    ImageView imgMap;//dettaglio longitudine e latitudine
-    TextView txtStoreName,txtStoreAddress, txtStorePhone, txtSalesPerson,txtStoreDescription;
+    public static final String KEY_STORE = "storePresoDalBundle";
+
+    private ImageView imgMap;//dettaglio longitudine e latitudine
+    private TextView txtStoreName, txtStoreAddress, txtStorePhone, txtSalesPerson, txtStoreDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,25 +19,23 @@ public class DetailStore extends AppCompatActivity {
         setContentView(R.layout.activity_detail_store);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Bundle bundle;
+        if (getIntent() != null) {
+            bundle = getIntent().getExtras();
+        }
 
-        imgMap = (ImageView)findViewById(R.id.imgMap);
-        txtStoreName = (TextView)findViewById(R.id.txtStoreName);
-        txtStoreAddress=(TextView)findViewById(R.id.txtStoreAddress);
-        txtStorePhone = (TextView)findViewById(R.id.txtStorePhone);
-        txtSalesPerson = (TextView)findViewById(R.id.txtSalesPerson);
-        txtStoreDescription = (TextView)findViewById(R.id.txtStoreDescriptions);
+        imgMap = (ImageView) findViewById(R.id.imgMap);
+        txtStoreName = (TextView) findViewById(R.id.txtStoreName);
+        txtStoreAddress = (TextView) findViewById(R.id.txtStoreAddress);
+        txtStorePhone = (TextView) findViewById(R.id.txtStorePhone);
+        txtSalesPerson = (TextView) findViewById(R.id.txtSalesPerson);
+        txtStoreDescription = (TextView) findViewById(R.id.txtStoreDescriptions);
 
-       /* setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
 
+    private void updateFields(Bundle bundle) {
+        // TODO - prendere dal bundle i valori e metterli nelle textview
+    }
 }
