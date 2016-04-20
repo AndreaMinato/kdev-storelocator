@@ -2,7 +2,6 @@ package it.kdevgroup.storelocator;
 
 import android.content.Context;
 import android.util.Log;
-import android.util.Property;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.couchbase.lite.Database;
@@ -11,18 +10,13 @@ import com.couchbase.lite.Document;
 import com.couchbase.lite.Emitter;
 import com.couchbase.lite.Manager;
 import com.couchbase.lite.Mapper;
-import com.couchbase.lite.Query;
-import com.couchbase.lite.QueryEnumerator;
-import com.couchbase.lite.QueryRow;
 import com.couchbase.lite.View;
 import com.couchbase.lite.android.AndroidContext;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by damiano on 15/04/16.
@@ -154,6 +148,12 @@ public class CouchbaseDB {
         return user;
     }
 
+    /**
+     * Salva l'array di store nel DB
+     *
+     * @param stores
+     * @throws CouchbaseLiteException
+     */
     public void saveStores(ArrayList<Store> stores) throws CouchbaseLiteException {
         Document document = db.getExistingDocument("stores");
         Map<String, Object> properties = new HashMap<>();
@@ -165,7 +165,7 @@ public class CouchbaseDB {
 
         Map<String, Object> storesData = new HashMap<>();
 
-        for(Store store : stores) {
+        for (Store store : stores) {
             storesData.put(store.getGUID(), store.toHashMap());
         }
 
@@ -185,7 +185,7 @@ public class CouchbaseDB {
             stores = new ArrayList<>();
             Map<String, Object> storesData = (Map<String, Object>) properties.get("stores");
 
-            for(String guid : storesData.keySet()){
+            for (String guid : storesData.keySet()) {
                 tempStore = new Store(((Map<String, Object>) storesData.get(guid)));
                 stores.add(tempStore);
             }

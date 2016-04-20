@@ -81,13 +81,21 @@ public class Store implements Parcelable {
         this.lastName = lastName;
     }
 
-    public Store (Map<String, Object> map) {
-        phone = map.get(KEY_PHONE).toString();
-        GUID = map.get(KEY_GUID).toString();
-        name = map.get(KEY_NAME).toString();
-        address = map.get(KEY_ADDRESS).toString();
-        latitude = map.get(KEY_LATITUDE).toString();
-        longitude = map.get(KEY_LONGITUDE).toString();
+    public Store(Map<String, Object> map) {
+        GUID = (String) map.get(KEY_GUID);
+        name = ((String) map.get(KEY_NAME));
+        address = ((String) map.get(KEY_ADDRESS));
+        description = ((String) map.get(KEY_DESCRIPTION));
+        phone = ((String) map.get(KEY_PHONE));
+        thumbnail = ((String) map.get(KEY_THUMBNAIL));
+        image = ((String) map.get(KEY_IMAGE));
+        tags = ((ArrayList) map.get(KEY_TAGS));
+        latitude = ((String) map.get(KEY_LATITUDE));
+        longitude = ((String) map.get(KEY_LONGITUDE));
+        email = ((String) map.get(KEY_EMAIL));
+        firstName = ((String) map.get(KEY_FIRSTNAME));
+        lastName = ((String) map.get(KEY_LASTNAME));
+        products = ((ArrayList) map.get(KEY_PRODUCTS));
     }
 
     public List<Product> getProducts() {
@@ -205,10 +213,20 @@ public class Store implements Parcelable {
     public HashMap<String, Object> toHashMap() {
         HashMap<String, Object> hashMap = new HashMap<>();
 
-        hashMap.put(KEY_GUID, getGUID());
-        hashMap.put(KEY_NAME, getName());
-        hashMap.put(KEY_ADDRESS, getAddress());
-        hashMap.put(KEY_PHONE, getPhone());
+        hashMap.put(KEY_GUID, GUID);
+        hashMap.put(KEY_NAME, name);
+        hashMap.put(KEY_ADDRESS, address);
+        hashMap.put(KEY_DESCRIPTION, description);
+        hashMap.put(KEY_PHONE, phone);
+        hashMap.put(KEY_THUMBNAIL, thumbnail);
+        hashMap.put(KEY_IMAGE, image);
+        hashMap.put(KEY_TAGS, tags);
+        hashMap.put(KEY_LATITUDE, latitude);
+        hashMap.put(KEY_LONGITUDE, longitude);
+        hashMap.put(KEY_EMAIL, email);
+        hashMap.put(KEY_FIRSTNAME, firstName);
+        hashMap.put(KEY_LASTNAME, lastName);
+        hashMap.put(KEY_PRODUCTS, products);
 
         return hashMap;
     }
