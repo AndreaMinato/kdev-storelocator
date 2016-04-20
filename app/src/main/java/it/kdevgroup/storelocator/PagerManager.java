@@ -81,10 +81,7 @@ public class PagerManager {
 
         public static StoresListFragment newInstance(Context ctx) {
             context = ctx;
-            Bundle args = new Bundle();
-            StoresListFragment fragment = new StoresListFragment();
-            fragment.setArguments(args);
-            return fragment;
+            return new StoresListFragment();
         }
 
         @Override
@@ -110,7 +107,7 @@ public class PagerManager {
             }
 
             //castare il context non sembra dare problemi
-            homeActivity = (HomeActivity) context; //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
+            homeActivity = (HomeActivity) context;
 
             if (stores == null)
                 stores = homeActivity.getStores();
@@ -203,16 +200,10 @@ public class PagerManager {
                 stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
             }
 
-            //castare il context non sembra dia problemi
-            homeActivity = (HomeActivity) getActivity(); //devo chiamare l'activity perchè il metodo utilizza un metodo di sistema
+            homeActivity = (HomeActivity) getActivity();
 
             if (stores == null)
                 stores = homeActivity.getStores();
-
-            if (stores != null && stores.size() > 0) {
-                //TODO chiamare setMarkers();
-
-            }
 
             //TODO cachare la mappa per visualizzarla anche senza dati se si può
             homeActivity = (HomeActivity) getActivity();
@@ -239,17 +230,6 @@ public class PagerManager {
                 updateStores(stores);
             }
 
-            /*
-            homeActivity.registerReceiver(new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (homeActivity.isNetworkAvailable()) {
-                        setLocationRequest(LocationManager.NETWORK_PROVIDER);
-                    } else
-                        setLocationRequest(LocationManager.GPS_PROVIDER);
-                }
-            }, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
-            */
         }
 
         @Override

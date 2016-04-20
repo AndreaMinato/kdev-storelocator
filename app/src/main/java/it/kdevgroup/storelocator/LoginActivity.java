@@ -178,7 +178,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i("onDestroy: ", "called");
     }
 
     // Metodo che controlla la possibilità di accedere a internet

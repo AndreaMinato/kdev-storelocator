@@ -99,6 +99,7 @@ public class HomeActivity extends AppCompatActivity
     private boolean goSnack = true;
     private ArrayList<Store> stores;
     private FragmentManager fragManager;
+    private boolean mustGetStores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +121,6 @@ public class HomeActivity extends AppCompatActivity
             stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
         }
 
-        Log.i("onMapReady: ", "updateStores");
         if (stores == null) {
             stores = new ArrayList<>();
             try {
@@ -129,8 +129,7 @@ public class HomeActivity extends AppCompatActivity
                     public void handle(Map<String, Object> value, Throwable error) {
                         if (value == null) {
                             Log.w(TAG, "handle: value is null", error);
-                            if (isNetworkAvailable())
-                                getStoresFromServer();
+                            mustGetStores = true;
                             return;
                         }
                         stores.add(new Store(value));
@@ -144,9 +143,13 @@ public class HomeActivity extends AppCompatActivity
             }
         }
 
+        if(mustGetStores && isNetworkAvailable())
+            getStoresFromServer();
+
         if (stores == null) {
             stores = new ArrayList<>();
         }
+
         // Set up the ViewPager, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -194,7 +197,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public void getStoresFromServer() {    //controlli già verificati prima della chiamata
-        Log.i("CHIAMO SERVER", "CHIAMO SERVER BRO, DATABASE NON VA O È VUOTO :(");
+        Log.i(TAG, "getStoresFromServer");
         ApiManager.getInstance().getStores(User.getInstance().getSession(), new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -290,8 +293,7 @@ public class HomeActivity extends AppCompatActivity
             Intent vInt = new Intent(this, DetailUser.class);
             startActivity(vInt);
 
-
-        } else if (id == R.id.nav_preferiti) {
+        //} else if (id == R.id.nav_preferiti) {
 
         } else if (id == R.id.nav_impostazioni) {
 
@@ -304,7 +306,6 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     // Metodo che controlla la possibilità di accedere a internet
     public boolean isNetworkAvailable() {

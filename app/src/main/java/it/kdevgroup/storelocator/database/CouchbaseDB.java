@@ -177,7 +177,6 @@ public class CouchbaseDB {
         }, "1");
     }
 
-
     /**
      * Salva l'array di store nel DB
      *
