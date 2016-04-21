@@ -81,7 +81,10 @@ public class PagerManager {
 
         public static StoresListFragment newInstance(Context ctx) {
             context = ctx;
-            return new StoresListFragment();
+            Bundle args = new Bundle();
+            StoresListFragment fragment = new StoresListFragment();
+            fragment.setArguments(args);
+            return fragment;
         }
 
         @Override

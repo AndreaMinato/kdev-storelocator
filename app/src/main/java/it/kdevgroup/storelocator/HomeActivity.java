@@ -99,7 +99,6 @@ public class HomeActivity extends AppCompatActivity
     private boolean goSnack = true;
     private ArrayList<Store> stores;
     private FragmentManager fragManager;
-    private boolean mustGetStores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,8 +128,10 @@ public class HomeActivity extends AppCompatActivity
                     public void handle(Map<String, Object> value, Throwable error) {
                         if (value == null) {
                             Log.w(TAG, "handle: value is null", error);
-                            mustGetStores = true;
+                            if (isNetworkAvailable())
+                                getStoresFromServer();
                             return;
+
                         }
                         stores.add(new Store(value));
                         if (error != null) {
@@ -142,9 +143,6 @@ public class HomeActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-
-        if(mustGetStores && isNetworkAvailable())
-            getStoresFromServer();
 
         if (stores == null) {
             stores = new ArrayList<>();
