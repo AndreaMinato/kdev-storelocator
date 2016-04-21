@@ -124,6 +124,21 @@ public class CouchbaseDB {
         document.putProperties(properties);
     }
 
+
+    /**
+     *
+     * cancella l'utente dal database
+     *
+     * @param user utente da cancellare
+     * @throws CouchbaseLiteException
+     */
+
+
+    public void deleteUser(User user) throws CouchbaseLiteException {
+        Document document = db.getDocument("user");
+        document.delete();
+    }
+
     /**
      * Carica l'utente dal database
      *

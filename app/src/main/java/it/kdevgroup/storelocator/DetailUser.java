@@ -6,11 +6,18 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class DetailUser extends AppCompatActivity {
+import it.kdevgroup.storelocator.database.CouchbaseDB;
 
-   TextView title,id,nome,cognome,email,compagnia;
+public class DetailUser extends AppCompatActivity implements LogoutAlertDialog.passDatabase {
+
+    TextView title,id,nome,cognome,email,compagnia;
+
+    Button logout;
+
+    CouchbaseDB database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +43,21 @@ public class DetailUser extends AppCompatActivity {
         email.setText(User.getInstance().getEmail());
         compagnia.setText(User.getInstance().getCompany());
 
+        database=new CouchbaseDB(getApplicationContext());
 
+        logout=(Button)findViewById(R.id.btnLogout);
 
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogoutAlertDialog logoutAlertDialog=new LogoutAlertDialog();
+                logoutAlertDialog.show(getFragmentManager(),"logout");
+            }
+        });
 
     }
+
+    public CouchbaseDB couchbaseDB(){ return database;}
 
 }
 

@@ -1,5 +1,6 @@
 package it.kdevgroup.storelocator;
 
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -36,7 +37,7 @@ import it.kdevgroup.storelocator.database.CouchbaseDB;
 import it.kdevgroup.storelocator.database.IAsyncMapQueryHandler;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,LogoutAlertDialog.passDatabase {
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -91,6 +92,7 @@ public class HomeActivity extends AppCompatActivity
     private static final String TAG = "HomeActivity";
     private static final String SAVE = "onsaved";
     public static final String STORES_KEY_FOR_BUNDLE = "StoresListKeyForBundle";
+    public static final String DIALOG="start dialog";
 
     private PagerManager.PagerAdapter pagerAdapter;
     private ViewPager viewPager;
@@ -296,7 +298,8 @@ public class HomeActivity extends AppCompatActivity
         } else if (id == R.id.nav_impostazioni) {
 
         } else if (id == R.id.nav_logout) {
-
+            LogoutAlertDialog logoutAlertDialog=new LogoutAlertDialog();
+            logoutAlertDialog.show(getFragmentManager(),DIALOG);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -304,6 +307,8 @@ public class HomeActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public CouchbaseDB couchbaseDB(){ return database;}
 
     // Metodo che controlla la possibilità di accedere a internet
     public boolean isNetworkAvailable() {
