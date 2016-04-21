@@ -2,8 +2,10 @@ package it.kdevgroup.storelocator;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +13,7 @@ import java.util.Map;
 /**
  * Created by andrea on 15/04/16.
  */
-public class Store implements Parcelable {
+public class Store implements Parcelable, Comparable<Store> {
 
     private static final String TAG = "Store";
 
@@ -45,10 +47,12 @@ public class Store implements Parcelable {
     private String email;
     private String firstName;
     private String lastName;
+    private int lastKnownDistance;
 
     public Store() {
         tags = new ArrayList<>();
         products = new ArrayList<>();
+        lastKnownDistance = 0;
     }
 
     public Store(List<Product> products,
@@ -79,6 +83,7 @@ public class Store implements Parcelable {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
+        lastKnownDistance = 0;
     }
 
     public Store(Map<String, Object> map) {
@@ -99,6 +104,7 @@ public class Store implements Parcelable {
         firstName = ((String) map.get(KEY_FIRSTNAME));
         lastName = ((String) map.get(KEY_LASTNAME));
         products = ((ArrayList) map.get(KEY_PRODUCTS));
+        lastKnownDistance = 0;
     }
 
     public List<Product> getProducts() {
@@ -157,6 +163,10 @@ public class Store implements Parcelable {
         return lastName;
     }
 
+    public int getLastKnownDistance() {
+        return lastKnownDistance;
+    }
+
     public void setProducts(List<Product> products) {
         this.products = products;
     }
@@ -211,6 +221,10 @@ public class Store implements Parcelable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setLastKnownDistance(int lastKnownDistance) {
+        this.lastKnownDistance = lastKnownDistance;
     }
 
     public HashMap<String, Object> toHashMap() {
@@ -293,5 +307,14 @@ public class Store implements Parcelable {
         lastName = in.readString();
         products = new ArrayList<>();
         in.readList(products, Product.class.getClassLoader());
+    }
+
+    @Override
+    public int compareTo(@NonNull Store store) {
+        if(this.lastKnownDistance < store.getLastKnownDistance())
+            return -1;
+        if(this.lastKnownDistance > store.getLastKnownDistance())
+            return 1;
+        return 0;
     }
 }
