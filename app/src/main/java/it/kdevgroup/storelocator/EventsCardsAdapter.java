@@ -2,6 +2,7 @@ package it.kdevgroup.storelocator;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -12,7 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,12 +28,16 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
 
     private ArrayList<Store> stores;  //lista di eventi
     private Context ctx;
+    private Location userLocation;
 
     private static final String TAG = "prova";
 
-    public EventsCardsAdapter(ArrayList<Store> stores, Context ctx) {
+    public EventsCardsAdapter(ArrayList<Store> stores, Context ctx, Location userLocation) {
         this.stores = stores;
         this.ctx = ctx;
+        this.userLocation = userLocation;
+        Collections.sort(this.stores);
+        Log.i(TAG, "stores sorted");
     }
 
     /**
@@ -65,7 +74,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         cardHolder.storeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "activity di dettaglio");
+                Log.d(TAG, "preparazione activity di dettaglio");
                 Intent vIntent = new Intent(ctx, DetailStoreActivity.class);
                 Bundle vBundle = new Bundle();
                 vBundle.putString(DetailStoreActivity.KEY_STORE, stores.get(position).getGUID());
@@ -79,7 +88,6 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             public void onClick(View v) {
                 Log.d(TAG, "mappa");
 
-
                 // TODO: collegare alla mappa
             }
         });
@@ -92,6 +100,8 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
                 ctx.startActivity(intent);
             }
         });
+
+        cardHolder.distance.setText(stores.get(position).getLastKnownDistance() + " km da te");
     }
 
     @Override
@@ -104,11 +114,11 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         return stores.size();
     }
 
-    public void addEvents(List<Store> eventsToAdd) {
-        for (Store newEvent : eventsToAdd) {
-            stores.add(newEvent);
-            notifyItemInserted(stores.size() - 1);
-        }
+    public void swapStores(ArrayList<Store> newStores){
+        Log.i(TAG, "swapStores");
+        Collections.sort(stores);
+        stores = newStores;
+        notifyDataSetChanged();
     }
 
     /**
@@ -119,6 +129,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         TextView storeName;
         TextView storeAddress;
         TextView storePhone;
+        TextView distance;
 
         CardViewHolder(View itemView) {
             super(itemView);
@@ -126,6 +137,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             storeName = (TextView) itemView.findViewById(R.id.storeName);
             storeAddress = (TextView) itemView.findViewById(R.id.storeAddress);
             storePhone = (TextView) itemView.findViewById(R.id.storePhone);
+            distance = (TextView) itemView.findViewById(R.id.storeDistance);
         }
     }
 

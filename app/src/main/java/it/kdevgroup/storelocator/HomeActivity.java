@@ -1,5 +1,8 @@
 package it.kdevgroup.storelocator;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -19,24 +22,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.couchbase.lite.CouchbaseLiteException;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import org.json.JSONException;
-
 import java.util.ArrayList;
-import java.util.Map;
-
 import cz.msebera.android.httpclient.Header;
 import it.kdevgroup.storelocator.database.CouchbaseDB;
-import it.kdevgroup.storelocator.database.IAsyncMapQueryHandler;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        LocationListener {
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -85,7 +83,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public interface StoresUpdater {
-        void updateStores(ArrayList<Store> newStores);
+        void updateStores();
     }
 
     private static final String TAG = "HomeActivity";
@@ -99,6 +97,8 @@ public class HomeActivity extends AppCompatActivity
     private boolean goSnack = true;
     private ArrayList<Store> stores;
     private FragmentManager fragManager;
+    private LocationManager locationManager;
+    private Location userLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +110,16 @@ public class HomeActivity extends AppCompatActivity
 
         pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
         database = new CouchbaseDB(getApplicationContext());
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        userLocation = new Location("");
+        setUserLocation();
+
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        assert viewPager != null;   //conferma che non è null
+        viewPager.setAdapter(pagerAdapter);
 
         ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
 
@@ -123,6 +133,7 @@ public class HomeActivity extends AppCompatActivity
         if (stores == null) {
             stores = new ArrayList<>();
             try {
+                /*
                 database.getStoresAsync(new IAsyncMapQueryHandler() {
                     @Override
                     public void handle(Map<String, Object> value, Throwable error) {
@@ -139,26 +150,31 @@ public class HomeActivity extends AppCompatActivity
                         }
                     }
                 });
+                */
+                stores = database.getStores();
+                if (stores != null)
+                    setDistanceFromStores();
             } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
             }
         }
 
-        if (stores == null) {
-            stores = new ArrayList<>();
+        if (stores == null && isNetworkAvailable()) {
+            getStoresFromServer();
         }
 
-        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
-        // user swipes between sections.
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        assert viewPager != null;   //conferma che non è null
-        viewPager.setAdapter(pagerAdapter);
+        if (stores == null) {
+            stores = new ArrayList<>();
+            //TODO dialog di errore
+        }
 
-        //se non ho preso negozi dal bundle e dal database li chiedo al server
-//        if (stores.size() == 0 && isNetworkAvailable()) {
-//            getStoresFromServer();
-//        }
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
+        /**
+         * da qua in poi setup di layout
+         */
         //snackbar di benvenuto, mostrata una volta sola
         if (goSnack) {
             Snackbar.make(viewPager, "Benvenuto " + User.getInstance().getName(), Snackbar.LENGTH_LONG).show();
@@ -170,9 +186,6 @@ public class HomeActivity extends AppCompatActivity
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager);
 
-        /**
-         * da qua in poi drawer
-         */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -185,9 +198,10 @@ public class HomeActivity extends AppCompatActivity
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        //notifico i frammenti di aggiornarsi per evitare problemi
+        //in caso il fragment carichi prima del database (difficile)
+        notifyFragments();
     }
 
     public ArrayList<Store> getStores() {
@@ -222,17 +236,16 @@ public class HomeActivity extends AppCompatActivity
 
                         //salvo store nel database
                         try {
+
                             database.saveStores(stores);
                         } catch (CouchbaseLiteException e) {
                             e.printStackTrace();
                         }
 
-                        //prendo il fragment corrente castandolo come interfaccia
-                        //e gli dico di aver aggiornato i negozi e quindi di fare cose
-                        StoresUpdater currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 0);
-                        currentFragment.updateStores(stores);
-                        currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 1);
-                        currentFragment.updateStores(stores);
+                        //TODO la prima volta questa viene chiamata troppo presto e userLocation non è ancora stato valorizzato, da fixare
+                        setDistanceFromStores();
+
+                        notifyFragments();
                     }
                 } else {
                     Snackbar.make(viewPager, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
@@ -247,6 +260,34 @@ public class HomeActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    /**
+     * Avvisa i fragment di aggiornarsi, se viene chiamata prima
+     * della loro creazione il manager torna null ma viene gestito
+     */
+    public void notifyFragments(){
+        Log.i(TAG, "notifyFragments");
+        StoresUpdater currentFragment;
+        //prendo tutti i fragment castandoli come interfaccia
+        //e gli dico di aggiornarsi la lista di negozi
+
+        //Controllo se il fragment è già stato creato, se sì allora gli notifico l'aggiornamento dei negozi
+        for(int i = 0; i < pagerAdapter.getCount(); ++i) {
+            if( (currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + i)) != null){
+                currentFragment.updateStores();
+            }
+        }
+    }
+
+    public void setDistanceFromStores(){
+        Log.i(TAG, "setDistanceFromStores");
+        for (Store store : stores) {
+            Location storeLocation = new Location("");
+            storeLocation.setLatitude( Double.parseDouble(store.getLatitude()) );
+            storeLocation.setLongitude( Double.parseDouble(store.getLongitude()) );
+            store.setLastKnownDistance( Math.round(userLocation.distanceTo(storeLocation) / 1000) );
+        }
     }
 
     @Override
@@ -311,6 +352,42 @@ public class HomeActivity extends AppCompatActivity
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public Location getUserLocation () {
+        return userLocation;
+    }
+
+    public void setUserLocation () {
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        try {
+            locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) throws SecurityException{
+
+        //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
+        userLocation = location;
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 
     @Override

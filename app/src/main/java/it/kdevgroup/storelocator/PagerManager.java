@@ -2,6 +2,9 @@ package it.kdevgroup.storelocator;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -73,7 +77,7 @@ public class PagerManager {
         private static final String USER_KEY_FOR_BUNDLE = "UserKeyForBundle";
 
         private static Context context;
-        private ArrayList<Store> stores;
+        //private ArrayList<Store> stores;
         private EventsCardsAdapter cardsAdapter;
         private RecyclerView recyclerView;
         private LinearLayoutManager layoutManager;
@@ -90,6 +94,9 @@ public class PagerManager {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
+            homeActivity = (HomeActivity) context;
+            cardsAdapter = new EventsCardsAdapter(homeActivity.getStores(), context, homeActivity.getUserLocation());
         }
 
         @Override
@@ -103,24 +110,16 @@ public class PagerManager {
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
             if (savedInstanceState != null) {
-                stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
+                //stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
                 if (User.isNull())
                     User.getInstance().setInstance((User) savedInstanceState.getParcelable(USER_KEY_FOR_BUNDLE));
                 Log.d(TAG, "trovati utente e stores nel bundle");
             }
 
-            //castare il context non sembra dare problemi
-            homeActivity = (HomeActivity) context;
-
-            if (stores == null)
-                stores = homeActivity.getStores();
-
-            if (stores != null && stores.size() > 0) {
-                updateAdapter();
-            }
-
-            cardsAdapter = new EventsCardsAdapter(stores, context);
             recyclerView.setAdapter(cardsAdapter);
+
+            //if (stores == null)
+            //    stores = homeActivity.getStores();
 
             // --- LAYOUT MANAGER
             /**
@@ -142,33 +141,19 @@ public class PagerManager {
         }
 
         @Override
-        public void onAttach(Context context) {
-            super.onAttach(context);
-            Log.d(TAG, "onAttach: ");
-        }
-
-        @Override
         public void onSaveInstanceState(Bundle outState) {
-            outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
+            //outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
             outState.putParcelable(USER_KEY_FOR_BUNDLE, User.getInstance());
             super.onSaveInstanceState(outState);
             Log.d(TAG, "onSaveInstanceState: ");
         }
 
-        @Override
-        public void onDetach() {
-            super.onDetach();
-            Log.d(TAG, "onDetach: ");
-        }
-
         public void updateAdapter() {
-            cardsAdapter = new EventsCardsAdapter(stores, context);
-            recyclerView.swapAdapter(cardsAdapter, true);
+            cardsAdapter.swapStores(homeActivity.getStores());
         }
 
         @Override
-        public void updateStores(ArrayList<Store> newStores) {
-            stores = newStores;
+        public void updateStores() {
             updateAdapter();
         }
     }
@@ -230,14 +215,21 @@ public class PagerManager {
                 stores = homeActivity.getStores();
 
             if (stores != null && stores.size() > 0) {
-                updateStores(stores);
+                setMarkers();
             }
 
         }
 
         @Override
-        public void updateStores(ArrayList<Store> newStores) {
-            stores = newStores;
+        public void updateStores() {
+            try {
+                stores = homeActivity.getStores();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void setMarkers(){
             if (googleMap != null) {
                 for (int i = 0; i < stores.size(); i++) {
                     Log.i("onMapReady: ", "Ciclo Markers");
