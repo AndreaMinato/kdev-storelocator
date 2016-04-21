@@ -1,9 +1,7 @@
 package it.kdevgroup.storelocator;
 
 import android.location.LocationListener;
-import android.app.FragmentTransaction;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
