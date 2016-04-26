@@ -126,7 +126,6 @@ public class CouchbaseDB {
 
 
     /**
-     *
      * cancella l'utente dal database
      *
      * @param user utente da cancellare
@@ -205,21 +204,31 @@ public class CouchbaseDB {
         value documento ->  store.toHashMap()
          */
         for (Store store : stores) {
-            Document document = db.getExistingDocument(store.getGUID());
-
-            // se non ho gia il documento, lo creo e inserisco il type per identificarlo
-            Map<String, Object> properties = new HashMap<>();
-            if (document == null) {
-                document = db.getDocument(store.getGUID());
-                properties.put(TYPE_KEY, STORE_TYPE_VALUE);     // "type": "Store"
-                document.putProperties(properties);
-            }
-            // ottengo le proprietà per la modifica
-
-            properties.putAll(document.getProperties());
-            properties.putAll(store.toHashMap());       // aggiungo lo store alle proprietà (se gia presenti, sovrascrivo)
-            document.putProperties(properties);         // salvo nel documento
+            saveStore(store);
         }
+    }
+
+    /**
+     * Salva un unico store nel database
+     *
+     * @param store
+     * @throws CouchbaseLiteException
+     */
+    public void saveStore(Store store) throws CouchbaseLiteException {
+        Document document = db.getExistingDocument(store.getGUID());
+
+        // se non ho gia il documento, lo creo e inserisco il type per identificarlo
+        Map<String, Object> properties = new HashMap<>();
+        if (document == null) {
+            document = db.getDocument(store.getGUID());
+            properties.put(TYPE_KEY, STORE_TYPE_VALUE);     // "type": "Store"
+            document.putProperties(properties);
+        }
+        // ottengo le proprietà per la modifica
+
+        properties.putAll(document.getProperties());
+        properties.putAll(store.toHashMap());       // aggiungo lo store alle proprietà (se gia presenti, sovrascrivo)
+        document.putProperties(properties);         // salvo nel documento
     }
 
     /**
@@ -248,7 +257,32 @@ public class CouchbaseDB {
     }
 
     /**
+     * Legge solamente uno store dal db dato un guid - ideale per il dettaglio
+     *
+     * @param guid guid dello store da leggere
+     * @return
+     * @throws CouchbaseLiteException
+     */
+    public Store getStore(String guid) throws CouchbaseLiteException {
+        View view = db.getView(STORES_VIEW);
+        Query query = view.createQuery();
+        query.setMapOnly(true);
+        QueryEnumerator rows = query.run();
+
+        if (rows.getCount() == 0)
+            return null;
+
+        for (QueryRow row : rows) {
+            if (row.getDocumentId().equals(guid))
+                return new Store((Map<String, Object>) row.getValue());
+        }
+
+        return null;
+    }
+
+    /**
      * Esegue asincronamente la query per ottenere gli stores
+     *
      * @param handler
      * @throws CouchbaseLiteException
      */
@@ -271,5 +305,39 @@ public class CouchbaseDB {
                 handler.onFinish();
             }
         });
+    }
+
+    /**
+     * Controlla se lo store con il guid passato è presente nel database
+     *
+     * @param guid guid dello store da ricercare
+     * @return
+     * @throws CouchbaseLiteException
+     */
+    public boolean isThisStoreStoredWithDetails(String guid) throws CouchbaseLiteException {
+        final String TAG = "isThisStoreStoredWithDetails";
+        long time = System.currentTimeMillis();
+
+        View view = db.getView(STORES_VIEW);
+        Query query = view.createQuery();
+        query.setMapOnly(true);
+        QueryEnumerator rows = query.run();
+
+        Log.d(TAG, "isThisStoreStoredWithDetails: query run in "
+                + (System.currentTimeMillis() - time) + "ms");
+
+        if (rows.getCount() == 0)
+            return false;
+
+        for (QueryRow row : rows) {
+            if (row.getDocumentId().equals(guid)) {
+                // Controllo se c'è la descrizione perchè è un campo che trovo solo
+                // nel dettaglio dello store. Avrei potuto usare qualsiasi altro campo,
+                // ma mi sembrava il piu ovvio.
+                if (new Store(((Map<String, Object>) row.getValue())).getDescription() != null)
+                    return true;
+            }
+        }
+        return false;
     }
 }

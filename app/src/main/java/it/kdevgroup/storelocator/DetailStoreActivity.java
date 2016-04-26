@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.couchbase.lite.CouchbaseLiteException;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,6 +26,7 @@ import java.net.URISyntaxException;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.client.utils.URIBuilder;
+import it.kdevgroup.storelocator.database.CouchbaseDB;
 
 public class DetailStoreActivity extends AppCompatActivity {
 
@@ -34,6 +36,8 @@ public class DetailStoreActivity extends AppCompatActivity {
     private ImageView imgMap;//dettaglio longitudine e latitudine
     private TextView txtStoreName, txtStoreAddress, txtStorePhone, txtSalesPerson, txtStoreDescription;
     private BroadcastReceiver broadcastReceiver;
+    private CouchbaseDB database;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -47,6 +51,8 @@ public class DetailStoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_store);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        database = new CouchbaseDB(getApplication());
 
         // broadcast receiver per terminare l'activity in caso di logout
         IntentFilter intentFilter = new IntentFilter();
@@ -82,39 +88,56 @@ public class DetailStoreActivity extends AppCompatActivity {
         if (guid != null) {
 
             final Bundle finalBundle = bundle;
-            ApiManager.getInstance().getStoreDetail(guid, User.getInstance().getSession(), new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    try {
-                        String response = new String(responseBody);
-                        JSONObject jsonResponse = new JSONObject(response);
-                        String[] error = JsonParser.getInstance().getErrorInfoFromResponse(response);
-                        if (error == null) {
-                            if (jsonResponse != null) {
-                                store = JsonParser.getInstance().parseStoreDetails(jsonResponse.getJSONObject("data"));
-                                updateFields(store);
-                                imgMap.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            getMap(imgMap, store.getLatitude(), store.getLongitude());
-                                        } catch (URISyntaxException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
+            boolean storeAlreadyStored = false;
+            try {
+                storeAlreadyStored = database.isThisStoreStoredWithDetails(guid);
+            } catch (CouchbaseLiteException e) {
+                e.printStackTrace();
+                storeAlreadyStored = false;
+            }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    error.printStackTrace();
+            if (!storeAlreadyStored) {
+                ApiManager.getInstance().getStoreDetail(guid, User.getInstance().getSession(), new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        try {
+                            String response = new String(responseBody);
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String[] error = JsonParser.getInstance().getErrorInfoFromResponse(response);
+                            if (error == null) {
+                                if (jsonResponse != null) {
+                                    store = JsonParser.getInstance().parseStoreDetails(jsonResponse.getJSONObject("data"));
+                                    updateFields(store);
+                                    imgMap.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            try {
+                                                getMap(imgMap, store.getLatitude(), store.getLongitude());
+                                            } catch (URISyntaxException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        error.printStackTrace();
+                    }
+                });
+            } else {
+                try {
+                    store = database.getStore(guid);
+                } catch (CouchbaseLiteException e) {
+                    e.printStackTrace();
+                    store = null;
                 }
-            });
+            }
 
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -131,6 +154,13 @@ public class DetailStoreActivity extends AppCompatActivity {
         txtStoreDescription.setText(store.getDescription());
     }
 
+    /**
+     * Imposta la mappa statica che si andrà a chiamare con picasso
+     *
+     * @param imgMap
+     * @param latlong
+     * @throws URISyntaxException
+     */
     private void getMap(ImageView imgMap, String... latlong) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder("https://maps.googleapis.com/maps/api/staticmap");
         uriBuilder.addParameter("maptype", "roadmap");
