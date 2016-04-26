@@ -236,6 +236,9 @@ public class PagerManager {
                     googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(stores.get(i).getLatitude()), Double.parseDouble(stores.get(i).getLongitude())))
                             .icon(BitmapDescriptorFactory.defaultMarker(hue))
+                            .alpha(0.7f)
+                            .rotation(15)
+                            .snippet(stores.get(i).getAddress())
                             .title(stores.get(i).getName()));
                 }
             }
