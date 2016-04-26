@@ -34,11 +34,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import it.kdevgroup.storelocator.database.CouchbaseDB;
-import it.kdevgroup.storelocator.database.IAsyncMapQueryHandler;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LogoutAlertDialog.passDatabase, LocationListener {
@@ -185,7 +183,7 @@ public class HomeActivity extends AppCompatActivity
         if (stores == null) {
             stores = new ArrayList<>();
             try {
-
+/*
                 database.getStoresAsync(new IAsyncMapQueryHandler() {
                     @Override
                     public void handle(Map<String, Object> value, Throwable error) {
@@ -209,8 +207,8 @@ public class HomeActivity extends AppCompatActivity
                         }
                     }
                 });
-
-                //stores = database.getStores();
+*/
+                stores = database.getStores();
 
             } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
