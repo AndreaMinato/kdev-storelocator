@@ -473,6 +473,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onLocationChanged(Location location) throws SecurityException {
         Log.i(TAG, "onLocationChanged: " + location.toString());
+
         //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
         userLocation = location;
         locationManager.removeUpdates(this);
