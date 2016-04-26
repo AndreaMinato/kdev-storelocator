@@ -226,13 +226,16 @@ public class PagerManager {
             }
         }
 
-        public void setMarkers(){
+        public void setMarkers() {
+            //Il marker viene dato con il colore di default rosso, per modificare il suo colore
+            //si gioca con l'hue del colore sarurandolo per ottenere quello che si preferisce (37-45) sono tutte tonalità simili all'oro ma questa mi piace
+            float hue = 39;
             if (googleMap != null) {
                 for (int i = 0; i < stores.size(); i++) {
                     Log.i("onMapReady: ", "Ciclo Markers");
                     googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(stores.get(i).getLatitude()), Double.parseDouble(stores.get(i).getLongitude())))
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            .icon(BitmapDescriptorFactory.defaultMarker(hue))
                             .title(stores.get(i).getName()));
                 }
             }
