@@ -45,6 +45,8 @@ import it.kdevgroup.storelocator.database.IAsyncMapQueryHandler;
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LogoutAlertDialog.passDatabase, LocationListener {
 
+
+    // TODO parallax detail, email to da detail, andare dal pin al detail
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.

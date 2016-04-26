@@ -1,6 +1,7 @@
 package it.kdevgroup.storelocator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -240,6 +242,20 @@ public class PagerManager {
                             .rotation(15)
                             .snippet(stores.get(i).getAddress())
                             .title(stores.get(i).getName()));
+                    //final String thisGUID=stores.get(i).getGUID();
+                    googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                        @Override
+                        public void onInfoWindowClick(Marker marker) {
+                            Log.i("click", "cliccato");
+                            Intent vIntent = new Intent(getActivity(), DetailStoreActivity.class);
+                            Bundle vBundle = new Bundle();
+                            int k = Integer.parseInt(marker.getId().substring(1));
+                            vBundle.putString(DetailStoreActivity.KEY_STORE, stores.get(k).getGUID());
+                            vIntent.putExtras(vBundle);
+                            getActivity().startActivity(vIntent);
+                        }
+                    });
+
                 }
             }
         }
