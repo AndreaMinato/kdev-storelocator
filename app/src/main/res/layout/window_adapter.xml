@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
-        android:id="@+id/txtTitle"
+        android:id="@+id/txtStoreName"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -20,9 +20,9 @@
         android:text="Medium Text"
         android:id="@+id/txtInfo"
         android:layout_marginTop="53dp"
-        android:layout_below="@+id/txtTitle"
-        android:layout_alignLeft="@+id/txtTitle"
-        android:layout_alignStart="@+id/txtTitle" />
+        android:layout_below="@+id/txtStoreName"
+        android:layout_alignLeft="@+id/txtStoreName"
+        android:layout_alignStart="@+id/txtStoreName" />
 
     <TextView
         android:layout_width="wrap_content"
