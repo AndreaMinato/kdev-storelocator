@@ -6,6 +6,7 @@ import android.util.Log;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -56,10 +57,23 @@ public class ApiManager {
      *
      * @param session sessione dell'utente
      */
-    public void getStores(String session, AsyncHttpResponseHandler handler) {
+    public void getAsyncStores(String session, AsyncHttpResponseHandler handler) {
         final String session_key = "x-bitrace-session";
 
         AsyncHttpClient httpClient = new AsyncHttpClient();
+        httpClient.addHeader(session_key, session);
+        httpClient.get(LINK_GET_STORES, handler);
+    }
+
+    /**
+     * Richiede la lista di negozi con la session passata
+     *
+     * @param session sessione dell'utente
+     */
+    public void getSyncStores(String session, AsyncHttpResponseHandler handler) {
+        final String session_key = "x-bitrace-session";
+
+        SyncHttpClient httpClient = new SyncHttpClient();
         httpClient.addHeader(session_key, session);
         httpClient.get(LINK_GET_STORES, handler);
     }

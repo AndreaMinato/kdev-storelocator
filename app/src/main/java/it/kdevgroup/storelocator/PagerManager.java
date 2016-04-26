@@ -116,7 +116,7 @@ public class PagerManager {
             recyclerView.setAdapter(cardsAdapter);
 
             //if (stores == null)
-            //    stores = homeActivity.getStores();
+            //    stores = homeActivity.getAsyncStores();
 
             // --- LAYOUT MANAGER
             /**

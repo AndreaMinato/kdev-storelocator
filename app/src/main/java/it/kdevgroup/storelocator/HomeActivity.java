@@ -192,7 +192,7 @@ public class HomeActivity extends AppCompatActivity
                         if (value == null) {
                             Log.w(TAG, "handle: value is null", error);
                             if (isNetworkAvailable())
-                                getStoresFromServer();
+                                getStoresFromServer(false);
                             return;
 
                         }
@@ -210,7 +210,7 @@ public class HomeActivity extends AppCompatActivity
                     }
                 });
 
-//                stores = database.getStores();
+//                stores = database.getAsyncStores();
 
             } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
@@ -218,7 +218,7 @@ public class HomeActivity extends AppCompatActivity
         }
 
         if (stores == null && isNetworkAvailable()) {
-            getStoresFromServer();
+            getStoresFromServer(true);
         }
 
         if (stores == null) {
@@ -266,9 +266,9 @@ public class HomeActivity extends AppCompatActivity
         return stores;
     }
 
-    public void getStoresFromServer() {    //controlli già verificati prima della chiamata
+    public void getStoresFromServer(boolean async) {    //controlli già verificati prima della chiamata
         Log.i(TAG, "getStoresFromServer");
-        ApiManager.getInstance().getStores(User.getInstance().getSession(), new AsyncHttpResponseHandler() {
+        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -317,7 +317,11 @@ public class HomeActivity extends AppCompatActivity
                     Log.i("onFailure response:", jsonBody);
                 }
             }
-        });
+        };
+        if (async)
+            ApiManager.getInstance().getAsyncStores(User.getInstance().getSession(), handler);
+        else
+            ApiManager.getInstance().getSyncStores(User.getInstance().getSession(), handler);
     }
 
     /**
