@@ -97,6 +97,7 @@ public class DetailStoreActivity extends AppCompatActivity {
             }
 
             if (!storeAlreadyStored) {
+                Log.d(TAG, "onCreate: evento non presente nel db");
                 ApiManager.getInstance().getStoreDetail(guid, User.getInstance().getSession(), new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -107,17 +108,12 @@ public class DetailStoreActivity extends AppCompatActivity {
                             if (error == null) {
                                 if (jsonResponse != null) {
                                     store = JsonParser.getInstance().parseStoreDetails(jsonResponse.getJSONObject("data"));
-                                    updateFields(store);
-                                    imgMap.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            try {
-                                                getMap(imgMap, store.getLatitude(), store.getLongitude());
-                                            } catch (URISyntaxException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    });
+                                    try {
+                                        database.saveStore(store);
+                                    } catch (CouchbaseLiteException e) {
+                                        e.printStackTrace();
+                                    }
+                                    updateFieldsAndMap(store);
                                 }
                             }
                         } catch (JSONException e) {
@@ -133,6 +129,8 @@ public class DetailStoreActivity extends AppCompatActivity {
             } else {
                 try {
                     store = database.getStore(guid);
+                    updateFieldsAndMap(store);
+                    Log.d(TAG, "onCreate: caricato evento dal db");
                 } catch (CouchbaseLiteException e) {
                     e.printStackTrace();
                     store = null;
@@ -145,23 +143,33 @@ public class DetailStoreActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    private void updateFields(Store store) {
+    private void updateFieldsAndMap(final Store store) {
 
         txtStoreName.setText(store.getName());
         txtStoreAddress.setText(store.getAddress());
         txtStorePhone.setText(store.getPhone());
         txtSalesPerson.setText(store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
         txtStoreDescription.setText(store.getDescription());
+
+        imgMap.post(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getMap(store.getLatitude(), store.getLongitude());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     /**
      * Imposta la mappa statica che si andrà a chiamare con picasso
      *
-     * @param imgMap
      * @param latlong
      * @throws URISyntaxException
      */
-    private void getMap(ImageView imgMap, String... latlong) throws URISyntaxException {
+    private void getMap(String... latlong) throws URISyntaxException {
         URIBuilder uriBuilder = new URIBuilder("https://maps.googleapis.com/maps/api/staticmap");
         uriBuilder.addParameter("maptype", "roadmap");
         uriBuilder.addParameter("center", String.format("%s,%s", latlong[0], latlong[1]));
