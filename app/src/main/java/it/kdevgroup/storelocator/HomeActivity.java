@@ -209,7 +209,7 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onFinish() {
                         if (stores != null) {
-                            setDistanceFromStores();
+                            //setDistanceFromStores();
                             Collections.sort(stores);
                         }
                     }
@@ -306,7 +306,7 @@ public class HomeActivity extends AppCompatActivity
                         }
 
                         //TODO la prima volta questa viene chiamata troppo presto e userLocation non è ancora stato valorizzato, da fixare
-                        setDistanceFromStores();
+                        //setDistanceFromStores();
 
                         notifyFragments();
                     }
@@ -369,6 +369,8 @@ public class HomeActivity extends AppCompatActivity
             storeLocation.setLongitude(Double.parseDouble(store.getLongitude()));
             store.setLastKnownDistance(Math.round(userLocation.distanceTo(storeLocation) / 1000));
         }
+        Collections.sort(stores);
+        notifyFragments();
     }
 
     @Override
@@ -468,8 +470,6 @@ public class HomeActivity extends AppCompatActivity
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-
-
     @Override
     public void onLocationChanged(Location location) throws SecurityException {
         Log.i(TAG, "onLocationChanged: " + location.toString());
@@ -477,6 +477,7 @@ public class HomeActivity extends AppCompatActivity
         //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
         userLocation = location;
         locationManager.removeUpdates(this);
+        setDistanceFromStores();
     }
 
     @Override
