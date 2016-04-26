@@ -34,7 +34,7 @@
         android:layout_below="@+id/txtTitle" />
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scrollView2"
         android:layout_below="@+id/line0" >
@@ -187,9 +187,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom"
         android:background="#fff"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/scrollView2"
+        android:gravity="bottom">
 
         <Button
             android:layout_width="wrap_content"
