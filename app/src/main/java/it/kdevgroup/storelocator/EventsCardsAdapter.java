@@ -13,12 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by mattia on 07/04/16.
@@ -63,8 +59,8 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
     public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
 
         //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
-        String title=stores.get(position).getName();
-        title=title.toLowerCase();
+        String title = stores.get(position).getName();
+        title = title.toLowerCase();
         StringBuilder rackingSystemSb = new StringBuilder();
         rackingSystemSb.append(title);
         rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
@@ -114,7 +110,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         return stores.size();
     }
 
-    public void swapStores(ArrayList<Store> newStores){
+    public void swapStores(ArrayList<Store> newStores) {
         Log.i(TAG, "swapStores");
         Collections.sort(stores);
         stores = newStores;
@@ -140,5 +136,4 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             distance = (TextView) itemView.findViewById(R.id.storeDistance);
         }
     }
-
 }
