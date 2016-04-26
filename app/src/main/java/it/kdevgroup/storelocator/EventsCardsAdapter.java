@@ -97,7 +97,8 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             }
         });
 
-        cardHolder.distance.setText(stores.get(position).getLastKnownDistance() + " km da te");
+        if(stores.get(position).getLastKnownDistance() != 0)
+            cardHolder.distance.setText(stores.get(position).getLastKnownDistance() + " km da te");
     }
 
     @Override
