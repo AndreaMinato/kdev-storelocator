@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -229,6 +230,27 @@ public class PagerManager {
         }
 
         public void setMarkers() {
+
+            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    View v = getLayoutInflater(null).inflate(R.layout.window_adapter, null);
+
+                    TextView title = (TextView)v.findViewById(R.id.txtTitle);
+                    title.setText(marker.getTitle());
+
+                    TextView info = (TextView)v.findViewById(R.id.txtInfo);
+                    info.setText(marker.getSnippet());
+
+                    return v;
+                }
+            });
+
             //Il marker viene dato con il colore di default rosso, per modificare il suo colore
             //si gioca con l'hue del colore sarurandolo per ottenere quello che si preferisce (37-45) sono tutte tonalità simili all'oro ma questa mi piace
             float hue = 39;
