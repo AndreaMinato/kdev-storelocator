@@ -34,6 +34,8 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
@@ -194,7 +196,6 @@ public class HomeActivity extends AppCompatActivity
                             if (isNetworkAvailable())
                                 getStoresFromServer(false);
                             return;
-
                         }
                         stores.add(new Store(value));
                         if (error != null) {
@@ -215,10 +216,6 @@ public class HomeActivity extends AppCompatActivity
             } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
             }
-        }
-
-        if (stores == null && isNetworkAvailable()) {
-            getStoresFromServer(true);
         }
 
         if (stores == null) {
@@ -264,6 +261,10 @@ public class HomeActivity extends AppCompatActivity
 
     public ArrayList<Store> getStores() {
         return stores;
+    }
+
+    public void getStoresFromServer() {
+        getStoresFromServer(true);
     }
 
     public void getStoresFromServer(boolean async) {    //controlli già verificati prima della chiamata
@@ -342,6 +343,20 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    public Location getUserLocation() {
+        return userLocation;
+    }
+
+    public void setUserLocation() {
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        try {
+            locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            // TODO dialog qualcosa
+        }
+    }
+
     public void setDistanceFromStores() {
         Log.i(TAG, "setDistanceFromStores");
         for (Store store : stores) {
@@ -378,9 +393,14 @@ public class HomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.alphabetic_sort) {
-            return true;
 
-            // TODO: implementare ordinamento
+            Collections.sort(stores, new Comparator<Store>() {
+                @Override
+                public int compare(Store lhs, Store rhs) {
+                    return lhs.getName().compareTo(rhs.getName());
+                }
+            });
+            return true;
         }
 
         if (id == R.id.distance_sort){
@@ -416,6 +436,7 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
     public CouchbaseDB couchbaseDB() {
         return database;
     }
@@ -428,22 +449,11 @@ public class HomeActivity extends AppCompatActivity
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Location getUserLocation() {
-        return userLocation;
-    }
 
-    public void setUserLocation() {
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
-        try {
-            locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onLocationChanged(Location location) throws SecurityException {
-
+        Log.i(TAG, "onLocationChanged: " + location.toString());
         //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
         userLocation = location;
         locationManager.removeUpdates(this);

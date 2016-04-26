@@ -2,9 +2,7 @@ package it.kdevgroup.storelocator;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +106,7 @@ public class User implements Parcelable {
         name = map.get(NAME_KEY).toString();
         surname = map.get(SURNAME_KEY).toString();
         email = map.get(EMAIL_KEY).toString();
-        company = map.get("company").toString();
+        company = map.get(COMPANY_KEY).toString();
         favouriteCompany = map.get("favouriteCompany").toString();
     }
 
