@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/contenuto"
             android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
             android:paddingTop="5dp">
 
             <TextView
@@ -86,7 +87,7 @@
                 android:drawablePadding="5dp"
                 android:textColor="@color/oro"
                 android:gravity="center_vertical"
-                android:padding="5dp" />
+                android:paddingLeft="6dp" />
 
 
         </RelativeLayout>
