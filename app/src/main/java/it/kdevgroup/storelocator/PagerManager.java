@@ -247,6 +247,14 @@ public class PagerManager {
                     TextView info = (TextView)v.findViewById(R.id.txtInfo);
                     info.setText(marker.getSnippet());
 
+                    int k = Integer.parseInt(marker.getId().substring(1));
+
+                    TextView phone = (TextView)v.findViewById(R.id.txtPhone);
+                    phone.setText( stores.get(k).getPhone());
+
+                    TextView mail = (TextView)v.findViewById(R.id.txtMail);
+                    mail.setText( stores.get(k).getEmail());
+
                     return v;
                 }
             });
@@ -256,7 +264,6 @@ public class PagerManager {
             float hue = 39;
             if (googleMap != null) {
                 for (int i = 0; i < stores.size(); i++) {
-                    Log.i("onMapReady: ", "Ciclo Markers");
                     googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(stores.get(i).getLatitude()), Double.parseDouble(stores.get(i).getLongitude())))
                             .icon(BitmapDescriptorFactory.defaultMarker(hue))
