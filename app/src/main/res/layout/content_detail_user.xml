@@ -187,8 +187,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/scrollView2"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:background="#fff"
+        android:layout_marginTop="10dp">
 
         <Button
             android:layout_width="wrap_content"
