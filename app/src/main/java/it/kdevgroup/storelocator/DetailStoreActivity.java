@@ -1,9 +1,14 @@
 package it.kdevgroup.storelocator;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,10 +28,12 @@ import cz.msebera.android.httpclient.client.utils.URIBuilder;
 
 public class DetailStoreActivity extends AppCompatActivity {
 
+    private static final String TAG = "DetailStoreActivity";
     public static final String KEY_STORE = "storePresoDalBundle";
 
     private ImageView imgMap;//dettaglio longitudine e latitudine
     private TextView txtStoreName, txtStoreAddress, txtStorePhone, txtSalesPerson, txtStoreDescription;
+    private BroadcastReceiver broadcastReceiver;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -40,6 +47,19 @@ public class DetailStoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_store);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // broadcast receiver per terminare l'activity in caso di logout
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LogoutAlertDialog.ACTION_LOGOUT);
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(TAG, "onReceive: richiesto logout, termino activity");
+                finish();
+            }
+        };
+        this.registerReceiver(broadcastReceiver, intentFilter);
+
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -167,5 +187,11 @@ public class DetailStoreActivity extends AppCompatActivity {
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    @Override
+    protected void onDestroy() {
+        this.unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 }

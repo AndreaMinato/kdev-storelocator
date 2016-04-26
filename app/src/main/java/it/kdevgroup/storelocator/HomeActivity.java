@@ -1,20 +1,22 @@
 package it.kdevgroup.storelocator;
 
-import android.location.LocationListener;
-import android.location.Location;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.support.v4.app.FragmentManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,20 +24,24 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import com.couchbase.lite.CouchbaseLiteException;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.Map;
+
 import cz.msebera.android.httpclient.Header;
 import it.kdevgroup.storelocator.database.CouchbaseDB;
+import it.kdevgroup.storelocator.database.IAsyncMapQueryHandler;
 
 public class HomeActivity extends AppCompatActivity
-
-        implements NavigationView.OnNavigationItemSelectedListener,LogoutAlertDialog.passDatabase,LocationListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener, LogoutAlertDialog.passDatabase, LocationListener {
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -87,18 +93,23 @@ public class HomeActivity extends AppCompatActivity
         void updateStores();
     }
 
+
     private static final String TAG = "HomeActivity";
     private static final String SAVE = "onsaved";
     public static final String STORES_KEY_FOR_BUNDLE = "StoresListKeyForBundle";
-    public static final String DIALOG="start dialog";
+    public static final String DIALOG = "start dialog";
 
     private PagerManager.PagerAdapter pagerAdapter;
+    private DrawerLayout drawerLayout;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private CouchbaseDB database;
     private boolean goSnack = true;
     private ArrayList<Store> stores;
     private FragmentManager fragManager;
+
+    private BroadcastReceiver broadcastReceiver;
+
     private LocationManager locationManager;
     private Location userLocation;
 
@@ -107,6 +118,45 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(LogoutAlertDialog.ACTION_LOGOUT);
+
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(TAG, "onReceive: richiesto logout, termino activity");
+                finish();
+            }
+        };
+        this.registerReceiver(broadcastReceiver, intentFilter);
+/*
+        if (drawerLayout != null) {
+            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                @Override
+                public void onDrawerSlide(View drawerView, float slideOffset) {
+//                    Log.d(TAG, "onDrawerSlide: " + slideOffset);
+                        // TODO eventuali animazioni
+                }
+
+                @Override
+                public void onDrawerOpened(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+
+                }
+
+                @Override
+                public void onDrawerStateChanged(int newState) {
+
+                }
+            });
+        }
+*/
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -135,7 +185,7 @@ public class HomeActivity extends AppCompatActivity
         if (stores == null) {
             stores = new ArrayList<>();
             try {
-                /*
+
                 database.getStoresAsync(new IAsyncMapQueryHandler() {
                     @Override
                     public void handle(Map<String, Object> value, Throwable error) {
@@ -151,11 +201,17 @@ public class HomeActivity extends AppCompatActivity
                             error.printStackTrace();
                         }
                     }
+
+                    @Override
+                    public void onFinish() {
+                        if (stores != null) {
+                            setDistanceFromStores();
+                        }
+                    }
                 });
-                */
-                stores = database.getStores();
-                if (stores != null)
-                    setDistanceFromStores();
+
+                //stores = database.getStores();
+
             } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
             }
@@ -268,27 +324,27 @@ public class HomeActivity extends AppCompatActivity
      * Avvisa i fragment di aggiornarsi, se viene chiamata prima
      * della loro creazione il manager torna null ma viene gestito
      */
-    public void notifyFragments(){
+    public void notifyFragments() {
         Log.i(TAG, "notifyFragments");
         StoresUpdater currentFragment;
         //prendo tutti i fragment castandoli come interfaccia
         //e gli dico di aggiornarsi la lista di negozi
 
         //Controllo se il fragment è già stato creato, se sì allora gli notifico l'aggiornamento dei negozi
-        for(int i = 0; i < pagerAdapter.getCount(); ++i) {
-            if( (currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + i)) != null){
+        for (int i = 0; i < pagerAdapter.getCount(); ++i) {
+            if ((currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + i)) != null) {
                 currentFragment.updateStores();
             }
         }
     }
 
-    public void setDistanceFromStores(){
+    public void setDistanceFromStores() {
         Log.i(TAG, "setDistanceFromStores");
         for (Store store : stores) {
             Location storeLocation = new Location("");
-            storeLocation.setLatitude( Double.parseDouble(store.getLatitude()) );
-            storeLocation.setLongitude( Double.parseDouble(store.getLongitude()) );
-            store.setLastKnownDistance( Math.round(userLocation.distanceTo(storeLocation) / 1000) );
+            storeLocation.setLatitude(Double.parseDouble(store.getLatitude()));
+            storeLocation.setLongitude(Double.parseDouble(store.getLongitude()));
+            store.setLastKnownDistance(Math.round(userLocation.distanceTo(storeLocation) / 1000));
         }
     }
 
@@ -331,16 +387,16 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_user) {
-            Intent vInt = new Intent(this, DetailUser.class);
+            Intent vInt = new Intent(this, DetailUserActivity.class);
             startActivity(vInt);
 
-        //} else if (id == R.id.nav_preferiti) {
+            //} else if (id == R.id.nav_preferiti) {
 
         } else if (id == R.id.nav_impostazioni) {
 
         } else if (id == R.id.nav_logout) {
-            LogoutAlertDialog logoutAlertDialog=new LogoutAlertDialog();
-            logoutAlertDialog.show(getFragmentManager(),DIALOG);
+            LogoutAlertDialog logoutAlertDialog = new LogoutAlertDialog();
+            logoutAlertDialog.show(getFragmentManager(), DIALOG);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -349,7 +405,9 @@ public class HomeActivity extends AppCompatActivity
         return true;
     }
 
-    public CouchbaseDB couchbaseDB(){ return database;}
+    public CouchbaseDB couchbaseDB() {
+        return database;
+    }
 
     // Metodo che controlla la possibilità di accedere a internet
     public boolean isNetworkAvailable() {
@@ -359,11 +417,11 @@ public class HomeActivity extends AppCompatActivity
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public Location getUserLocation () {
+    public Location getUserLocation() {
         return userLocation;
     }
 
-    public void setUserLocation () {
+    public void setUserLocation() {
         String locationProvider = LocationManager.NETWORK_PROVIDER;
         try {
             locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
@@ -373,7 +431,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLocationChanged(Location location) throws SecurityException{
+    public void onLocationChanged(Location location) throws SecurityException {
 
         //setto la posizione dell'utente ogni volta che apre il fragment per consentire alle card di scrivere la distanza
         userLocation = location;
@@ -400,5 +458,11 @@ public class HomeActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
         outState.putBoolean(SAVE, goSnack);
+    }
+
+    @Override
+    protected void onDestroy() {
+        this.unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 }

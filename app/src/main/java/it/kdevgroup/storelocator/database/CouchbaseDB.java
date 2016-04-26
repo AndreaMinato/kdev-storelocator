@@ -261,12 +261,14 @@ public class CouchbaseDB {
             public void completed(QueryEnumerator rows, Throwable error) {
                 if (rows.getCount() == 0) {
                     handler.handle(null, error);
+                    handler.onFinish();
                     return;
                 }
 
                 for (QueryRow row : rows) {
                     handler.handle((Map<String, Object>) row.getValue(), error);
                 }
+                handler.onFinish();
             }
         });
     }

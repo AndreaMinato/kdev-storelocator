@@ -18,11 +18,14 @@ import it.kdevgroup.storelocator.database.CouchbaseDB;
  */
 public class LogoutAlertDialog extends DialogFragment {
 
-    public interface passDatabase{
+    public static final String ACTION_LOGOUT = "it.kdevgroup.storelocator.CUSTOM_ACTION_LOGOUT";
+    private static final String TAG = "LogoutAlertDialog";
+
+    public interface passDatabase {
         CouchbaseDB couchbaseDB();
     }
 
-    public LogoutAlertDialog(){
+    public LogoutAlertDialog() {
         //default constructor
     }
 
@@ -33,16 +36,16 @@ public class LogoutAlertDialog extends DialogFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
 
-        if(activity instanceof passDatabase){
-            database=(passDatabase)activity;
-            ctx=activity.getBaseContext();
+        if (activity instanceof passDatabase) {
+            database = (passDatabase) activity;
+            ctx = activity.getBaseContext();
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        database=null;
+        database = null;
     }
 
     @Override
@@ -52,14 +55,30 @@ public class LogoutAlertDialog extends DialogFragment {
         builder.setMessage("Vuoi uscire da Jesse Store Locator?")
                 .setPositiveButton("Esci", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Intent logout = new Intent(ctx, LoginActivity.class);
+                        Intent loginActivity = new Intent(ctx, LoginActivity.class);
+
+//                        logout.addFlags(Intent.FLAG_cle);
                         try {
                             database.couchbaseDB().deleteUser(User.getInstance());
                         } catch (CouchbaseLiteException e) {
                             e.printStackTrace();
                         }
-                        startActivity(logout);
-                        getActivity().finish();
+                        startActivity(loginActivity);
+
+                        // manda un broadcast a tutte le activity per dire di terminarsi
+                        // causa logout effettuato
+                        Intent broadcastLogout = new Intent(ACTION_LOGOUT);
+                        getActivity().sendBroadcast(broadcastLogout);
+/*
+                        if (getActivity() != null) {
+                            Log.d(TAG, "onClick: activity not null");
+                            if (getActivity().getParent() != null) {
+                                Log.d(TAG, "onClick: parent not null");
+                                getActivity().getParent().finish();
+                            }
+                            getActivity().finish();
+                        }
+*/
                     }
                 })
                 .setNegativeButton("Indietro", new DialogInterface.OnClickListener() {

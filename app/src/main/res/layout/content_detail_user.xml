@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_datail_user"
-    tools:context="it.kdevgroup.storelocator.DetailUser"
+    tools:context=".DetailUserActivity"
     android:orientation="vertical">
 
     <TextView

@@ -8,4 +8,5 @@ import java.util.Map;
  */
 public interface IAsyncMapQueryHandler {
     void handle(Map<String, Object> value, Throwable error);
+    void onFinish();
 }

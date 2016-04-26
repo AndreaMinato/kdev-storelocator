@@ -2,9 +2,6 @@ package it.kdevgroup.storelocator;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -193,7 +190,7 @@ public class PagerManager {
             if (stores == null)
                 stores = homeActivity.getStores();
 
-            //TODO cachare la mappa per visualizzarla anche senza dati se si può
+            //TODO cacare la mappa per visualizzarla anche senza dati se si può
             homeActivity = (HomeActivity) getActivity();
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
@@ -246,114 +243,6 @@ public class PagerManager {
             super.onSaveInstanceState(outState);
             outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
         }
-
-        /*
-        public void setLocationRequest(final String locationProvider){
-            final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-            try {
-                locationManager.requestLocationUpdates(
-                        locationProvider,
-                        FIVE_SECS,
-                        0.5f,       //mezzo metro dalla vecchia location
-                        new LocationListener() {
-
-                            @Override
-                            public void onLocationChanged(Location location) {
-                                Log.i(TAG, "onLocationChanged: lat: " + location.getLatitude());
-                                Log.i(TAG, "onLocationChanged: long: " + location.getLongitude());
-
-                                try {
-                                    if ( isBetterLocation(location, bestLocation) ) {
-                                        bestLocation = location;
-
-                                        //posizione telecamera
-                                        CameraUpdate center = CameraUpdateFactory.newLatLngZoom(
-                                                new LatLng(
-                                                        location.getLatitude(),
-                                                        location.getLongitude()),
-                                                googleMap.getCameraPosition().zoom);    //prendo lo zoom già presente per non rompere le palle ogni volta, si può zoomare solo la prima volta in caso
-                                        googleMap.animateCamera(center);
-
-                                        //tolgo il marker se era già presente
-                                        if(userMarker != null)
-                                            userMarker.remove();
-
-                                        //setta marker
-                                        MarkerOptions userMarkerOptions = new MarkerOptions();
-                                        userMarkerOptions.position(new LatLng(location.getLatitude(), location.getLongitude()));
-                                        userMarkerOptions.title(User.getInstance().getName());
-                                        userMarker = googleMap.addMarker(userMarkerOptions);
-
-                                        Log.i(TAG, "onLocationChanged: animata camera");
-                                    }
-                                } catch (SecurityException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                            @Override
-                            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                            }
-
-                            @Override
-                            public void onProviderEnabled(String provider) {
-
-                            }
-
-                            @Override
-                            public void onProviderDisabled(String provider) {
-                                //qua si scambiano i provider
-                                if (provider.equals(LocationManager.GPS_PROVIDER)) {
-                                    Log.i("Provider cambiato: ", "network");
-                                    setLocationRequest(LocationManager.NETWORK_PROVIDER);
-                                } else {
-                                    Log.i("Provider cambiato: ", "gps");
-                                    setLocationRequest(LocationManager.GPS_PROVIDER);
-                                }
-                            }
-                        });
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-        }
-
-        protected boolean isBetterLocation(Location location, Location currentBestLocation) {
-            if (currentBestLocation == null) {
-                // A new location is always better than no location
-                return true;
-            }
-
-            // Check whether the new location fix is more or less accurate
-            int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-            boolean isLessAccurate = accuracyDelta > 0;
-            boolean isMoreAccurate = accuracyDelta < 0;
-            boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
-            // Check if the old and new location are from the same provider
-            boolean isFromSameProvider = isSameProvider(location.getProvider(),
-                    currentBestLocation.getProvider());
-
-            // Determine location quality using a combination of timeliness and accuracy
-            if (isMoreAccurate) {
-                return true;
-            } else if (!isLessAccurate) {
-                return true;
-            } else if (!isSignificantlyLessAccurate && isFromSameProvider) {
-                return true;
-            }
-            return false;
-        }
-
-        // Checks whether two providers are the same
-        private boolean isSameProvider(String provider1, String provider2) {
-            if (provider1 == null) {
-                return provider2 == null;
-            }
-            return provider1.equals(provider2);
-        }
-        */
     }
 
 
