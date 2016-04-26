@@ -371,8 +371,15 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.alphabetic_sort) {
             return true;
+
+            // TODO: implementare ordinamento
+        }
+
+        if (id == R.id.distance_sort){
+            return true;
+            // TODO: agganciare ordinamento (Mattia)
         }
 
         return super.onOptionsItemSelected(item);
