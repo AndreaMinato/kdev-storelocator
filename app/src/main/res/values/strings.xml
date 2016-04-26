@@ -13,4 +13,7 @@
 
     <string name="indirizzo">Address</string>
     <string name="telefono">Phone</string>
+
+    <string name="ordine_alfabetico">Ordina per nome</string>
+    <string name="ordine_posizione">Ordina per distanza</string>
 </resources>

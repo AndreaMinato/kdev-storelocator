@@ -4,11 +4,11 @@
     <item
         android:id="@+id/alphabetic_sort"
         android:orderInCategory="100"
-        android:title="A-Z"
+        android:title="@string/ordine_alfabetico"
         app:showAsAction="never" />
     <item
         android:id="@+id/distance_sort"
         android:orderInCategory="100"
-        android:title="0-100 km"
+        android:title="@string/ordine_posizione"
         app:showAsAction="never" />
 </menu>

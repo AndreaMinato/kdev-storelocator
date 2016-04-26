@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -207,6 +208,7 @@ public class HomeActivity extends AppCompatActivity
                     public void onFinish() {
                         if (stores != null) {
                             setDistanceFromStores();
+                            Collections.sort(stores);
                         }
                     }
                 });
@@ -292,7 +294,7 @@ public class HomeActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                     if (stores != null && stores.size() > 0) {
-
+                        Collections.sort(stores);
                         //salvo store nel database
                         try {
 
@@ -394,16 +396,31 @@ public class HomeActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.alphabetic_sort) {
 
-            Collections.sort(stores, new Comparator<Store>() {
+            new AsyncTask<Void, Void, Void>() {
                 @Override
-                public int compare(Store lhs, Store rhs) {
-                    return lhs.getName().compareTo(rhs.getName());
+                protected Void doInBackground(Void... params) {
+                    Collections.sort(stores, new Comparator<Store>() {
+                        @Override
+                        public int compare(Store lhs, Store rhs) {
+                            return lhs.getName().compareTo(rhs.getName());
+                        }
+                    });
+                    return null;
                 }
-            });
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    notifyFragments();
+                }
+            }.execute();
+
             return true;
         }
 
         if (id == R.id.distance_sort){
+            Collections.sort(stores);
+            notifyFragments();
             return true;
             // TODO: agganciare ordinamento (Mattia)
         }

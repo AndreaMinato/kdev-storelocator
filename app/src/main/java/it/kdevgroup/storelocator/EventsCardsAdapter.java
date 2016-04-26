@@ -26,7 +26,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
     private Context ctx;
     private Location userLocation;
 
-    private static final String TAG = "prova";
+    private static final String TAG = "EventsCardsAdapter";
 
     public EventsCardsAdapter(ArrayList<Store> stores, Context ctx, Location userLocation) {
         this.stores = stores;
@@ -112,7 +112,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
 
     public void swapStores(ArrayList<Store> newStores) {
         Log.i(TAG, "swapStores");
-        Collections.sort(stores);
+
         stores = newStores;
         notifyDataSetChanged();
     }
