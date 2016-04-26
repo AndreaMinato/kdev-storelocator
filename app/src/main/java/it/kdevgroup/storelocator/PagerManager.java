@@ -241,7 +241,7 @@ public class PagerManager {
                 public View getInfoContents(Marker marker) {
                     View v = getLayoutInflater(null).inflate(R.layout.window_adapter, null);
 
-                    TextView title = (TextView)v.findViewById(R.id.txtStoreName);
+                    TextView title = (TextView)v.findViewById(R.id.txtTitle);
                     title.setText(marker.getTitle());
 
                     TextView info = (TextView)v.findViewById(R.id.txtInfo);

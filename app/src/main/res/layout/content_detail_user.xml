@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_detail_user"
+    tools:showIn="@layout/activity_datail_user"
     tools:context=".DetailUserActivity"
     android:orientation="vertical">
 
@@ -19,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="nome+nonome cognome+cocognome"
-        android:id="@+id/txtStoreName"
+        android:id="@+id/txtTitle"
         android:drawableLeft="@drawable/ic_perm_identity"
         android:drawablePadding="5dp"
         android:layout_gravity="center_horizontal"
@@ -34,7 +31,7 @@
         android:layout_height="1dp"
         android:background="#c2c2c2"
         android:id="@+id/line0"
-        android:layout_below="@+id/txtStoreName" />
+        android:layout_below="@+id/txtTitle" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -52,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="ID"
-                android:id="@+id/address"
+                android:id="@+id/id1"
                 android:textColor="@color/oro"
                 android:textSize="20dp"
                 android:layout_marginTop="3dp" />
@@ -62,8 +59,8 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="--"
-                android:id="@+id/txtStoreAddress"
-                android:layout_below="@+id/address"
+                android:id="@+id/txtId"
+                android:layout_below="@+id/id1"
                 android:layout_marginBottom="20dp"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15dp" />
@@ -72,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#c2c2c2"
-                android:layout_below="@+id/txtStoreAddress"
+                android:layout_below="@+id/txtId"
                 android:id="@+id/line1" />
 
             <TextView
@@ -80,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Nome"
-                android:id="@+id/phone"
+                android:id="@+id/nome1"
                 android:layout_below="@+id/line1"
                 android:layout_marginTop="3dp"
                 android:textColor="@color/oro"
@@ -91,9 +88,9 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="-----"
-                android:id="@+id/txtStorePhone"
+                android:id="@+id/txtNome"
                 android:layout_marginBottom="20dp"
-                android:layout_below="@+id/phone"
+                android:layout_below="@+id/nome1"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15dp" />
 
@@ -102,14 +99,14 @@
                 android:layout_height="1dp"
                 android:background="#c2c2c2"
                 android:id="@+id/line2"
-                android:layout_below="@+id/txtStorePhone" />
+                android:layout_below="@+id/txtNome" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Cognome"
-                android:id="@+id/salesPerson"
+                android:id="@+id/cognome1"
                 android:layout_below="@+id/line2"
                 android:layout_marginTop="3dp"
                 android:textColor="@color/oro"
@@ -120,9 +117,9 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="------"
-                android:id="@+id/txtSalesPerson"
+                android:id="@+id/txtCognome"
                 android:layout_marginBottom="20dp"
-                android:layout_below="@+id/salesPerson"
+                android:layout_below="@+id/cognome1"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15dp" />
 
@@ -131,14 +128,14 @@
                 android:layout_height="1dp"
                 android:background="#c2c2c2"
                 android:id="@+id/line3"
-                android:layout_below="@+id/txtSalesPerson" />
+                android:layout_below="@+id/txtCognome" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="E-mail"
-                android:id="@+id/description"
+                android:id="@+id/email1"
                 android:layout_below="@+id/line3"
                 android:layout_marginTop="3dp"
                 android:textColor="@color/oro"
@@ -149,9 +146,9 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="------"
-                android:id="@+id/txtStoreDescriptions"
+                android:id="@+id/txtEmail"
                 android:layout_marginBottom="20dp"
-                android:layout_below="@+id/description"
+                android:layout_below="@+id/email1"
                 android:textColor="@color/colorPrimary"
                 android:textSize="15dp" />
 
@@ -160,7 +157,7 @@
                 android:layout_height="1dp"
                 android:background="#c2c2c2"
                 android:id="@+id/lin4"
-                android:layout_below="@+id/txtStoreDescriptions" />
+                android:layout_below="@+id/txtEmail" />
 
             <TextView
                 android:layout_width="match_parent"

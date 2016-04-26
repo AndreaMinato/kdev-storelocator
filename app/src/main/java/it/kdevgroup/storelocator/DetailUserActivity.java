@@ -46,11 +46,11 @@ public class DetailUserActivity extends AppCompatActivity implements LogoutAlert
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = (TextView) findViewById(R.id.txtStoreName);
-        id = (TextView) findViewById(R.id.txtStoreAddress);
-        nome = (TextView) findViewById(R.id.txtStorePhone);
-        cognome = (TextView) findViewById(R.id.txtSalesPerson);
-        email = (TextView) findViewById(R.id.txtStoreDescriptions);
+        title = (TextView) findViewById(R.id.txtTitle);
+        id = (TextView) findViewById(R.id.txtId);
+        nome = (TextView) findViewById(R.id.txtNome);
+        cognome = (TextView) findViewById(R.id.txtCognome);
+        email = (TextView) findViewById(R.id.txtEmail);
         compagnia = (TextView) findViewById(R.id.txtCompany);
 
         title.setText(User.getInstance().getName() + " " + User.getInstance().getSurname());

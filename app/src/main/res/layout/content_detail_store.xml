@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_detail_store"
-    tools:context=".DetailStoreActivity">
+    tools:context=".DetailStoreActivity"
+    tools:showIn="@layout/activity_detail_store">
 
     <ImageView
         android:id="@+id/imgMap"
@@ -15,154 +14,77 @@
         android:layout_height="150dp"
         android:contentDescription="map/longitude/latitude" />
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Store"
-        android:id="@+id/txtStoreName"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="25dp"
-        android:textSize="30dp"
-        android:textColor="@color/oro"
-        android:textStyle="bold|italic"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/imgMap"
-        android:layout_marginTop="10dp" />
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="#c2c2c2"
-        android:id="@+id/line0"
-        android:layout_below="@+id/txtStoreName"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp" />
-
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/scrollView2"
-        android:layout_below="@+id/line0"
-        android:layout_above="@+id/linearLayout"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/imgMap"
+        android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/txtStoreName"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Indirizzo"
-                android:id="@+id/address"
+                android:layout_height="70dp"
+                android:gravity="center"
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="name"
+                android:textStyle="bold"
                 android:textColor="@color/oro"
-                android:textSize="20dp"
-                android:layout_marginTop="3dp" />
+                android:textSize="@dimen/abc_text_size_headline_material" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="--"
+                android:drawableLeft="@drawable/ic_place"
                 android:id="@+id/txtStoreAddress"
-                android:layout_below="@+id/address"
-                android:layout_marginBottom="20dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-
-            <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#c2c2c2"
-                android:layout_below="@+id/txtStoreAddress"
-                android:id="@+id/line1" />
+                android:layout_height="50dp"
+                android:text="address"
+                android:textSize="@dimen/abc_text_size_body_1_material"
+                android:gravity="left|center_vertical" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Telefono"
-                android:id="@+id/phone"
-                android:layout_below="@+id/line1"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/oro"
-                android:textSize="20dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="-----"
+                android:drawableLeft="@drawable/ic_local_phone"
                 android:id="@+id/txtStorePhone"
-                android:layout_marginBottom="20dp"
-                android:layout_below="@+id/phone"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-
-            <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#c2c2c2"
-                android:id="@+id/line2"
-                android:layout_below="@+id/txtStorePhone" />
+                android:layout_height="25dp"
+                android:text="phone"
+
+                android:textSize="@dimen/abc_text_size_body_1_material"
+                android:gravity="center_vertical" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Responsabile"
-                android:id="@+id/salesPerson"
-                android:layout_below="@+id/line2"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/oro"
-                android:textSize="20dp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="------"
                 android:id="@+id/txtSalesPerson"
-                android:layout_marginBottom="20dp"
-                android:layout_below="@+id/salesPerson"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-
-            <View
+                android:drawableLeft="@drawable/ic_perm_identity"
+                android:text="salesPerson
+                            firstName  lastName
+                            email"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#c2c2c2"
-                android:id="@+id/line3"
-                android:layout_below="@+id/txtSalesPerson" />
+                android:layout_height="100dp"
+
+                android:textSize="@dimen/abc_text_size_body_1_material"
+                android:gravity="center_vertical" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Descrizione"
-                android:id="@+id/description"
-                android:layout_below="@+id/line3"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/oro"
-                android:textSize="20dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="------"
+                android:drawableLeft="@android:drawable/ic_menu_info_details"
                 android:id="@+id/txtStoreDescriptions"
-                android:layout_marginBottom="20dp"
-                android:layout_below="@+id/description"
-                android:textColor="@color/colorPrimary"
-                android:textSize="15dp" />
-
-        </RelativeLayout>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="descriptions"
+                android:textSize="@dimen/abc_text_size_body_1_material"
+                android:gravity="center_vertical" />
+        </LinearLayout>
     </ScrollView>
 
 

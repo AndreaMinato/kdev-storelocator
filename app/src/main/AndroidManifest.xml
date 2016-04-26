@@ -53,15 +53,10 @@
 
         <activity
             android:name=".DetailStoreActivity"
-            android:label="Dettaglio"
+            android:label="@string/title_activity_detail_store"
             android:parentActivityName=".HomeActivity"
             android:screenOrientation="userPortrait"
-            android:theme="@style/AppTheme" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.kdevgroup.storelocator.HomeActivity" />
-        </activity>
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".DetailUserActivity"
             android:label="Account"

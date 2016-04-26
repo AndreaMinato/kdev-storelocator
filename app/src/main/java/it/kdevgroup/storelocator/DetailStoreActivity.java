@@ -51,7 +51,6 @@ public class DetailStoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_store);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         database = new CouchbaseDB(getApplication());
 
@@ -146,18 +145,10 @@ public class DetailStoreActivity extends AppCompatActivity {
 
     private void updateFieldsAndMap(final Store store) {
 
-        //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
-        String title = store.getName();
-        title = title.toLowerCase();
-        StringBuilder rackingSystemSb = new StringBuilder();
-        rackingSystemSb.append(title);
-        rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
-        title = rackingSystemSb.toString();
-
-        txtStoreName.setText(title);
+        txtStoreName.setText(store.getName());
         txtStoreAddress.setText(store.getAddress());
         txtStorePhone.setText(store.getPhone());
-        txtSalesPerson.setText(store.getFirstName() +" "+store.getLastName() + '\n' + store.getEmail());
+        txtSalesPerson.setText(store.getFirstName() + store.getLastName() + '\n' + store.getEmail());
         txtStoreDescription.setText(store.getDescription());
 
         imgMap.post(new Runnable() {
