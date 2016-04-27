@@ -116,6 +116,12 @@ public class Store implements Parcelable, Comparable<Store> {
     }
 
     public String getName() {
+        //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
+        name = name.toLowerCase();
+        StringBuilder rackingSystemSb = new StringBuilder();
+        rackingSystemSb.append(name);
+        rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
+        name = rackingSystemSb.toString();
         return name;
     }
 

@@ -58,15 +58,9 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
     @Override
     public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
 
-        //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
-        String title = stores.get(position).getName();
-        title = title.toLowerCase();
-        StringBuilder rackingSystemSb = new StringBuilder();
-        rackingSystemSb.append(title);
-        rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
-        title = rackingSystemSb.toString();
 
-        cardHolder.storeName.setText(title);
+
+        cardHolder.storeName.setText(stores.get(position).getName());
         cardHolder.storeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

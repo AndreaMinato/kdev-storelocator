@@ -3,6 +3,12 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +31,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class PagerManager {
@@ -255,6 +266,15 @@ public class PagerManager {
                     TextView mail = (TextView)v.findViewById(R.id.txtMail);
                     mail.setText( stores.get(k).getEmail());
 
+//                    ImageView thumbnail =(ImageView)v.findViewById(R.id.imageView2);
+//                    try {
+//                        thumbnail.setImageDrawable(drawableFromUrl(stores.get(k).getThumbnail()));
+//                        Log.i("ima","immagine scaricata");
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                        Log.i("ima","immagine non scaricata");
+//                    }
+
                     return v;
                 }
             });
@@ -328,4 +348,14 @@ public class PagerManager {
             return rootView;
         }
     }
+
+//    public static Drawable drawableFromUrl(String url) throws IOException {
+//        try {
+//            InputStream is = (InputStream) new URL(url).getContent();
+//            Drawable d = Drawable.createFromStream(is, "src name");
+//            return d;
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
 }
