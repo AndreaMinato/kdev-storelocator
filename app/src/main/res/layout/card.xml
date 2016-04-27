@@ -81,7 +81,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/storeDistance"
-                android:text="Distanza"
+                android:text="Calcolo distanza..."
                 android:layout_below="@+id/storePhone"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:drawablePadding="5dp"

@@ -95,7 +95,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     public interface StoresUpdater {
-        void updateStores();
+        void updateStores(ArrayList<Store> stores);
     }
 
 
@@ -123,7 +123,24 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        if (savedInstanceState != null) {
+            goSnack = savedInstanceState.getBoolean(SAVE);
+            stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
+            notifyFragments();
+        }
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
+
+        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // user swipes between sections.
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        assert viewPager != null;   //conferma che non è null
+        viewPager.setAdapter(pagerAdapter);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LogoutAlertDialog.ACTION_LOGOUT);
@@ -162,30 +179,18 @@ public class HomeActivity extends AppCompatActivity
             });
         }
 */
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
-        database = new CouchbaseDB(getApplicationContext());
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        userLocation = new Location("");
+        //userLocation = new Location("");
         setUserLocation();
 
-        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
-        // user swipes between sections.
-        viewPager = (ViewPager) findViewById(R.id.pager);
-        assert viewPager != null;   //conferma che non è null
-        viewPager.setAdapter(pagerAdapter);
 
         ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
 
-        fragManager = getSupportFragmentManager();
+        database = new CouchbaseDB(getApplicationContext());
 
-        if (savedInstanceState != null) {
-            goSnack = savedInstanceState.getBoolean(SAVE);
-            stores = savedInstanceState.getParcelableArrayList(STORES_KEY_FOR_BUNDLE);
-        }
+        fragManager = getSupportFragmentManager();
 
         if (stores == null) {
             stores = new ArrayList<>();
@@ -208,14 +213,15 @@ public class HomeActivity extends AppCompatActivity
 
                     @Override
                     public void onFinish() {
-                        if (stores != null) {
-                            //setDistanceFromStores();
+
+                        if (stores != null && userLocation != null) {
                             Collections.sort(stores);
                         }
+
+                        notifyFragments();  //dentro viene lanciato un NullPointerException se uno dei Fragment non è passato per l'onCreateView dove viene valorizzata la variabile homeActivity
+
                     }
                 });
-
-//                stores = database.getAsyncStores();
 
             } catch (CouchbaseLiteException e) {
                 e.printStackTrace();
@@ -260,7 +266,7 @@ public class HomeActivity extends AppCompatActivity
 
         //notifico i frammenti di aggiornarsi per evitare problemi
         //in caso il fragment carichi prima del database (difficile)
-        notifyFragments();
+        //notifyFragments();
     }
 
     public ArrayList<Store> getStores() {
@@ -342,7 +348,7 @@ public class HomeActivity extends AppCompatActivity
         //Controllo se il fragment è già stato creato, se sì allora gli notifico l'aggiornamento dei negozi
         for (int i = 0; i < pagerAdapter.getCount(); ++i) {
             if ((currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + i)) != null) {
-                currentFragment.updateStores();
+                currentFragment.updateStores(stores);
             }
         }
     }
@@ -426,7 +432,6 @@ public class HomeActivity extends AppCompatActivity
             Collections.sort(stores);
             notifyFragments();
             return true;
-            // TODO: agganciare ordinamento (Mattia)
         }
 
         return super.onOptionsItemSelected(item);
@@ -498,7 +503,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
+        outState.putParcelableArrayList(STORES_KEY_FOR_BUNDLE, stores);
         outState.putBoolean(SAVE, goSnack);
     }
 

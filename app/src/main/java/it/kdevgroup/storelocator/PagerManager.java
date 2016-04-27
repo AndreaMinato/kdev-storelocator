@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class PagerManager {
 
@@ -148,13 +150,9 @@ public class PagerManager {
             Log.d(TAG, "onSaveInstanceState: ");
         }
 
-        public void updateAdapter() {
-            cardsAdapter.swapStores(homeActivity.getStores());
-        }
-
         @Override
-        public void updateStores() {
-            updateAdapter();
+        public void updateStores(ArrayList<Store> stores) {
+            cardsAdapter.swapStores(stores);
         }
     }
 
@@ -163,9 +161,12 @@ public class PagerManager {
      */
     public static class MapFragment extends Fragment implements OnMapReadyCallback, HomeActivity.StoresUpdater {
 
+        public static final String MARKERS_KEY_FOR_BUNDLE = "markers";
+
         private GoogleMap googleMap;
         private HomeActivity homeActivity;
         private ArrayList<Store> stores;
+        private HashMap<Marker, Store> markers;
 
         public static MapFragment newInstance() {
             return new MapFragment();
@@ -184,17 +185,17 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_map, container, false);
 
+            //TODO cacare la mappa per visualizzarla anche senza dati se si può
+            homeActivity = (HomeActivity) getActivity();
+
+            markers = new HashMap<>();
+
             if (savedInstanceState != null) {
                 stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
             }
 
-            homeActivity = (HomeActivity) getActivity();
-
             if (stores == null)
                 stores = homeActivity.getStores();
-
-            //TODO cacare la mappa per visualizzarla anche senza dati se si può
-            homeActivity = (HomeActivity) getActivity();
 
             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapFragment);
             mapFragment.getMapAsync(this);
@@ -206,7 +207,7 @@ public class PagerManager {
             googleMap = gm;
 
             try {
-                googleMap.setMyLocationEnabled(true); //benedetta sia questa riga, anche se poteva saltare fuori prima (setta il punto blu)
+                googleMap.setMyLocationEnabled(true); //abilita il punto blu sulla mappa
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
@@ -221,9 +222,10 @@ public class PagerManager {
         }
 
         @Override
-        public void updateStores() {
+        public void updateStores(ArrayList<Store> stores) {
             try {
-                stores = homeActivity.getStores();
+                this.stores = stores;
+                updateMarkers();
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -238,7 +240,7 @@ public class PagerManager {
                 }
 
                 @Override
-                public View getInfoContents(Marker marker) {
+                public View getInfoContents(final Marker marker) {
                     View v = getLayoutInflater(null).inflate(R.layout.window_adapter, null);
 
                     TextView title = (TextView)v.findViewById(R.id.txtStoreName);
@@ -247,30 +249,38 @@ public class PagerManager {
                     TextView info = (TextView)v.findViewById(R.id.txtInfo);
                     info.setText(marker.getSnippet());
 
-                    int k = Integer.parseInt(marker.getId().substring(1));
+                    final int k = Integer.parseInt(marker.getId().substring(1));
 
                     TextView phone = (TextView)v.findViewById(R.id.txtPhone);
-                    phone.setText( stores.get(k).getPhone());
+                    phone.setText(markers.get(marker).getPhone());
 
                     TextView mail = (TextView)v.findViewById(R.id.txtMail);
-                    mail.setText( stores.get(k).getEmail());
+                    mail.setText(markers.get(marker).getEmail());
 
                     return v;
                 }
             });
 
+            updateMarkers();
+        }
+
+        public void updateMarkers(){
             //Il marker viene dato con il colore di default rosso, per modificare il suo colore
-            //si gioca con l'hue del colore sarurandolo per ottenere quello che si preferisce (37-45) sono tutte tonalità simili all'oro ma questa mi piace
+            //si gioca con l'hue del colore saturandolo per ottenere quello che si preferisce (37-45) sono tutte tonalità simili all'oro ma questa mi piace
             float hue = 39;
             if (googleMap != null) {
+                googleMap.clear();
+                markers.clear();
+                Marker temp;
                 for (int i = 0; i < stores.size(); i++) {
-                    googleMap.addMarker(new MarkerOptions()
+                    temp = googleMap.addMarker(new MarkerOptions()
                             .position(new LatLng(Double.parseDouble(stores.get(i).getLatitude()), Double.parseDouble(stores.get(i).getLongitude())))
                             .icon(BitmapDescriptorFactory.defaultMarker(hue))
                             .alpha(0.7f)
                             .rotation(15)
                             .snippet(stores.get(i).getAddress())
                             .title(stores.get(i).getName()));
+                    markers.put(temp, stores.get(i));
                     //final String thisGUID=stores.get(i).getGUID();
                     googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                         @Override
@@ -278,8 +288,7 @@ public class PagerManager {
                             Log.i("click", "cliccato");
                             Intent vIntent = new Intent(getActivity(), DetailStoreActivity.class);
                             Bundle vBundle = new Bundle();
-                            int k = Integer.parseInt(marker.getId().substring(1));
-                            vBundle.putString(DetailStoreActivity.KEY_STORE, stores.get(k).getGUID());
+                            vBundle.putString(DetailStoreActivity.KEY_STORE, markers.get(marker).getGUID());
                             vIntent.putExtras(vBundle);
                             getActivity().startActivity(vIntent);
                         }
