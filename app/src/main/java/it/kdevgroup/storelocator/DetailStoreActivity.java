@@ -6,17 +6,26 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.couchbase.lite.CouchbaseLiteException;
+import com.fasterxml.jackson.databind.deser.Deserializers;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
+import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.nineoldandroids.view.ViewHelper;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -28,7 +37,8 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.client.utils.URIBuilder;
 import it.kdevgroup.storelocator.database.CouchbaseDB;
 
-public class DetailStoreActivity extends AppCompatActivity {
+public class DetailStoreActivity extends AppCompatActivity
+        implements ObservableScrollViewCallbacks {
 
     private static final String TAG = "DetailStoreActivity";
     public static final String KEY_STORE = "storePresoDalBundle";
@@ -37,7 +47,10 @@ public class DetailStoreActivity extends AppCompatActivity {
     private TextView txtStoreName, txtStoreAddress, txtStorePhone, txtSalesPerson, txtStoreDescription;
     private BroadcastReceiver broadcastReceiver;
     private CouchbaseDB database;
-
+    private ObservableScrollView scrollView;
+    private int flexibleSpaceImageHeight;
+    private int actionBarSize;
+    private Toolbar toolbar;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -50,8 +63,15 @@ public class DetailStoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_store);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        scrollView = (ObservableScrollView)findViewById(R.id.scroll);
+        scrollView.setScrollViewCallbacks(this);
+
+        flexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_map_height);
+        Log.i("height", "image: " + flexibleSpaceImageHeight);
 
         database = new CouchbaseDB(getApplication());
 
@@ -142,23 +162,38 @@ public class DetailStoreActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
+        /*
+        ScrollUtils.addOnGlobalLayoutListener(scrollView, new Runnable() {
+            @Override
+            public void run() {
+                scrollView.scrollTo(0, flexibleSpaceImageHeight - actionBarSize);
+
+                // If you'd like to start from scrollY == 0, don't write like this:
+                //mScrollView.scrollTo(0, 0);
+                // The initial scrollY is 0, so it won't invoke onScrollChanged().
+                // To do this, use the following:
+                //onScrollChanged(0, false, false);
+
+                // You can also achieve it with the following codes.
+                // This causes scroll change from 1 to 0.
+                //mScrollView.scrollTo(0, 1);
+                //mScrollView.scrollTo(0, 0);
+            }
+        });
+        */
     }
 
     private void updateFieldsAndMap(final Store store) {
 
-        //riformatta il nome dell'azienda(ZILIDIUM ==> Zilidium)
-        String title = store.getName();
-        title = title.toLowerCase();
-        StringBuilder rackingSystemSb = new StringBuilder();
-        rackingSystemSb.append(title);
-        rackingSystemSb.setCharAt(0, Character.toUpperCase(rackingSystemSb.charAt(0)));
-        title = rackingSystemSb.toString();
-
-        txtStoreName.setText(title);
+        getSupportActionBar().setTitle(store.getName());
         txtStoreAddress.setText(store.getAddress());
         txtStorePhone.setText(store.getPhone());
         txtSalesPerson.setText(store.getFirstName() +" "+store.getLastName() + '\n' + store.getEmail());
         txtStoreDescription.setText(store.getDescription());
+
+
 
         imgMap.post(new Runnable() {
             @Override
@@ -205,7 +240,7 @@ public class DetailStoreActivity extends AppCompatActivity {
         client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
-                "DetailStore Page", // TODO: Define a title for the content shown.
+                "DetailStoreActivity Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
                 // make sure this auto-generated web page URL is correct.
                 // Otherwise, set the URL to null.
@@ -240,5 +275,29 @@ public class DetailStoreActivity extends AppCompatActivity {
     protected void onDestroy() {
         this.unregisterReceiver(broadcastReceiver);
         super.onDestroy();
+    }
+
+    @Override
+    public void onScrollChanged(int scrollY, boolean firstScroll,
+                                boolean dragging) {
+        int baseColor = getResources().getColor(R.color.colorPrimary);
+        float alpha = Math.min(1, (float) scrollY / flexibleSpaceImageHeight);
+        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
+        ViewHelper.setTranslationY(imgMap, scrollY / 2);
+}
+
+    @Override
+    public void onDownMotionEvent() {
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        onScrollChanged(scrollView.getCurrentScrollY(), false, false);
     }
 }
