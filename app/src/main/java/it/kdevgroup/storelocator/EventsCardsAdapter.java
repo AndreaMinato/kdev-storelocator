@@ -82,14 +82,14 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             }
         });
         cardHolder.storePhone.setText(stores.get(position).getPhone());
-        cardHolder.storePhone.setOnClickListener(new View.OnClickListener() {
+       /* cardHolder.storePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "telefono");
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + stores.get(position).getPhone()));
                 ctx.startActivity(intent);
             }
-        });
+        });*/
 
         if(stores.get(position).getLastKnownDistance() != 0)
             cardHolder.distance.setText(stores.get(position).getLastKnownDistance() + " km da te");
