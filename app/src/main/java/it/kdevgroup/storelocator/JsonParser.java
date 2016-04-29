@@ -126,7 +126,7 @@ public class JsonParser {
         store.setLongitude(obj.getString(Store.KEY_LONGITUDE));
         store.setImage(obj.getString(Store.KEY_IMAGE));
         store.setDescription(obj.getString(Store.KEY_DESCRIPTION));
-        store.setThumbnail(Store.KEY_THUMBNAIL);
+        store.setThumbnail(obj.getString(Store.KEY_THUMBNAIL));
 
         JSONArray tagArray = obj.getJSONArray(Store.KEY_TAGS);
         List<String> tmp = new ArrayList<>();
