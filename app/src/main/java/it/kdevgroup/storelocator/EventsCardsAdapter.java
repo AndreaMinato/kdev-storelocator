@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -58,10 +59,11 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
     @Override
     public void onBindViewHolder(final CardViewHolder cardHolder, final int position) {
 
-
-
         cardHolder.storeName.setText(stores.get(position).getName());
-        cardHolder.storeName.setOnClickListener(new View.OnClickListener() {
+        cardHolder.storeAddress.setText(stores.get(position).getAddress());
+        cardHolder.storePhone.setText(stores.get(position).getPhone());
+
+        cardHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "preparazione activity di dettaglio");
@@ -72,27 +74,10 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
                 ctx.startActivity(vIntent);
             }
         });
-        cardHolder.storeAddress.setText(stores.get(position).getAddress());
-        cardHolder.storeAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "mappa");
-
-                // TODO: collegare alla mappa
-            }
-        });
-        cardHolder.storePhone.setText(stores.get(position).getPhone());
-       /* cardHolder.storePhone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "telefono");
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + stores.get(position).getPhone()));
-                ctx.startActivity(intent);
-            }
-        });*/
 
         if(stores.get(position).getLastKnownDistance() != 0)
             cardHolder.distance.setText(stores.get(position).getLastKnownDistance() + " km da te");
+
     }
 
     @Override

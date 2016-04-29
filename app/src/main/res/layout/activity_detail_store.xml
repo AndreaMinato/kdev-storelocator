@@ -132,7 +132,9 @@
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15sp"
-                    android:layout_below="@+id/phone" />
+                    android:layout_below="@+id/phone"
+                    android:drawableRight="@drawable/ic_local_phone"
+                    android:paddingRight="10dp" />
 
                 <View
                     android:id="@+id/line2"
@@ -150,7 +152,7 @@
                     android:layout_marginTop="3dp"
                     android:textColor="@color/oro"
                     android:textSize="20sp"
-                    android:layout_below="@+id/line2" />
+                    android:layout_below="@+id/line2"/>
 
                 <TextView
                     android:id="@+id/txtSalesPerson"
@@ -161,7 +163,9 @@
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/colorPrimary"
                     android:textSize="15sp"
-                    android:layout_below="@+id/salesPerson" />
+                    android:layout_below="@+id/salesPerson"
+                    android:drawableRight="@drawable/ic_mail_outline"
+                    android:paddingRight="10dp" />
 
                 <View
                     android:id="@+id/line3"

@@ -33,21 +33,7 @@
                 android:paddingTop="5dp"
                 android:paddingRight="5dp"
                 android:paddingBottom="5dp"
-                android:textColor="@color/oro"
-                android:clickable="true" />
-
-            <!--
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/heart"
-                android:src="@drawable/ic_not_favorite"
-                android:paddingRight="10dp"
-                android:paddingTop="10dp"
-                android:layout_alignTop="@+id/storeName"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
-            -->
+                android:textColor="@color/oro" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -60,8 +46,7 @@
                 android:drawablePadding="5dp"
                 android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:padding="5dp"
-                android:clickable="true" />
+                android:padding="5dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -74,8 +59,7 @@
                 android:drawablePadding="5dp"
                 android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:padding="5dp"
-                android:clickable="true" />
+                android:padding="5dp"/>
 
             <TextView
                 android:layout_width="match_parent"
