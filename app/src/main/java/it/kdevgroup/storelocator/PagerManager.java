@@ -91,6 +91,11 @@ public class PagerManager {
             public void onStoreListFragmentCreated(StoresListFragment fragment) {
 
             }
+
+            @Override
+            public void onStoreListRefresh() {
+
+            }
         };  // inizializzazione dummy alla Merlino
 
         private EventsCardsAdapter cardsAdapter;
@@ -102,6 +107,7 @@ public class PagerManager {
 
         public interface IStoresListFragmentCallbacks {
             void onStoreListFragmentCreated(StoresListFragment fragment);
+            void onStoreListRefresh();
         }
 
         public static StoresListFragment newInstance(Context ctx) {
@@ -140,11 +146,21 @@ public class PagerManager {
 
                     boolean enableRefreshCircle = true;
 
-                    // se l'elemento visibile è il primo, allora ho la possibilità di aggiornare il contenuto
+                    // Se ho elementi e l'elemento visibile è il primo
+                    // allora quando scrollo verrà mostrata la pallina rotante
+                    // Altrimenti, se non ho elementi, scrollando verrà mostrata per default
                     if (recyclerView.getChildCount() > 0) {
                         enableRefreshCircle = (layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
                     }
                     swipeRefreshLayout.setEnabled(enableRefreshCircle);
+                }
+            });
+
+            // azioni da compiere durante il refresh
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    mListener.onStoreListRefresh();
                 }
             });
 
@@ -156,9 +172,6 @@ public class PagerManager {
             }
 
             recyclerView.setAdapter(cardsAdapter);
-
-            //if (stores == null)
-            //    stores = homeActivity.getAsyncStores();
 
             // --- LAYOUT MANAGER
             /**

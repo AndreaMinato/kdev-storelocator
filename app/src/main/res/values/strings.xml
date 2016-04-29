@@ -16,4 +16,7 @@
 
     <string name="ordine_alfabetico">Ordina per nome</string>
     <string name="ordine_posizione">Ordina per distanza</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

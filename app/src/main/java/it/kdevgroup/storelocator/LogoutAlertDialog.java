@@ -52,41 +52,42 @@ public class LogoutAlertDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Vuoi uscire da Jesse Store Locator?")
-                .setPositiveButton("Esci", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent loginActivity = new Intent(ctx, LoginActivity.class);
+        builder.setMessage("Vuoi uscire da Jesse Store Locator?");
+
+        builder.setPositiveButton("Esci", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Intent loginActivity = new Intent(ctx, LoginActivity.class);
 
 //                        logout.addFlags(Intent.FLAG_cle);
-                        try {
-                            database.couchbaseDB().deleteUser(User.getInstance());
-                        } catch (CouchbaseLiteException e) {
-                            e.printStackTrace();
-                        }
-                        startActivity(loginActivity);
+                    try {
+                        database.couchbaseDB().deleteUser(User.getInstance());
+                    } catch (CouchbaseLiteException e) {
+                        e.printStackTrace();
+                    }
+                    startActivity(loginActivity);
 
-                        // manda un broadcast a tutte le activity per dire di terminarsi
-                        // causa logout effettuato
-                        Intent broadcastLogout = new Intent(ACTION_LOGOUT);
-                        getActivity().sendBroadcast(broadcastLogout);
+                    // manda un broadcast a tutte le activity per dire di terminarsi
+                    // causa logout effettuato
+                    Intent broadcastLogout = new Intent(ACTION_LOGOUT);
+                    getActivity().sendBroadcast(broadcastLogout);
 /*
-                        if (getActivity() != null) {
-                            Log.d(TAG, "onClick: activity not null");
-                            if (getActivity().getParent() != null) {
-                                Log.d(TAG, "onClick: parent not null");
-                                getActivity().getParent().finish();
-                            }
-                            getActivity().finish();
+                    if (getActivity() != null) {
+                        Log.d(TAG, "onClick: activity not null");
+                        if (getActivity().getParent() != null) {
+                            Log.d(TAG, "onClick: parent not null");
+                            getActivity().getParent().finish();
                         }
+                        getActivity().finish();
+                    }
 */
-                    }
-                })
-                .setNegativeButton("Indietro", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // User cancelled the dialog
-                        onDestroy();
-                    }
-                });
+                }
+            })
+            .setNegativeButton("Indietro", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                    onDestroy();
+                }
+            });
         // Create the AlertDialog object and return it
         return builder.create();
     }
