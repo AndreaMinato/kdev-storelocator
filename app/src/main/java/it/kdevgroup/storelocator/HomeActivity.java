@@ -116,7 +116,7 @@ public class HomeActivity extends AppCompatActivity implements
     private ArrayList<Store> stores;
     private FragmentManager fragManager;
     private PagerManager.StoresListFragment storesListFragment;
-
+    private PersistentProgressDialog progressDialog;
     private BroadcastReceiver broadcastReceiver;
 
     private LocationManager locationManager;
@@ -196,9 +196,10 @@ public class HomeActivity extends AppCompatActivity implements
         // --- OTTENGO GLI STORE DALLE API O DAL DATABASE
         database = new CouchbaseDB(getApplicationContext());
         if (stores == null) {
+            progressDialog = new PersistentProgressDialog();
+            progressDialog.show(getSupportFragmentManager(), "tag");
             stores = new ArrayList<>();
             try {
-
                 database.getStoresAsync(new IAsyncMapQueryHandler() {
                     @Override
                     public void handle(Map<String, Object> value, Throwable error) {
@@ -216,11 +217,10 @@ public class HomeActivity extends AppCompatActivity implements
 
                     @Override
                     public void onFinish() {
-
                         if (stores != null) {
                             notifyFragments();  //dentro viene lanciato un NullPointerException se uno dei Fragment non è passato per l'onCreateView dove viene valorizzata la variabile homeActivity
                         }
-
+                        progressDialog.dismiss();
                     }
                 });
 
@@ -309,6 +309,16 @@ public class HomeActivity extends AppCompatActivity implements
                     String jsonBody = new String(responseBody);
                     Log.i("onFailure response:", jsonBody);
                 }
+
+                try {
+                    String[] errString = JsonParser.getInstance().getErrorInfoFromResponse(new String(responseBody));
+                    if(errString[0].equals("100"))
+                        Snackbar.make(viewPager, "Accesso negato al server", Snackbar.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
                 setRefreshing(false);
             }
 
