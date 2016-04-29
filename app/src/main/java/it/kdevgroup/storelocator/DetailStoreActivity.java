@@ -280,10 +280,10 @@ public class DetailStoreActivity extends AppCompatActivity
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll,
                                 boolean dragging) {
-        int baseColor = getResources().getColor(R.color.colorPrimary);
-        float alpha = Math.min(1, (float) scrollY / flexibleSpaceImageHeight);
-        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
-        ViewHelper.setTranslationY(imgMap, scrollY / 2);
+//        int baseColor = getResources().getColor(R.color.colorPrimary);
+//        float alpha = Math.min(1, (float) scrollY / flexibleSpaceImageHeight);
+//        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
+        ViewHelper.setTranslationY(imgMap, scrollY / 4 * 3);
 }
 
     @Override
