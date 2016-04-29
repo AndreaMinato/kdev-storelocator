@@ -94,8 +94,32 @@ public class DetailStoreActivity extends AppCompatActivity
         imgMap = (ImageView) findViewById(R.id.imgMap);
         txtStoreName = (TextView) findViewById(R.id.txtStoreName);
         txtStoreAddress = (TextView) findViewById(R.id.txtStoreAddress);
+
         txtStorePhone = (TextView) findViewById(R.id.txtStorePhone);
+        txtStorePhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent phone = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + store.getPhone()));
+                startActivity(phone);
+            }
+        });
+
         txtSalesPerson = (TextView) findViewById(R.id.txtSalesPerson);
+        txtSalesPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent mail = new Intent(Intent.ACTION_SENDTO);
+                mail.setType("text/plain");
+                mail.putExtra(Intent.EXTRA_SUBJECT, "");
+                mail.putExtra(Intent.EXTRA_TEXT, "");
+                mail.setData(Uri.parse("mailto:"+store.getEmail()));
+                mail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
+                startActivity(mail);
+            }
+        });
+
         txtStoreDescription = (TextView) findViewById(R.id.txtStoreDescriptions);
 
         Bundle bundle = null;
