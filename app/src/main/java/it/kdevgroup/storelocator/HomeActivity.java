@@ -12,6 +12,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -214,11 +215,9 @@ public class HomeActivity extends AppCompatActivity
                     @Override
                     public void onFinish() {
 
-                        if (stores != null && userLocation != null) {
-                            Collections.sort(stores);
+                        if (stores != null) {
+                            notifyFragments();  //dentro viene lanciato un NullPointerException se uno dei Fragment non è passato per l'onCreateView dove viene valorizzata la variabile homeActivity
                         }
-
-                        notifyFragments();  //dentro viene lanciato un NullPointerException se uno dei Fragment non è passato per l'onCreateView dove viene valorizzata la variabile homeActivity
 
                     }
                 });
@@ -267,6 +266,15 @@ public class HomeActivity extends AppCompatActivity
         //notifico i frammenti di aggiornarsi per evitare problemi
         //in caso il fragment carichi prima del database (difficile)
         //notifyFragments();
+        /*
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyFragments();
+            }
+        });
+        */
+
     }
 
     public ArrayList<Store> getStores() {
@@ -314,7 +322,7 @@ public class HomeActivity extends AppCompatActivity
                         //TODO la prima volta questa viene chiamata troppo presto e userLocation non è ancora stato valorizzato, da fixare
                         //setDistanceFromStores();
 
-                        notifyFragments();
+                        //notifyFragments();
                     }
                 } else {
                     Snackbar.make(viewPager, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
@@ -335,22 +343,37 @@ public class HomeActivity extends AppCompatActivity
             ApiManager.getInstance().getSyncStores(User.getInstance().getSession(), handler);
     }
 
+
+
     /**
      * Avvisa i fragment di aggiornarsi, se viene chiamata prima
      * della loro creazione il manager torna null ma viene gestito
      */
     public void notifyFragments() {
-        Log.i(TAG, "notifyFragments");
-        StoresUpdater currentFragment;
-        //prendo tutti i fragment castandoli come interfaccia
-        //e gli dico di aggiornarsi la lista di negozi
 
-        //Controllo se il fragment è già stato creato, se sì allora gli notifico l'aggiornamento dei negozi
-        for (int i = 0; i < pagerAdapter.getCount(); ++i) {
-            if ((currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + i)) != null) {
-                currentFragment.updateStores(stores);
+        Handler mainHandler = new Handler(getApplicationContext().getMainLooper());
+
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                Log.i(TAG, "notifyFragments");
+                StoresUpdater currentFragment;
+                //prendo tutti i fragment castandoli come interfaccia
+                //e gli dico di aggiornarsi la lista di negozi
+
+                //Controllo se il fragment è già stato creato, se sì allora gli notifico l'aggiornamento dei negozi
+                for (int i = 0; i < pagerAdapter.getCount(); ++i) {
+                    if ((currentFragment = (StoresUpdater) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + i)) != null) {
+                        currentFragment.updateStores(stores);
+                    }
+                }
+
             }
-        }
+        };
+
+        mainHandler.post(myRunnable);
+
     }
 
     public Location getUserLocation() {

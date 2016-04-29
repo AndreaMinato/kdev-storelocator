@@ -51,6 +51,7 @@ public class DetailStoreActivity extends AppCompatActivity
     private int flexibleSpaceImageHeight;
     private int actionBarSize;
     private Toolbar toolbar;
+    private PersistentProgressDialog progressDialog;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -118,6 +119,8 @@ public class DetailStoreActivity extends AppCompatActivity
             }
 
             if (!storeAlreadyStored) {
+                progressDialog = new PersistentProgressDialog();
+                progressDialog.show(getSupportFragmentManager(), "tag");
                 Log.d(TAG, "onCreate: evento non presente nel db");
                 ApiManager.getInstance().getStoreDetail(guid, User.getInstance().getSession(), new AsyncHttpResponseHandler() {
                     @Override
@@ -145,6 +148,12 @@ public class DetailStoreActivity extends AppCompatActivity
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                         error.printStackTrace();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        progressDialog.dismiss();
                     }
                 });
             } else {
