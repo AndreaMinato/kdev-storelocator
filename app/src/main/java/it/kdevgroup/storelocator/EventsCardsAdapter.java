@@ -3,7 +3,6 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,6 +64,11 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         cardHolder.storeAddress.setText(stores.get(position).getAddress());
         cardHolder.storePhone.setText(stores.get(position).getPhone());
 
+        Picasso.with(ctx)
+                .load(stores.get(position).getThumbnail())
+                .fit()
+                .into(cardHolder.thumbnail);
+
         cardHolder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +112,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         TextView storeAddress;
         TextView storePhone;
         TextView distance;
+        ImageView thumbnail;
 
         CardViewHolder(View itemView) {
             super(itemView);
@@ -114,6 +121,7 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             storeAddress = (TextView) itemView.findViewById(R.id.storeAddress);
             storePhone = (TextView) itemView.findViewById(R.id.storePhone);
             distance = (TextView) itemView.findViewById(R.id.storeDistance);
+            thumbnail = (ImageView) itemView.findViewById(R.id.thumbnail);
         }
     }
 }

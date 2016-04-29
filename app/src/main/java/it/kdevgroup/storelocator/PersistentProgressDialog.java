@@ -32,7 +32,7 @@ public class PersistentProgressDialog extends DialogFragment {
 
         ProgressDialog dialog = new ProgressDialog(getActivity(), getTheme());
         dialog.setTitle("Caricamento");
-        dialog.setMessage("speta n'atimo");
+        dialog.setMessage("Caricamento dati in corso, attendi . . .");
         dialog.setIndeterminate(true);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         return dialog;

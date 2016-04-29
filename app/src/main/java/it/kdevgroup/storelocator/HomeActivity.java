@@ -109,6 +109,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     private PagerManager.PagerAdapter pagerAdapter;
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private CouchbaseDB database;
@@ -188,7 +189,7 @@ public class HomeActivity extends AppCompatActivity implements
         }
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
         }
@@ -368,7 +369,7 @@ public class HomeActivity extends AppCompatActivity implements
             locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
         } catch (SecurityException e) {
             e.printStackTrace();
-            // TODO dialog qualcosa
+            Snackbar.make(this.viewPager, "Non riesco a determinare la posizione, probabilmente non è attiva sul tuo device", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -451,16 +452,13 @@ public class HomeActivity extends AppCompatActivity implements
         if (id == R.id.nav_user) {
             Intent vInt = new Intent(this, DetailUserActivity.class);
             startActivity(vInt);
-
-            //} else if (id == R.id.nav_preferiti) {
-
         } else if (id == R.id.nav_impostazioni) {
-
+            // TODO
         } else if (id == R.id.nav_logout) {
             LogoutAlertDialog logoutAlertDialog = new LogoutAlertDialog();
             logoutAlertDialog.show(getFragmentManager(), DIALOG);
         }
-
+        
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         assert drawer != null;
         drawer.closeDrawer(GravityCompat.START);

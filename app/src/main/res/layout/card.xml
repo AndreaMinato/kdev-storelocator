@@ -4,8 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="3dp">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,65 +12,79 @@
         card_view:cardUseCompatPadding="true">
 
         <RelativeLayout
+            android:id="@+id/contenuto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/contenuto"
             android:paddingBottom="10dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp">
 
             <TextView
+                android:id="@+id/storeName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nome negozio"
-                android:id="@+id/storeName"
                 android:drawablePadding="5dp"
                 android:gravity="center_vertical"
-                android:textStyle="bold|italic"
-                android:textSize="27sp"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
-                android:paddingRight="5dp"
                 android:paddingBottom="5dp"
-                android:textColor="@color/oro" />
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
+                android:paddingTop="5dp"
+                android:text="Nome negozio"
+                android:textColor="@color/oro"
+                android:textSize="27sp"
+                android:textStyle="bold|italic" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Indirizzo negozio"
                 android:id="@+id/storeAddress"
-                android:layout_below="@+id/storeName"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:layout_width="123dp"
+                android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_place"
                 android:drawablePadding="5dp"
-                android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:text="Indirizzo negozio"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimary"
+                android:layout_below="@+id/storeName"
+                android:layout_toRightOf="@+id/thumbnail"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <TextView
+                android:id="@+id/storePhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Telefono negozio"
-                android:id="@+id/storePhone"
+                android:layout_alignLeft="@+id/storeAddress"
+                android:layout_alignStart="@+id/storeAddress"
                 android:layout_below="@+id/storeAddress"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:drawableLeft="@drawable/ic_local_phone"
                 android:drawablePadding="5dp"
-                android:textColor="@color/colorPrimary"
                 android:gravity="center_vertical"
-                android:padding="5dp"/>
+                android:padding="5dp"
+                android:text="Telefono negozio"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimary" />
 
             <TextView
+                android:id="@+id/storeDistance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/storeDistance"
-                android:text="Calcolo distanza..."
                 android:layout_below="@+id/storePhone"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                 android:drawablePadding="5dp"
-                android:textColor="@color/oro"
                 android:gravity="center_vertical"
-                android:paddingLeft="6dp" />
+                android:paddingLeft="6dp"
+                android:text="Calcolo distanza..."
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textColor="@color/oro" />
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/storeAddress"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/thumbnail" />
 
 
         </RelativeLayout>
