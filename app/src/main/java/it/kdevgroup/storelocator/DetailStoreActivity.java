@@ -211,7 +211,10 @@ public class DetailStoreActivity extends AppCompatActivity
 
     private void updateFieldsAndMap(final Store store) {
 
-        getSupportActionBar().setTitle(store.getName());
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setTitle(store.getName());
+
+
         txtStoreAddress.setText(store.getAddress());
         txtStorePhone.setText(store.getPhone());
         txtSalesPerson.setText(store.getFirstName() +" "+store.getLastName() + '\n' + store.getEmail());
