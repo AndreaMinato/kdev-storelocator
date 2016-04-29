@@ -43,8 +43,15 @@ import cz.msebera.android.httpclient.Header;
 import it.kdevgroup.storelocator.database.CouchbaseDB;
 import it.kdevgroup.storelocator.database.IAsyncMapQueryHandler;
 
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, LogoutAlertDialog.passDatabase, LocationListener {
+interface StoresUpdater {
+    void updateStores(ArrayList<Store> stores);
+}
+
+public class HomeActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        LogoutAlertDialog.passDatabase,
+        LocationListener,
+        PagerManager.StoresListFragment.IStoresListFragmentCallbacks {
 
 
     // TODO parallax detail, email to da detail, andare dal pin al detail
@@ -94,11 +101,6 @@ public class HomeActivity extends AppCompatActivity
         client.disconnect();
     }
 
-    public interface StoresUpdater {
-        void updateStores(ArrayList<Store> stores);
-    }
-
-
     private static final String TAG = "HomeActivity";
     private static final String SAVE = "onsaved";
     public static final String STORES_KEY_FOR_BUNDLE = "StoresListKeyForBundle";
@@ -112,6 +114,7 @@ public class HomeActivity extends AppCompatActivity
     private boolean goSnack = true;
     private ArrayList<Store> stores;
     private FragmentManager fragManager;
+    private PagerManager.StoresListFragment storesListFragment;
 
     private BroadcastReceiver broadcastReceiver;
 
@@ -182,9 +185,7 @@ public class HomeActivity extends AppCompatActivity
 
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        //userLocation = new Location("");
         setUserLocation();
-
 
         ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
 
@@ -251,6 +252,11 @@ public class HomeActivity extends AppCompatActivity
         assert tabLayout != null;
         tabLayout.setupWithViewPager(viewPager);
 
+        storesListFragment = (PagerManager.StoresListFragment)
+                fragManager.findFragmentByTag("android:switcher:" +
+                        R.id.pager + ":" +
+                        PagerManager.PagerAdapter.ID_STORE_LIST_FRAGMENT);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -280,6 +286,12 @@ public class HomeActivity extends AppCompatActivity
     public void getStoresFromServer(boolean async) {    //controlli già verificati prima della chiamata
         Log.i(TAG, "getStoresFromServer");
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onStart() {
+                super.onStart();
+                setRefreshing(true);
+            }
+
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 
@@ -327,8 +339,16 @@ public class HomeActivity extends AppCompatActivity
                     String jsonBody = new String(responseBody);
                     Log.i("onFailure response:", jsonBody);
                 }
+                setRefreshing(false);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                setRefreshing(false);
             }
         };
+
         if (async)
             ApiManager.getInstance().getAsyncStores(User.getInstance().getSession(), handler);
         else
@@ -428,7 +448,7 @@ public class HomeActivity extends AppCompatActivity
             return true;
         }
 
-        if (id == R.id.distance_sort){
+        if (id == R.id.distance_sort) {
             Collections.sort(stores);
             notifyFragments();
             return true;
@@ -465,6 +485,17 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public CouchbaseDB couchbaseDB() {
         return database;
+    }
+
+    @Override
+    public void onStoreListFragmentCreated(PagerManager.StoresListFragment fragment) {
+        this.storesListFragment = fragment;
+    }
+
+    private void setRefreshing(boolean flag) {
+        if (storesListFragment != null) {
+            storesListFragment.setRefreshing(flag);
+        }
     }
 
     // Metodo che controlla la possibilità di accedere a internet

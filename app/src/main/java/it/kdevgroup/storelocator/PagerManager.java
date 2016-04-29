@@ -3,16 +3,11 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -31,20 +25,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class PagerManager {
 
     public static class PagerAdapter extends FragmentPagerAdapter {
 
-//        private StoresListFragment storesListFragment;
-//        private MapFragment mapFragment;
+        public static final int ID_STORE_LIST_FRAGMENT = 0;
+        public static final int ID_MAP_FRAGMENT = 1;
 
         private String tabTitles[] = new String[]{"Negozi", "Mappa"};
         private Context context;
@@ -57,9 +46,9 @@ public class PagerManager {
         @Override
         public Fragment getItem(int i) {
             switch (i) {
-                case 0:
+                case ID_STORE_LIST_FRAGMENT:
                     return StoresListFragment.newInstance(context);
-                case 1:
+                case ID_MAP_FRAGMENT:
                     return MapFragment.newInstance();
                 case 2:
                     //TODO lista prodotti ?
@@ -84,17 +73,29 @@ public class PagerManager {
     /**
      * Fragment che conterrà la lista
      */
-    public static class StoresListFragment extends Fragment implements HomeActivity.StoresUpdater {
+    public static class StoresListFragment extends Fragment implements StoresUpdater {
 
         private static final String TAG = "StoresListFragment";
         private static final String USER_KEY_FOR_BUNDLE = "UserKeyForBundle";
 
         private static Context context;
-        //private ArrayList<Store> stores;
+        private IStoresListFragmentCallbacks mListener = new IStoresListFragmentCallbacks() {
+            @Override
+            public void onStoreListFragmentCreated(StoresListFragment fragment) {
+
+            }
+        };  // inizializzazione dummy alla Merlino
+
         private EventsCardsAdapter cardsAdapter;
         private RecyclerView recyclerView;
         private LinearLayoutManager layoutManager;
         private HomeActivity homeActivity;
+
+        private SwipeRefreshLayout swipeRefreshLayout;
+
+        public interface IStoresListFragmentCallbacks {
+            void onStoreListFragmentCreated(StoresListFragment fragment);
+        }
 
         public static StoresListFragment newInstance(Context ctx) {
             context = ctx;
@@ -121,6 +122,24 @@ public class PagerManager {
                     R.layout.fragment_stores_list, container, false);
 
             recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+            swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
+
+            // resta in ascolto dello scorrimento della lista di card
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    boolean enableRefreshCircle = true;
+
+                    // se l'elemento visibile è il primo, allora ho la possibilità di aggiornare il contenuto
+                    if (recyclerView.getChildCount() > 0) {
+                        enableRefreshCircle = (layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                    }
+                    swipeRefreshLayout.setEnabled(enableRefreshCircle);
+                }
+            });
 
             if (savedInstanceState != null) {
                 //stores = savedInstanceState.getParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE);
@@ -154,6 +173,16 @@ public class PagerManager {
         }
 
         @Override
+        public void onAttach(Context context) {
+            super.onAttach(context);
+            if (context instanceof IStoresListFragmentCallbacks) {
+                mListener = (IStoresListFragmentCallbacks)context;
+            }
+            if (mListener != null) {
+                mListener.onStoreListFragmentCreated(this);
+            }
+        }
+        @Override
         public void onSaveInstanceState(Bundle outState) {
             //outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
             outState.putParcelable(USER_KEY_FOR_BUNDLE, User.getInstance());
@@ -165,12 +194,24 @@ public class PagerManager {
         public void updateStores(ArrayList<Store> stores) {
             cardsAdapter.swapStores(stores);
         }
+
+        /**
+         * Imposta il pallino che gira per il caricamento
+         * @param flag
+         */
+        public void setRefreshing(boolean flag) {
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(flag);
+            }
+        }
     }
 
     /**
      * Fragment per la mappa
      */
-    public static class MapFragment extends Fragment implements OnMapReadyCallback, HomeActivity.StoresUpdater {
+    public static class MapFragment extends Fragment implements
+            OnMapReadyCallback,
+            StoresUpdater {
 
         public static final String MARKERS_KEY_FOR_BUNDLE = "markers";
 
@@ -254,18 +295,18 @@ public class PagerManager {
                 public View getInfoContents(final Marker marker) {
                     View v = getLayoutInflater(null).inflate(R.layout.window_adapter, null);
 
-                    TextView title = (TextView)v.findViewById(R.id.txtStoreName);
+                    TextView title = (TextView) v.findViewById(R.id.txtStoreName);
                     title.setText(marker.getTitle());
 
-                    TextView info = (TextView)v.findViewById(R.id.txtInfo);
+                    TextView info = (TextView) v.findViewById(R.id.txtInfo);
                     info.setText(marker.getSnippet());
 
                     final int k = Integer.parseInt(marker.getId().substring(1));
 
-                    TextView phone = (TextView)v.findViewById(R.id.txtPhone);
+                    TextView phone = (TextView) v.findViewById(R.id.txtPhone);
                     phone.setText(markers.get(marker).getPhone());
 
-                    TextView mail = (TextView)v.findViewById(R.id.txtMail);
+                    TextView mail = (TextView) v.findViewById(R.id.txtMail);
                     mail.setText(markers.get(marker).getEmail());
 
 //                    ImageView thumbnail =(ImageView)v.findViewById(R.id.imageView2);
@@ -284,7 +325,7 @@ public class PagerManager {
             updateMarkers();
         }
 
-        public void updateMarkers(){
+        public void updateMarkers() {
             //Il marker viene dato con il colore di default rosso, per modificare il suo colore
             //si gioca con l'hue del colore saturandolo per ottenere quello che si preferisce (37-45) sono tutte tonalità simili all'oro ma questa mi piace
             float hue = 39;

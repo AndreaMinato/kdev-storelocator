@@ -11,35 +11,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/sliding_tabs"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:layout_gravity="left"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:tabTextColor="#ffffff"
-            app:tabSelectedTextColor="@color/oro" />
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-    </android.support.design.widget.AppBarLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary" />
 
-    <include layout="@layout/content_home"
-        android:layout_below="@id/appBarLayout"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+            <android.support.design.widget.TabLayout
+                android:id="@+id/sliding_tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:tabSelectedTextColor="@color/oro"
+                app:tabTextColor="#ffffff" />
 
+        </android.support.design.widget.AppBarLayout>
+
+        <include
+            layout="@layout/content_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/appBarLayout" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>
