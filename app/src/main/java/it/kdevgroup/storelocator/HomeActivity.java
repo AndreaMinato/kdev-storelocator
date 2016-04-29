@@ -250,6 +250,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     /**
      * Ottiene gli store dal server
+     *
      * @param async flag che specifica se eseguire il task asincronamente o no
      */
     public void getStoresFromServer(boolean async) {    //controlli già verificati prima della chiamata
@@ -313,7 +314,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onFinish() {
                 super.onFinish();
-                setRefreshing(true);
+                setRefreshing(false);
             }
         };
 
@@ -458,6 +459,13 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     public void onStoreListFragmentCreated(PagerManager.StoresListFragment fragment) {
         this.storesListFragment = fragment;
+    }
+
+    @Override
+    public void onStoreListRefresh() {
+        if (isNetworkAvailable()) {
+            getStoresFromServer();
+        }
     }
 
     private void setRefreshing(boolean flag) {
