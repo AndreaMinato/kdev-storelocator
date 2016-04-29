@@ -199,9 +199,14 @@ public class PagerManager {
          * Imposta il pallino che gira per il caricamento
          * @param flag
          */
-        public void setRefreshing(boolean flag) {
+        public void setRefreshing(final boolean flag) {
             if (swipeRefreshLayout != null) {
-                swipeRefreshLayout.setRefreshing(flag);
+                swipeRefreshLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(flag);
+                    }
+                });
             }
         }
     }

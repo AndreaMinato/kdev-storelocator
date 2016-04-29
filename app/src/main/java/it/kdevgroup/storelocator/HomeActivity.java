@@ -139,15 +139,15 @@ public class HomeActivity extends AppCompatActivity implements
 
         pagerAdapter = new PagerManager.PagerAdapter(getSupportFragmentManager(), this);
 
-        // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+        // --- SET UP THE VIEW PAGER, attaching the adapter and setting up a listener for when the
         // user swipes between sections.
         viewPager = (ViewPager) findViewById(R.id.pager);
         assert viewPager != null;   //conferma che non è null
         viewPager.setAdapter(pagerAdapter);
 
+        // --- INTENT PER AZIONE DI LOGOUT
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(LogoutAlertDialog.ACTION_LOGOUT);
-
         broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -156,43 +156,44 @@ public class HomeActivity extends AppCompatActivity implements
             }
         };
         this.registerReceiver(broadcastReceiver, intentFilter);
-/*
-        if (drawerLayout != null) {
-            drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-                @Override
-                public void onDrawerSlide(View drawerView, float slideOffset) {
-//                    Log.d(TAG, "onDrawerSlide: " + slideOffset);
-                        // TODO eventuali animazioni
-                }
 
-                @Override
-                public void onDrawerOpened(View drawerView) {
+        // --- ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-                }
 
-                @Override
-                public void onDrawerClosed(View drawerView) {
-
-                }
-
-                @Override
-                public void onDrawerStateChanged(int newState) {
-
-                }
-            });
-        }
-*/
-
+        ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         setUserLocation();
 
-        ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
-
-        database = new CouchbaseDB(getApplicationContext());
-
         fragManager = getSupportFragmentManager();
 
+        // --- SETUP TAB STILE WHATSAPP
+        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        assert tabLayout != null;
+        tabLayout.setupWithViewPager(viewPager);
+
+        storesListFragment = (PagerManager.StoresListFragment)
+                fragManager.findFragmentByTag("android:switcher:" +
+                        R.id.pager + ":" +
+                        PagerManager.PagerAdapter.ID_STORE_LIST_FRAGMENT);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        if (drawer != null) {
+            drawer.addDrawerListener(toggle);
+        }
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+        }
+
+        // --- OTTENGO GLI STORE DALLE API O DAL DATABASE
+        database = new CouchbaseDB(getApplicationContext());
         if (stores == null) {
             stores = new ArrayList<>();
             try {
@@ -218,9 +219,7 @@ public class HomeActivity extends AppCompatActivity implements
                         if (stores != null && userLocation != null) {
                             Collections.sort(stores);
                         }
-
                         notifyFragments();  //dentro viene lanciato un NullPointerException se uno dei Fragment non è passato per l'onCreateView dove viene valorizzata la variabile homeActivity
-
                     }
                 });
 
@@ -234,45 +233,11 @@ public class HomeActivity extends AppCompatActivity implements
             //TODO dialog di errore
         }
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-
-        /**
-         * da qua in poi setup di layout
-         */
-        //snackbar di benvenuto, mostrata una volta sola
+        // snackbar di benvenuto, mostrata una volta sola
         if (goSnack) {
             Snackbar.make(viewPager, "Benvenuto " + User.getInstance().getName(), Snackbar.LENGTH_LONG).show();
             goSnack = false;
         }
-
-        //setup delle tab stile whatsapp
-        tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
-        assert tabLayout != null;
-        tabLayout.setupWithViewPager(viewPager);
-
-        storesListFragment = (PagerManager.StoresListFragment)
-                fragManager.findFragmentByTag("android:switcher:" +
-                        R.id.pager + ":" +
-                        PagerManager.PagerAdapter.ID_STORE_LIST_FRAGMENT);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        if (drawer != null) {
-            drawer.addDrawerListener(toggle);
-        }
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        if (navigationView != null) {
-            navigationView.setNavigationItemSelectedListener(this);
-        }
-
-        //notifico i frammenti di aggiornarsi per evitare problemi
-        //in caso il fragment carichi prima del database (difficile)
-        //notifyFragments();
     }
 
     public ArrayList<Store> getStores() {
@@ -283,6 +248,10 @@ public class HomeActivity extends AppCompatActivity implements
         getStoresFromServer(true);
     }
 
+    /**
+     * Ottiene gli store dal server
+     * @param async flag che specifica se eseguire il task asincronamente o no
+     */
     public void getStoresFromServer(boolean async) {    //controlli già verificati prima della chiamata
         Log.i(TAG, "getStoresFromServer");
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
@@ -322,7 +291,6 @@ public class HomeActivity extends AppCompatActivity implements
                         } catch (CouchbaseLiteException e) {
                             e.printStackTrace();
                         }
-
                         //TODO la prima volta questa viene chiamata troppo presto e userLocation non è ancora stato valorizzato, da fixare
                         //setDistanceFromStores();
 
@@ -345,7 +313,7 @@ public class HomeActivity extends AppCompatActivity implements
             @Override
             public void onFinish() {
                 super.onFinish();
-                setRefreshing(false);
+                setRefreshing(true);
             }
         };
 
