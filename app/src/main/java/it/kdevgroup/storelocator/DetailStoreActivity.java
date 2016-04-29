@@ -1,6 +1,7 @@
 package it.kdevgroup.storelocator;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.fasterxml.jackson.databind.deser.Deserializers;
@@ -68,7 +70,7 @@ public class DetailStoreActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        scrollView = (ObservableScrollView)findViewById(R.id.scroll);
+        scrollView = (ObservableScrollView) findViewById(R.id.scroll);
         scrollView.setScrollViewCallbacks(this);
 
         flexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_map_height);
@@ -115,9 +117,16 @@ public class DetailStoreActivity extends AppCompatActivity
                 mail.setType("text/plain");
                 mail.putExtra(Intent.EXTRA_SUBJECT, "");
                 mail.putExtra(Intent.EXTRA_TEXT, "");
-                mail.setData(Uri.parse("mailto:"+store.getEmail()));
+                mail.setData(Uri.parse("mailto:" + store.getEmail()));
                 mail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // this will make such that when user returns to your app, your app is displayed, instead of the email app.
-                startActivity(mail);
+
+                ComponentName emailApp = mail.resolveActivity(getPackageManager());
+                ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
+                boolean hasEmailApp = emailApp != null && !emailApp.equals(unsupportedAction);
+                if (hasEmailApp)
+                    startActivity(mail);
+                else
+                    Toast.makeText(getApplicationContext(), "Configura prima la tua app per gestire la comunicazione epistolare", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -226,9 +235,8 @@ public class DetailStoreActivity extends AppCompatActivity
 
         txtStoreAddress.setText(store.getAddress());
         txtStorePhone.setText(store.getPhone());
-        txtSalesPerson.setText(store.getFirstName() +" "+store.getLastName() + '\n' + store.getEmail());
+        txtSalesPerson.setText(store.getFirstName() + " " + store.getLastName() + '\n' + store.getEmail());
         txtStoreDescription.setText(store.getDescription());
-
 
 
         imgMap.post(new Runnable() {
@@ -320,7 +328,7 @@ public class DetailStoreActivity extends AppCompatActivity
 //        float alpha = Math.min(1, (float) scrollY / flexibleSpaceImageHeight);
 //        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha, baseColor));
         ViewHelper.setTranslationY(imgMap, scrollY / 4 * 3);
-}
+    }
 
     @Override
     public void onDownMotionEvent() {
