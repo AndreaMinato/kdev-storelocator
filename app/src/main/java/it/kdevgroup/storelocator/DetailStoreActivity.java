@@ -7,22 +7,24 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
-import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,13 +48,15 @@ public class DetailStoreActivity extends AppCompatActivity
     public static final String KEY_STORE = "storePresoDalBundle";
 
     private ImageView imgMap;//dettaglio longitudine e latitudine
-    private TextView txtStoreName, txtStoreAddress, txtStorePhone, txtSalesPerson, txtStoreDescription;
+    private TextView txtStoreAddress, txtStorePhone, txtSalesPerson, txtStoreDescription;
     private BroadcastReceiver broadcastReceiver;
     private CouchbaseDB database;
     private ObservableScrollView scrollView;
     private int flexibleSpaceImageHeight;
-    private int actionBarSize;
-    private Toolbar toolbar;
+    public Toolbar toolbar;
+    public NavigationView navigationView;
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
     private PersistentProgressDialog progressDialog;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -69,6 +73,10 @@ public class DetailStoreActivity extends AppCompatActivity
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        navigationView = (NavigationView) findViewById(R.id.product_view);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         scrollView = (ObservableScrollView) findViewById(R.id.scroll);
         scrollView.setScrollViewCallbacks(this);
@@ -95,7 +103,6 @@ public class DetailStoreActivity extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         imgMap = (ImageView) findViewById(R.id.imgMap);
-        txtStoreName = (TextView) findViewById(R.id.txtStoreName);
         txtStoreAddress = (TextView) findViewById(R.id.txtStoreAddress);
 
         txtStorePhone = (TextView) findViewById(R.id.txtStorePhone);
@@ -344,4 +351,36 @@ public class DetailStoreActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         onScrollChanged(scrollView.getCurrentScrollY(), false, false);
     }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.detail_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+
+        if (id == R.id.foursquare) {
+           return true;
+        }
+
+        if(id== R.id.prodotti){
+
+            if (drawerLayout.isDrawerOpen(Gravity.END)) {
+                drawerLayout.closeDrawer(Gravity.END);
+            } else {
+                drawerLayout.openDrawer(Gravity.END);
+            }
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 }

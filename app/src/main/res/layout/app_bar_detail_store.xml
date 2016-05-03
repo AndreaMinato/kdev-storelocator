@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="it.kdevgroup.storelocator.HomeActivity">
+    tools:context=".DetailStoreActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,20 +23,10 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary" />
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/sliding_tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:background="@color/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:tabSelectedTextColor="@color/oro"
-                app:tabTextColor="#ffffff" />
-
         </android.support.design.widget.AppBarLayout>
 
         <include
-            layout="@layout/content_home"
+            layout="@layout/content_detail_store"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/appBarLayout" />

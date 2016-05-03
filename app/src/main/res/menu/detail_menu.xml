@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/foursquare"
+        android:icon="@drawable/foursquare_logo"
+        android:title="Fourquare"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/prodotti"
+        android:icon="@drawable/ic_dns"
+        android:title="Prodotti"
+        app:showAsAction="ifRoom"/>
+</menu>
