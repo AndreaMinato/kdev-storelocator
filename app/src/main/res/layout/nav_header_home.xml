@@ -12,22 +12,9 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="80dp"
-        android:layout_height="120dp"
-        android:src="@drawable/jesse_logo"
-        android:layout_weight="1"
-        android:layout_gravity="center_vertical"/>
-
-    <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Store Locator"
-        android:gravity="center_vertical"
-        android:textSize="20dp"
-        android:textColor="@color/oro"
-        android:layout_weight="1"
-        android:textStyle="italic"
-        android:paddingLeft="@dimen/nav_header_vertical_spacing"
-        android:paddingRight="@dimen/nav_header_vertical_spacing"/>
+        android:src="@drawable/jesse_we_touch"
+        android:layout_gravity="center_vertical"/>
 
 </LinearLayout>
