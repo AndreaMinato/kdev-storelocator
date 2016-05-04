@@ -1,9 +1,12 @@
 package it.kdevgroup.storelocator;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by andrea on 15/04/16.
  */
-public class Product {
+public class Product implements Parcelable {
 
     private static final String TAG = "Store";
 
@@ -61,5 +64,42 @@ public class Product {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(isAvailable ? 1 : 0);
+        dest.writeString(name);
+        dest.writeString(price);
+    }
+
+    Parcelable.Creator<Product> CREATOR = new ClassLoaderCreator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel source, ClassLoader loader) {
+            return new Product(source);
+        }
+
+        @Override
+        public Product createFromParcel(Parcel source) {
+            return new Product(source);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
+
+    private Product(Parcel parcel) {
+        id = parcel.readInt();
+        isAvailable = (parcel.readInt() == 1);
+        name = parcel.readString();
+        price = parcel.readString();
     }
 }
