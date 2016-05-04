@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -232,11 +234,23 @@ public class DetailStoreActivity extends AppCompatActivity
             }
         });
         */
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        ProductFragment productFragment = (ProductFragment) fragmentManager.findFragmentByTag("ciao");
+
+        if (productFragment == null) {
+            productFragment = ProductFragment.newInstance(store);
+            fragmentManager.beginTransaction()
+                    .add(R.id.product_view, productFragment, "ciao")
+                    .commit();
+        }
+
+
     }
 
     private void updateFieldsAndMap(final Store store) {
 
-        if(getSupportActionBar() != null)
+        if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(store.getName());
 
 
@@ -366,15 +380,15 @@ public class DetailStoreActivity extends AppCompatActivity
 
 
         if (id == R.id.foursquare) {
-           return true;
+            return true;
         }
 
-        if(id== R.id.prodotti){
+        if (id == R.id.prodotti) {
 
-            if (drawerLayout.isDrawerOpen(Gravity.END)) {
-                drawerLayout.closeDrawer(Gravity.END);
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END);
             } else {
-                drawerLayout.openDrawer(Gravity.END);
+                drawerLayout.openDrawer(GravityCompat.END);
             }
 
             return true;
