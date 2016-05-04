@@ -2,9 +2,6 @@ package it.kdevgroup.storelocator;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,9 +26,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -182,8 +176,8 @@ public class PagerManager {
              * visibile. FIGATTAAA
              */
             int colonne = 1;
-            // se lo schermo è orizzontale, allora le colonne da utilizzare sono due
-            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // se lo schermo è di un tablet, allora le colonne da utilizzare sono due
+            if (getResources().getBoolean(R.bool.isTablet)) {
                 colonne = 2;
             }
             layoutManager = new GridLayoutManager(context, colonne, GridLayoutManager.VERTICAL, false);
