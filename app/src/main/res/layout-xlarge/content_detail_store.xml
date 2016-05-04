@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_marginTop="?attr/actionBarSize"
+    tools:context=".DetailStoreActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgMap"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/parallax_map_height"
+            android:contentDescription="map/longitude/latitude" />
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/parallax_map_height"
+            android:minHeight="@dimen/parallax_map_height" />
+
+        <View
+            android:id="@+id/line0"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="#c2c2c2"
+            android:layout_below="@+id/anchor" />
+
+        <RelativeLayout
+            android:background="#ffffff"
+            android:layout_below="@+id/line0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="86dp"
+            android:paddingRight="86dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp">
+
+            <!--
+            <TextView
+                android:id="@+id/txtStoreName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Store"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="25dp"
+                android:textSize="30sp"
+                android:textColor="@color/oro"
+                android:textStyle="bold|italic"/>
+
+            <View
+                android:id="@+id/line0"
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:layout_below="@+id/txtStoreName" />
+            -->
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Indirizzo"
+                android:textColor="@color/oro"
+                android:textSize="20sp"
+                android:layout_marginTop="3dp"/>
+
+            <TextView
+                android:id="@+id/txtStoreAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:layout_below="@+id/address" />
+
+            <View
+                android:id="@+id/line1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:layout_below="@+id/txtStoreAddress" />
+
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Telefono"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/oro"
+                android:textSize="20sp"
+                android:layout_below="@+id/line1" />
+
+            <TextView
+                android:id="@+id/txtStorePhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:layout_below="@+id/phone"
+                android:drawableRight="@drawable/ic_local_phone"
+                android:paddingRight="10dp" />
+
+            <View
+                android:id="@+id/line2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:layout_below="@+id/txtStorePhone" />
+
+            <TextView
+                android:id="@+id/salesPerson"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Responsabile"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/oro"
+                android:textSize="20sp"
+                android:layout_below="@+id/line2"/>
+
+            <TextView
+                android:id="@+id/txtSalesPerson"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:layout_below="@+id/salesPerson"
+                android:drawableRight="@drawable/ic_mail_outline"
+                android:paddingRight="10dp" />
+
+            <View
+                android:id="@+id/line3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#c2c2c2"
+                android:layout_below="@+id/txtSalesPerson" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Descrizione"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/oro"
+                android:textSize="20sp"
+                android:layout_below="@+id/line3" />
+
+            <TextView
+                android:id="@+id/txtStoreDescriptions"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:layout_below="@+id/description" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
