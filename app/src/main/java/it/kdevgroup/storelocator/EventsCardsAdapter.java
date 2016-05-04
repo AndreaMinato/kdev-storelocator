@@ -25,14 +25,12 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
 
     private ArrayList<Store> stores;  //lista di eventi
     private Context ctx;
-    private Location userLocation;
 
     private static final String TAG = "EventsCardsAdapter";
 
     public EventsCardsAdapter(ArrayList<Store> stores, Context ctx, Location userLocation) {
         this.stores = stores;
         this.ctx = ctx;
-        this.userLocation = userLocation;
         Collections.sort(this.stores);
         Log.i(TAG, "stores sorted");
     }

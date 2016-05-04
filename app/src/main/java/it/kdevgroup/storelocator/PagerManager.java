@@ -1,11 +1,14 @@
 package it.kdevgroup.storelocator;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -107,6 +110,7 @@ public class PagerManager {
 
         public interface IStoresListFragmentCallbacks {
             void onStoreListFragmentCreated(StoresListFragment fragment);
+
             void onStoreListRefresh();
         }
 
@@ -196,12 +200,13 @@ public class PagerManager {
         public void onAttach(Context context) {
             super.onAttach(context);
             if (context instanceof IStoresListFragmentCallbacks) {
-                mListener = (IStoresListFragmentCallbacks)context;
+                mListener = (IStoresListFragmentCallbacks) context;
             }
             if (mListener != null) {
                 mListener.onStoreListFragmentCreated(this);
             }
         }
+
         @Override
         public void onSaveInstanceState(Bundle outState) {
             //outState.putParcelableArrayList(HomeActivity.STORES_KEY_FOR_BUNDLE, stores);
@@ -262,7 +267,6 @@ public class PagerManager {
             View rootView = inflater.inflate(
                     R.layout.fragment_map, container, false);
 
-            //TODO cacare la mappa per visualizzarla anche senza dati se si può
             homeActivity = (HomeActivity) getActivity();
 
             markers = new HashMap<>();
@@ -283,17 +287,18 @@ public class PagerManager {
         public void onMapReady(GoogleMap gm) {
             googleMap = gm;
 
-            try {
+            if (ActivityCompat.checkSelfPermission(homeActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(homeActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
                 googleMap.setMyLocationEnabled(true); //abilita il punto blu sulla mappa
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
 
-            if (stores == null)
-                stores = homeActivity.getStores();
+                if (stores == null)
+                    stores = homeActivity.getStores();
 
-            if (stores != null && stores.size() > 0) {
-                setMarkers();
+                if (stores != null && stores.size() > 0) {
+                    setMarkers();
+                }
+
             }
 
         }
@@ -377,6 +382,10 @@ public class PagerManager {
 
                 }
             }
+        }
+
+        public GoogleMap getGoogleMap() {
+            return googleMap;
         }
 
         @Override
