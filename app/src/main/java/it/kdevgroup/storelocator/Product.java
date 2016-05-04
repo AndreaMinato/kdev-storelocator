@@ -79,7 +79,7 @@ public class Product implements Parcelable {
         dest.writeString(price);
     }
 
-    Parcelable.Creator<Product> CREATOR = new ClassLoaderCreator<Product>() {
+    public static final Parcelable.Creator<Product> CREATOR = new ClassLoaderCreator<Product>() {
         @Override
         public Product createFromParcel(Parcel source, ClassLoader loader) {
             return new Product(source);

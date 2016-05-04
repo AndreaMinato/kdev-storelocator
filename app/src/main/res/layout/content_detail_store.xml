@@ -109,7 +109,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="15sp"
                 android:layout_below="@+id/phone"
-                android:drawableRight="@drawable/ic_local_phone"
+                android:drawableRight="@drawable/ic_phone"
                 android:paddingRight="10dp" />
 
             <View

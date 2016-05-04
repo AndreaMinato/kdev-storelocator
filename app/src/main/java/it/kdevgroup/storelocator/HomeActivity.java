@@ -1,9 +1,12 @@
 package it.kdevgroup.storelocator;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -11,21 +14,26 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.couchbase.lite.CouchbaseLiteException;
 import com.google.android.gms.appindexing.Action;
@@ -102,6 +110,7 @@ public class HomeActivity extends AppCompatActivity implements
         client.disconnect();
     }
 
+    private static final int PERMISSION_REQUEST_LOCATION = 1;
     private static final String TAG = "HomeActivity";
     private static final String SAVE = "onsaved";
     public static final String STORES_KEY_FOR_BUNDLE = "StoresListKeyForBundle";
@@ -126,6 +135,15 @@ public class HomeActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        //requestLocationPermission();
+        //setUserLocation();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission();
+        } else {
+            setUserLocation();
+        }
 
         if (savedInstanceState != null) {
             goSnack = savedInstanceState.getBoolean(SAVE);
@@ -162,11 +180,9 @@ public class HomeActivity extends AppCompatActivity implements
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-
         ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        setUserLocation();
 
         fragManager = getSupportFragmentManager();
 
@@ -238,6 +254,77 @@ public class HomeActivity extends AppCompatActivity implements
         if (goSnack) {
             Snackbar.make(viewPager, "Benvenuto " + User.getInstance().getName(), Snackbar.LENGTH_LONG).show();
             goSnack = false;
+        }
+    }
+
+    public void requestLocationPermission() {
+
+
+            // Should we show an explanation?
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                Manifest.permission.ACCESS_FINE_LOCATION)) {
+//
+//            new AlertDialog.Builder(this)
+//                    .setMessage("Ci serve la tua posizione")
+//                    .setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            onDestroy();
+//                        }
+//                    })
+//                    .create()
+//                    .show();
+//
+//        } else {
+
+            // No explanation needed, we can request the permission.
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_LOCATION);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+
+//        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    Toast.makeText(this, "Grazie :)", Toast.LENGTH_LONG).show();
+
+                    setUserLocation();
+                    PagerManager.MapFragment mapFragment = (PagerManager.MapFragment) fragManager.findFragmentByTag("android:switcher:" + R.id.pager + ":" + 1);
+
+                    try {
+                        mapFragment.getGoogleMap().setMyLocationEnabled(true);
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                } else {
+                    Toast.makeText(this, "goditi la tua app inutile", Toast.LENGTH_LONG).show();
+
+                    //requestLocationPermission(); //non entra
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                break;
+            }
+
         }
     }
 
