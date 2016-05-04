@@ -49,7 +49,6 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card, viewGroup, false);
         return new CardViewHolder(v);
     }
-
     /**
      * Crea una card, chiamato ogni volta che deve essere mostrata una CardView
      *

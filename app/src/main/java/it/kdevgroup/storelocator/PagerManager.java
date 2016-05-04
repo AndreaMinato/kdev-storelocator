@@ -182,7 +182,7 @@ public class PagerManager {
              * visibile. FIGATTAAA
              */
             int colonne = 1;
-            // se lo schermo è orizzontale, allora le colonne da utilizzare sono due
+            // se siamo su un tablet, allora le colonne da utilizzare sono due
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 colonne = 2;
             }
