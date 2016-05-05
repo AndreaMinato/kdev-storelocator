@@ -10,7 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
 import android.widget.TextView;
+
+import com.github.florent37.viewanimator.ViewAnimator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,6 +79,11 @@ public class StoresCardsAdapter extends RecyclerView.Adapter<StoresCardsAdapter.
             cardHolder.distance.setText( Integer.toString(stores.get(position).getLastKnownDistance()) + " " + ctx.getResources().getString(R.string.from_you) );
         }
 
+        ViewAnimator
+                .animate(cardHolder.itemView)
+                .bounceIn().interpolator(new BounceInterpolator())
+                .wave().duration(2000)
+                .start();
     }
 
     @Override
