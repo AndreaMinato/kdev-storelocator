@@ -139,6 +139,8 @@ public class HomeActivity extends AppCompatActivity implements
         //requestLocationPermission();
         //setUserLocation();
 
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestLocationPermission();
         } else {
@@ -181,8 +183,6 @@ public class HomeActivity extends AppCompatActivity implements
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         ((NavigationView) findViewById(R.id.nav_view)).setItemIconTintList(null);
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         fragManager = getSupportFragmentManager();
 
@@ -465,8 +465,8 @@ public class HomeActivity extends AppCompatActivity implements
             locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
         } catch (SecurityException e) {
             e.printStackTrace();
-            // TODO dialog qualcosa
         }
+
     }
 
     public void setDistanceFromStores() {

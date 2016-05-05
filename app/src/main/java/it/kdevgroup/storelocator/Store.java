@@ -277,6 +277,7 @@ public class Store implements Parcelable, Comparable<Store> {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeList(products);
+        dest.writeInt(lastKnownDistance);
     }
 
     public final static Parcelable.Creator<Store> CREATOR = new ClassLoaderCreator<Store>() {
@@ -313,6 +314,7 @@ public class Store implements Parcelable, Comparable<Store> {
         lastName = in.readString();
         products = new ArrayList<>();
         in.readList(products, Product.class.getClassLoader());
+        lastKnownDistance = in.readInt();
     }
 
     @Override

@@ -3,7 +3,6 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,18 +19,17 @@ import java.util.Collections;
  * Created by mattia on 07/04/16.
  */
 
-public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.CardViewHolder> {
+public class StoresCardsAdapter extends RecyclerView.Adapter<StoresCardsAdapter.CardViewHolder> {
 
     private ArrayList<Store> stores;  //lista di eventi
     private Context ctx;
 
-    private static final String TAG = "EventsCardsAdapter";
+    private static final String TAG = "StoresCardsAdapter";
 
-    public EventsCardsAdapter(ArrayList<Store> stores, Context ctx, Location userLocation) {
+    public StoresCardsAdapter(ArrayList<Store> stores, Context ctx) {
         this.stores = stores;
         this.ctx = ctx;
         Collections.sort(this.stores);
-        Log.i(TAG, "stores sorted");
     }
 
     /**
@@ -72,8 +69,12 @@ public class EventsCardsAdapter extends RecyclerView.Adapter<EventsCardsAdapter.
             }
         });
 
-        if(stores.get(position).getLastKnownDistance() != 0)
-            cardHolder.distance.setText(stores.get(position).getLastKnownDistance() + " km da te");
+        if( !((HomeActivity)ctx).isNetworkAvailable() ){
+            cardHolder.distance.setText(R.string.device_offline);
+        }
+        else if(stores.get(position).getLastKnownDistance() != 0) {
+            cardHolder.distance.setText( Integer.toString(stores.get(position).getLastKnownDistance()) + " " + ctx.getResources().getString(R.string.from_you) );
+        }
 
     }
 

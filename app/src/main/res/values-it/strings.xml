@@ -13,4 +13,10 @@
 
     <string name="indirizzo">Indirizzo</string>
     <string name="telefono">Telefono</string>
+
+    <string name="ordine_alfabetico">Ordina per nome</string>
+    <string name="ordine_posizione">Ordina per distanza</string>
+
+    <string name="from_you">km da te</string>
+    <string name="device_offline">Il tuo dispositivo è offline</string>
 </resources>

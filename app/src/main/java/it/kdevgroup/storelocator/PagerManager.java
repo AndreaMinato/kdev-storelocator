@@ -95,7 +95,7 @@ public class PagerManager {
             }
         };  // inizializzazione dummy alla Merlino
 
-        private EventsCardsAdapter cardsAdapter;
+        private StoresCardsAdapter cardsAdapter;
         private RecyclerView recyclerView;
         private LinearLayoutManager layoutManager;
         private HomeActivity homeActivity;
@@ -121,7 +121,7 @@ public class PagerManager {
             super.onCreate(savedInstanceState);
 
             homeActivity = (HomeActivity) context;
-            cardsAdapter = new EventsCardsAdapter(homeActivity.getStores(), context, homeActivity.getUserLocation());
+            cardsAdapter = new StoresCardsAdapter(homeActivity.getStores(), context);
         }
 
         @Override
@@ -237,6 +237,7 @@ public class PagerManager {
             OnMapReadyCallback,
             StoresUpdater {
 
+        public static final String TAG = "MapFragment";
         public static final String MARKERS_KEY_FOR_BUNDLE = "markers";
 
         private GoogleMap googleMap;
@@ -281,9 +282,9 @@ public class PagerManager {
         public void onMapReady(GoogleMap gm) {
             googleMap = gm;
 
-            if (ActivityCompat.checkSelfPermission(homeActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(homeActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(homeActivity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
+                Log.i(TAG, "onMapReady: locationEnabled");
                 googleMap.setMyLocationEnabled(true); //abilita il punto blu sulla mappa
 
                 if (stores == null)
