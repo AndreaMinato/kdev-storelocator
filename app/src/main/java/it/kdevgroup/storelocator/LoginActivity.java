@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.design.widget.Snackbar;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
+    MediaPlayer mp;
     private LinearLayout loginLinearLayout;
 
     private String email;
@@ -48,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        mp = MediaPlayer.create(this, R.raw.error);
         btnLogin = (Button) findViewById(R.id.login);
         if (btnLogin != null) {
             btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +144,8 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     //Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
-                                    Snackbar.make(loginLinearLayout, "Qualcosa è andato storto, ma si sistemerà", Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(loginLinearLayout, "Non posso farti netrare con queste credenziali", Snackbar.LENGTH_LONG).show();
+                                    mp.start();
                                 }
 
                             }
@@ -170,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
                 );
             } else {
                 Snackbar.make(loginLinearLayout, "Ho bisogno di avere tutti i tuoi dati per accedere", Snackbar.LENGTH_SHORT).show();
-
+                mp.start();
             }
         } else {
             Snackbar.make(loginLinearLayout, "Sembra che no ci sia connessione, puoi verificare?", Snackbar.LENGTH_SHORT).show();
