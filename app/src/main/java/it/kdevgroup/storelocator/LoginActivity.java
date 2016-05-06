@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    MediaPlayer mp;
+    public MediaPlayer mp;
     private LinearLayout loginLinearLayout;
 
     private String email;
@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             txtPassword.setTypeface(Typeface.DEFAULT);
         }
 
-        progressBar = (ProgressBar)findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
         loginLinearLayout = (LinearLayout) findViewById(R.id.loginLinearLayout);
@@ -156,6 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                                 progressBar.setVisibility(View.INVISIBLE);
                                 //Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
                                 Snackbar.make(loginLinearLayout, "Accidenti non ci riesco", Snackbar.LENGTH_LONG).show();
+                                mp.start();
                             }
 
                             @Override
@@ -177,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         } else {
             Snackbar.make(loginLinearLayout, "Sembra che no ci sia connessione, puoi verificare?", Snackbar.LENGTH_SHORT).show();
+            mp.start();
         }
     }
 

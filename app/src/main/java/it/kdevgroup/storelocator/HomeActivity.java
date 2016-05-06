@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -68,6 +69,7 @@ public class HomeActivity extends AppCompatActivity implements
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
+    public MediaPlayer mp;
     private GoogleApiClient client;
 
     @Override
@@ -155,6 +157,7 @@ public class HomeActivity extends AppCompatActivity implements
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -165,6 +168,9 @@ public class HomeActivity extends AppCompatActivity implements
         viewPager = (ViewPager) findViewById(R.id.pager);
         assert viewPager != null;   //conferma che non è null
         viewPager.setAdapter(pagerAdapter);
+
+        mp = MediaPlayer.create(this, R.raw.error);
+
 
         // --- INTENT PER AZIONE DI LOGOUT
         IntentFilter intentFilter = new IntentFilter();
@@ -388,6 +394,7 @@ public class HomeActivity extends AppCompatActivity implements
                 } else {
                    // Snackbar.make(viewPager, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
                     Snackbar.make(viewPager, "Qualcosa è andato storto, ma si sistemerà", Snackbar.LENGTH_LONG).show();
+                    mp.start();
                 }
             }
 
