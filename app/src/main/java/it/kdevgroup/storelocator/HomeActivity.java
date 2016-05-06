@@ -315,7 +315,7 @@ public class HomeActivity extends AppCompatActivity implements
                     // contacts-related task you need to do.
 
                 } else {
-                    Toast.makeText(this, "goditi la tua app inutile", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Accidenti, così non posso funzionare al meglio", Toast.LENGTH_LONG).show();
 
                     //requestLocationPermission(); //non entra
 
@@ -386,7 +386,8 @@ public class HomeActivity extends AppCompatActivity implements
                         //notifyFragments();
                     }
                 } else {
-                    Snackbar.make(viewPager, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
+                   // Snackbar.make(viewPager, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(viewPager, "Qualcosa è andato storto, ma si sistemerà", Snackbar.LENGTH_LONG).show();
                 }
             }
 
@@ -400,7 +401,7 @@ public class HomeActivity extends AppCompatActivity implements
                 try {
                     String[] errString = JsonParser.getInstance().getErrorInfoFromResponse(new String(responseBody));
                     if(errString[0].equals("100"))
-                        Snackbar.make(viewPager, "Accesso negato al server", Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(viewPager, "Il server mi impedisce di lavorare...stupido server", Snackbar.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

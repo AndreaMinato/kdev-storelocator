@@ -141,7 +141,8 @@ public class LoginActivity extends AppCompatActivity {
                                         launchHomeActivity(user);
                                     }
                                 } else {
-                                    Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
+                                    //Snackbar.make(loginLinearLayout, error[0] + " " + error[1], Snackbar.LENGTH_LONG).show();
+                                    Snackbar.make(loginLinearLayout, "Qualcosa è andato storto, ma si sistemerà", Snackbar.LENGTH_LONG).show();
                                 }
 
                             }
@@ -150,7 +151,8 @@ public class LoginActivity extends AppCompatActivity {
                             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                                 progressBar.setVisibility(View.INVISIBLE);
-                                Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
+                                //Snackbar.make(loginLinearLayout, getString(R.string.error_onFailure), Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(loginLinearLayout, "Accidenti non ci riesco", Snackbar.LENGTH_LONG).show();
                             }
 
                             @Override
@@ -167,11 +169,11 @@ public class LoginActivity extends AppCompatActivity {
                         }
                 );
             } else {
-                Snackbar.make(loginLinearLayout, "Inserire tutti i dati", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(loginLinearLayout, "Ho bisogno di avere tutti i tuoi dati per accedere", Snackbar.LENGTH_SHORT).show();
 
             }
         } else {
-            Snackbar.make(loginLinearLayout, "Connessione assente", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(loginLinearLayout, "Sembra che no ci sia connessione, puoi verificare?", Snackbar.LENGTH_SHORT).show();
         }
     }
 
