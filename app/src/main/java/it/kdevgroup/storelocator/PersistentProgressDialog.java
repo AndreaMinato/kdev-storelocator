@@ -31,8 +31,8 @@ public class PersistentProgressDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         ProgressDialog dialog = new ProgressDialog(getActivity(), getTheme());
-        dialog.setTitle("Caricamento");
-        dialog.setMessage("speta n'atimo");
+        dialog.setTitle("Sto lavorando per te");
+        dialog.setMessage("Devo chiederti di avere pazienza");
         dialog.setIndeterminate(true);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         return dialog;
