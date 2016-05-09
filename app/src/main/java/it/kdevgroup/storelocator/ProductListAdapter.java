@@ -28,7 +28,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.product, parent, false);
         return new ProductViewHolder(v);
     }
-
+    
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         holder.txtNome.setText(products.get(position).getName());
