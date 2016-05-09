@@ -51,8 +51,10 @@ public class ProductFragment extends Fragment {
 
         if (getArguments() != null) {
             currentStore = getArguments().getParcelable(STORE_KEY_FOR_BUNDLE);
-            adapter = new ProductListAdapter(currentStore.getProducts(), getContext());
-            recyclerView.setAdapter(adapter);
+            if (currentStore != null) {
+                adapter = new ProductListAdapter(currentStore.getProducts(), getContext());
+                recyclerView.setAdapter(adapter);
+            }
         }
 
         return view;
