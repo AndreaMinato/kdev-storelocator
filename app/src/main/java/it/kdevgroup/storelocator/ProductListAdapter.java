@@ -17,7 +17,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     private Context context;
     private List<Product> products;
-    private boolean useList = true;
 
     public ProductListAdapter(List<Product> products, Context ctx) {
         this.products = products;
@@ -32,7 +31,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
-        holder.txtTitolo.setText(products.get(position).getName());
+        holder.txtNome.setText(products.get(position).getName());
         holder.txtPrezzo.setText(products.get(position).getPrice());
         if (products.get(position).isAvailable()) {
             holder.txtDisponibile.setText(context.getString(R.string.disponibile));
@@ -57,7 +56,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
      * "Contenitore" di ogni card
      */
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        TextView txtTitolo;
+        TextView txtNome;
         TextView txtPrezzo;
         TextView txtDisponibile;
 
@@ -65,9 +64,9 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         ProductViewHolder(View itemView) {
             super(itemView);
 //            card = (CardView) itemView.findViewById(R.id.cardView);
-            txtTitolo = (TextView) itemView.findViewById(R.id.storeName);
-            txtPrezzo = (TextView) itemView.findViewById(R.id.storeAddress);
-            txtDisponibile = (TextView) itemView.findViewById(R.id.storePhone);
+            txtNome = (TextView) itemView.findViewById(R.id.product);
+            txtPrezzo = (TextView) itemView.findViewById(R.id.price);
+            txtDisponibile = (TextView) itemView.findViewById(R.id.available);
         }
     }
 }

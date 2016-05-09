@@ -40,8 +40,8 @@ public class ProductFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_product, container,false);//super.onCreateView(inflater, container, savedInstanceState);
-        recyclerView = (RecyclerView)view.findViewById(R.id.product_recyclerView);
+        View view = inflater.inflate(R.layout.product_navigation, container, false);//super.onCreateView(inflater, container, savedInstanceState);
+        recyclerView = (RecyclerView) view.findViewById(R.id.product_recyclerView);
 
         if (getArguments() != null) {
             currentStore = getArguments().getParcelable(STORE_KEY_FOR_BUNDLE);
@@ -80,7 +80,7 @@ public class ProductFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        void onFragmentInteraction(String id);
     }
 
 }
