@@ -1,18 +1,8 @@
 package it.kdevgroup.storelocator;
 
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.graphics.Color;
-import android.media.audiofx.LoudnessEnhancer;
-import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -75,7 +65,7 @@ public class StoresCardsAdapter extends RecyclerView.Adapter<StoresCardsAdapter.
                 Log.d(TAG, "preparazione activity di dettaglio");
 
                 //40% di possibilità di steve jobs
-                if (Math.random() < 0.4){
+                /*if (Math.random() < 0.4){
                     final AlertDialog dialog = new AlertDialog.Builder(ctx).create();
 
                     dialog.getWindow().setBackgroundDrawableResource(R.drawable.steve);
@@ -97,7 +87,7 @@ public class StoresCardsAdapter extends RecyclerView.Adapter<StoresCardsAdapter.
                             ctx.startActivity(vIntent);
                         }
                     }, 35);
-                } else {
+                } else */{
                     Intent vIntent = new Intent(ctx, DetailStoreActivity.class);
                     Bundle vBundle = new Bundle();
                     vBundle.putString(DetailStoreActivity.KEY_STORE, stores.get(position).getGUID());
@@ -118,7 +108,7 @@ public class StoresCardsAdapter extends RecyclerView.Adapter<StoresCardsAdapter.
         ViewAnimator
                 .animate(cardHolder.itemView)
                 .bounceIn().interpolator(new BounceInterpolator())
-                .wave().duration(2000)
+                .wave().duration(700)
                 .start();
     }
 

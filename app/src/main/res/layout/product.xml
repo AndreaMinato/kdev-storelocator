@@ -11,32 +11,49 @@
         android:id="@+id/lista"
         android:paddingBottom="10dp"
         android:paddingLeft="5dp"
-        android:paddingTop="5dp">
+        android:paddingTop="5dp"
+        android:background="@drawable/login_background_style"
+        android:layout_margin="5dp">
 
         <TextView
             android:id="@+id/product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="nome prodotto"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textStyle="bold|italic"
+            android:textColor="@color/colorPrimary"
+            android:textSize="25sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="prezzo"
             android:id="@+id/price"
-            android:layout_below="@+id/product" />
+            android:layout_below="@+id/product"
+            android:textSize="20sp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="is available"
             android:id="@+id/available"
             android:layout_below="@+id/price"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"/>
+            android:layout_alignParentRight="true"
+            android:textSize="20sp"
+            android:textColor="@color/oro"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp" />
     </RelativeLayout>
 
 
