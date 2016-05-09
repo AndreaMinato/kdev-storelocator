@@ -29,6 +29,29 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         return new ProductViewHolder(v);
     }
 
+<<<<<<< HEAD
+    /**
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = null;
+        Product item = (Product) getItem(position);
+        View viewToUse = null;
+
+        // This block exists to inflate the settings list item conditionally based on whether
+        // we want to support a grid or list view.
+        LayoutInflater mInflater = (LayoutInflater) context
+                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        if (convertView == null) {
+
+            viewToUse = mInflater.inflate(R.layout.product, null);
+            holder = new ViewHolder();
+            holder.titleText = (TextView) viewToUse.findViewById(R.id.titleText);
+            viewToUse.setTag(holder);
+=======
     @Override
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         holder.txtNome.setText(products.get(position).getName());
@@ -36,6 +59,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         if (products.get(position).isAvailable()) {
             holder.txtDisponibile.setText(context.getString(R.string.disponibile));
             holder.txtDisponibile.setBackgroundColor(Color.GREEN);
+>>>>>>> origin/master
         } else {
             holder.txtDisponibile.setText(context.getString(R.string.non_disponibile));
             holder.txtDisponibile.setBackgroundColor(Color.RED);
