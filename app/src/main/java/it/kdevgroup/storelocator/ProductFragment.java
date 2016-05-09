@@ -2,11 +2,12 @@ package it.kdevgroup.storelocator;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import it.kdevgroup.storelocator.dummy.DummyContent;
@@ -18,10 +19,11 @@ import it.kdevgroup.storelocator.dummy.DummyContent;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class ProductFragment extends ListFragment {
+public class ProductFragment extends Fragment {
 
     public static final String STORE_KEY_FOR_BUNDLE = "Store";
     private Store currentStore = null;
+    private RecyclerView recyclerView;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -42,11 +44,13 @@ public class ProductFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_product, container,false);//super.onCreateView(inflater, container, savedInstanceState);
+        recyclerView = (RecyclerView)view.findViewById(R.id.product_recyclerView);
 
-        if (getArguments() != null)
+        if (getArguments() != null) {
             currentStore = getArguments().getParcelable(STORE_KEY_FOR_BUNDLE);
-        setListAdapter(new ArrayAdapter<ProductListAdapter>(getContext(), R.layout.fragment_product));
+            recyclerView.setAdapter(new ProductListAdapter(currentStore.getProducts(), getContext()));
+        }
 
         return view;
     }
@@ -66,17 +70,6 @@ public class ProductFragment extends ListFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
     }
 
     /**

@@ -1,11 +1,10 @@
 package it.kdevgroup.storelocator;
 
-import android.app.Activity;
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.List;
@@ -13,50 +12,60 @@ import java.util.List;
 /**
  * Created by Michele on 04/05/2016.
  */
-public class ProductListAdapter extends ArrayAdapter {
+public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.ProductViewHolder> {
 
     private Context context;
+    private List<Product> products;
     private boolean useList = true;
 
-    public ProductListAdapter(Context context, List products) {
-        super(context, android.R.layout.simple_list_item_1, products);
-        this.context = context;
+    public ProductListAdapter(List<Product> products, Context ctx) {
+        this.products = products;
+        this.context = ctx;
     }
 
-    /**
-     * Holder for the list items.
-     */
-    private class ViewHolder {
-        TextView titleText;
+    @Override
+    public ProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return null;
     }
 
-    /**
-     * @param position
-     * @param convertView
-     * @param parent
-     * @return
-     */
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
-        Product item = (Product) getItem(position);
-        View viewToUse = null;
-
-        // This block exists to inflate the settings list item conditionally based on whether
-        // we want to support a grid or list view.
-        LayoutInflater mInflater = (LayoutInflater) context
-                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        if (convertView == null) {
-
-            viewToUse = mInflater.inflate(R.layout.fragment_product, null);
-            holder = new ViewHolder();
-            holder.titleText = (TextView) viewToUse.findViewById(R.id.titleText);
-            viewToUse.setTag(holder);
+    @Override
+    public void onBindViewHolder(ProductViewHolder holder, int position) {
+        holder.txtTitolo.setText(products.get(position).getName());
+        holder.txtPrezzo.setText(products.get(position).getPrice());
+        if (products.get(position).isAvailable()) {
+            holder.txtDisponibile.setText(context.getString(R.string.disponibile));
+            holder.txtDisponibile.setBackgroundColor(Color.GREEN);
         } else {
-            viewToUse = convertView;
-            holder = (ViewHolder) viewToUse.getTag();
+            holder.txtDisponibile.setText(context.getString(R.string.non_disponibile));
+            holder.txtDisponibile.setBackgroundColor(Color.RED);
         }
+    }
 
-        holder.titleText.setText(item.getName());
-        return viewToUse;
+    @Override
+    public int getItemCount() {
+        return (products == null) ? 0 : products.size();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    /**
+     * "Contenitore" di ogni card
+     */
+    public static class ProductViewHolder extends RecyclerView.ViewHolder {
+        TextView txtTitolo;
+        TextView txtPrezzo;
+        TextView txtDisponibile;
+
+
+        ProductViewHolder(View itemView) {
+            super(itemView);
+//            card = (CardView) itemView.findViewById(R.id.cardView);
+            txtTitolo = (TextView) itemView.findViewById(R.id.storeName);
+            txtPrezzo = (TextView) itemView.findViewById(R.id.storeAddress);
+            txtDisponibile = (TextView) itemView.findViewById(R.id.storePhone);
+        }
     }
 }

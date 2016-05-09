@@ -19,4 +19,7 @@
 
     <string name="from_you">km da te</string>
     <string name="device_offline">Il tuo dispositivo è offline</string>
+
+    <string name="non_disponibile">Non in stock</string>
+    <string name="disponibile">Acquista!</string>
 </resources>
