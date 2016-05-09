@@ -61,7 +61,6 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
         TextView txtPrezzo;
         TextView txtDisponibile;
 
-
         ProductViewHolder(View itemView) {
             super(itemView);
 //            card = (CardView) itemView.findViewById(R.id.cardView);

@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -76,7 +75,7 @@ public class DetailStoreActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        navigationView = (NavigationView) findViewById(R.id.product_view);
+        navigationView = (NavigationView) findViewById(R.id.product_sidebar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -241,7 +240,7 @@ public class DetailStoreActivity extends AppCompatActivity
         if (productFragment == null) {
             productFragment = ProductFragment.newInstance(store);
             fragmentManager.beginTransaction()
-                    .add(R.id.product_view, productFragment, "ciao")
+                    .add(R.id.product_sidebar, productFragment, "ciao")
                     .commit();
         }
 

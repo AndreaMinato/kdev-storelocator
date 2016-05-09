@@ -22,7 +22,7 @@
             android:layout_height="match_parent" />
 
         <android.support.design.widget.NavigationView
-            android:id="@+id/product_view"
+            android:id="@+id/product_sidebar"
             app:itemTextColor="@color/colorPrimary"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

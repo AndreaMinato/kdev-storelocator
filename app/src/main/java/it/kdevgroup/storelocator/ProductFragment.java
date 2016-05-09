@@ -20,6 +20,7 @@ public class ProductFragment extends Fragment {
     public static final String STORE_KEY_FOR_BUNDLE = "Store";
     private Store currentStore = null;
     private RecyclerView recyclerView;
+    private ProductListAdapter adapter;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -39,13 +40,19 @@ public class ProductFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.product_navigation, container, false);//super.onCreateView(inflater, container, savedInstanceState);
         recyclerView = (RecyclerView) view.findViewById(R.id.product_recyclerView);
 
         if (getArguments() != null) {
             currentStore = getArguments().getParcelable(STORE_KEY_FOR_BUNDLE);
-            recyclerView.setAdapter(new ProductListAdapter(currentStore.getProducts(), getContext()));
+            adapter = new ProductListAdapter(currentStore.getProducts(), getContext());
+            recyclerView.setAdapter(adapter);
         }
 
         return view;
