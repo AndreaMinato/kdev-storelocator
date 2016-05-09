@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="?attr/actionBarSize"
     android:orientation="vertical">
 
     <LinearLayout
@@ -13,8 +12,8 @@
         android:paddingLeft="5dp"
         android:paddingTop="5dp"
         android:background="@drawable/login_background_style"
-        android:layout_margin="5dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="5dp">
 
         <TextView
             android:id="@+id/product"
