@@ -45,12 +45,8 @@ public class ProductFragment extends Fragment {
 
         if (getArguments() != null) {
             currentStore = getArguments().getParcelable(STORE_KEY_FOR_BUNDLE);
-<<<<<<< HEAD
-        setListAdapter(new ArrayAdapter<ProductListAdapter>(getContext(), R.layout.product));
-=======
             recyclerView.setAdapter(new ProductListAdapter(currentStore.getProducts(), getContext()));
         }
->>>>>>> origin/master
 
         return view;
     }
