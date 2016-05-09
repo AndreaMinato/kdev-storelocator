@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lista"
+        android:paddingBottom="10dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp">
+
+        <TextView
+            android:id="@+id/product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="nome prodotto"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="prezzo"
+            android:id="@+id/price"
+            android:layout_below="@+id/product" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="is available"
+            android:id="@+id/available"
+            android:layout_below="@+id/price"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

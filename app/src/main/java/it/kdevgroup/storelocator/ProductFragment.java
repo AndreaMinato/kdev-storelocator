@@ -46,7 +46,7 @@ public class ProductFragment extends ListFragment {
 
         if (getArguments() != null)
             currentStore = getArguments().getParcelable(STORE_KEY_FOR_BUNDLE);
-        setListAdapter(new ArrayAdapter<ProductListAdapter>(getContext(), R.layout.fragment_product));
+        setListAdapter(new ArrayAdapter<ProductListAdapter>(getContext(), R.layout.product));
 
         return view;
     }
