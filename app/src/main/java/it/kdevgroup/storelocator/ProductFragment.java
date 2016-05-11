@@ -3,6 +3,8 @@ package it.kdevgroup.storelocator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ public class ProductFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProductListAdapter adapter;
     private OnFragmentInteractionListener mListener;
+    private LinearLayoutManager layoutManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -54,6 +57,8 @@ public class ProductFragment extends Fragment {
             if (currentStore != null) {
                 adapter = new ProductListAdapter(currentStore.getProducts(), getContext());
                 recyclerView.setAdapter(adapter);
+                layoutManager = new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(layoutManager);
             }
         }
 

@@ -4,9 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,13 +99,26 @@ public class Store implements Parcelable, Comparable<Store> {
         if (tags == null) {
             tags = new ArrayList<>();
         }
-        tags = ((ArrayList) map.get(KEY_TAGS));
+        tags = ((ArrayList<String>) map.get(KEY_TAGS));
         latitude = ((String) map.get(KEY_LATITUDE));
         longitude = ((String) map.get(KEY_LONGITUDE));
         email = ((String) map.get(KEY_EMAIL));
         firstName = ((String) map.get(KEY_FIRSTNAME));
         lastName = ((String) map.get(KEY_LASTNAME));
-        products = ((ArrayList) map.get(KEY_PRODUCTS));
+        products = new ArrayList<>();
+        ArrayList<LinkedHashMap<String, String>> list = ((ArrayList) map.get(KEY_PRODUCTS));
+        for (LinkedHashMap<String, String> pr : list ) {
+            try {
+                JSONObject jsonObject = new JSONObject(pr);
+                Product product = new Product();
+                product.setId(jsonObject.getInt("id"));
+                product.setName(pr.get("name"));
+                product.setPrice(pr.get("price"));
+                product.setIsAvailable(Boolean.parseBoolean(pr.get("available")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         lastKnownDistance = 0;
     }
 
@@ -243,6 +258,7 @@ public class Store implements Parcelable, Comparable<Store> {
         hashMap.put(KEY_PHONE, phone);
         hashMap.put(KEY_THUMBNAIL, thumbnail);
         hashMap.put(KEY_IMAGE, image);
+
         hashMap.put(KEY_TAGS, tags);
         hashMap.put(KEY_LATITUDE, latitude);
         hashMap.put(KEY_LONGITUDE, longitude);
@@ -258,7 +274,7 @@ public class Store implements Parcelable, Comparable<Store> {
 
     @Override
     public int describeContents() {
-        return 0;
+        return getGUID().hashCode();
     }
 
     @Override
@@ -276,7 +292,7 @@ public class Store implements Parcelable, Comparable<Store> {
         dest.writeString(email);
         dest.writeString(firstName);
         dest.writeString(lastName);
-        dest.writeList(products);
+        dest.writeTypedList(products);
         dest.writeInt(lastKnownDistance);
     }
 
@@ -313,7 +329,7 @@ public class Store implements Parcelable, Comparable<Store> {
         firstName = in.readString();
         lastName = in.readString();
         products = new ArrayList<>();
-        in.readList(products, Product.class.getClassLoader());
+        in.readTypedList(products, Product.CREATOR);
         lastKnownDistance = in.readInt();
     }
 

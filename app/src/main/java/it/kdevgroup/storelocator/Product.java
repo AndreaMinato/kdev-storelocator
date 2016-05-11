@@ -96,7 +96,7 @@ public class Product implements Parcelable {
         }
     };
 
-    private Product(Parcel parcel) {
+    public Product(Parcel parcel) {
         id = parcel.readInt();
         isAvailable = (parcel.readInt() == 1);
         name = parcel.readString();
