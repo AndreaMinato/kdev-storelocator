@@ -112,9 +112,9 @@ public class Store implements Parcelable, Comparable<Store> {
                 JSONObject jsonObject = new JSONObject(pr);
                 Product product = new Product();
                 product.setId(jsonObject.getInt("id"));
-                product.setName(pr.get("name"));
-                product.setPrice(pr.get("price"));
-                product.setIsAvailable(Boolean.parseBoolean(pr.get("available")));
+                product.setName(jsonObject.getString("name"));
+                product.setPrice(jsonObject.getString("price"));
+                product.setIsAvailable(jsonObject.getBoolean("available"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
