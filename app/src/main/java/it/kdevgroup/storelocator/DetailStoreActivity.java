@@ -13,6 +13,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -179,6 +182,7 @@ public class DetailStoreActivity extends AppCompatActivity
                                         e.printStackTrace();
                                     }
                                     updateFieldsAndMap(store);
+                                    setProductsList();
                                 }
                             }
                         } catch (JSONException e) {
@@ -201,6 +205,7 @@ public class DetailStoreActivity extends AppCompatActivity
                 try {
                     store = database.getStore(guid);
                     updateFieldsAndMap(store);
+                    setProductsList();
                     Log.d(TAG, "onCreate: caricato evento dal db");
                 } catch (CouchbaseLiteException e) {
                     e.printStackTrace();
@@ -234,6 +239,7 @@ public class DetailStoreActivity extends AppCompatActivity
         });
         */
 
+        /*
         FragmentManager fragmentManager = getSupportFragmentManager();
         ProductFragment productFragment = (ProductFragment) fragmentManager.findFragmentByTag("ciao");
 
@@ -242,9 +248,21 @@ public class DetailStoreActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .add(R.id.product_sidebar, productFragment, "ciao")
                     .commit();
+            Log.i(TAG, "onCreate: products added in sidebar");
         }
+        */
 
+    }
 
+    private void setProductsList () {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.product_recyclerView);
+
+        //Log.i(TAG, "products number: " + store.getProducts().size());
+        ProductListAdapter adapter = new ProductListAdapter(store.getProducts(), getApplicationContext());
+        recyclerView.setAdapter(adapter);
+
+        LinearLayoutManager layoutManager = new GridLayoutManager(getApplicationContext(), 1, GridLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     private void updateFieldsAndMap(final Store store) {
